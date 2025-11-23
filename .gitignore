@@ -21,3 +21,4 @@ yarn.lock
 
 # Supabase
 supabase/.temp/
+dist
