@@ -110,41 +110,48 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 
 ---
 
-## Phase 4: Route Implementation
+## Phase 4: Route Implementation ✅
 
-### Landing/Create Event Route (`/`)
+### Landing/Create Event Route (`/`) ✅
 
-- [ ] Create `src/routes/index.tsx`
-- [ ] Build form UI with Mantine components
-  - [ ] TextInput for event name
-  - [ ] Dynamic participant name inputs
-  - [ ] Button to create event
-- [ ] Implement form submission logic
-- [ ] Show success state with participant links
-- [ ] Add copy-to-clipboard functionality
+- [x] Create `src/routes/index.tsx`
+- [x] Build form UI with Mantine components
+  - [x] TextInput for event name
+  - [x] Dynamic participant name inputs
+  - [x] Button to create event
+- [x] Implement form submission logic
+- [x] Show success state with participant links
+- [x] Add copy-to-clipboard functionality
 
-### Admin Overview Route (`/admin/$eventSlug`)
+### Admin Overview Route (`/admin/$eventSlug`) ✅
 
-- [ ] Create `src/routes/admin.$eventSlug.tsx`
-- [ ] Implement admin token validation
-- [ ] Build participant table UI
-  - [ ] Show participant names
-  - [ ] Show drawn status (✓/✗)
-  - [ ] Add regenerate link buttons
-- [ ] Display stats: "X of Y have drawn"
-- [ ] Implement regenerate link functionality
+- [x] Create `src/routes/admin.$eventSlug.tsx`
+- [x] Implement admin token validation
+- [x] Build participant table UI
+  - [x] Show participant names
+  - [x] Show drawn status (✓/✗)
+  - [x] Add regenerate link buttons
+- [x] Display stats: "X of Y have drawn"
+- [x] Implement regenerate link functionality
 
-### Participant Draw Route (`/e/$eventSlug`)
+### Participant Draw Route (`/e/$eventSlug`) ✅
 
-- [ ] Create `src/routes/e.$eventSlug.tsx`
-- [ ] Implement participant token validation
-- [ ] Build pre-draw UI
-  - [ ] Greeting with participant name
-  - [ ] Large "Namen ziehen" button
-- [ ] Build post-draw UI
-  - [ ] Show drawn name with emoji
-  - [ ] Disable button after draw
-- [ ] Handle revisiting link (show existing draw)
+- [x] Create `src/routes/e.$eventSlug.tsx`
+- [x] Implement participant token validation
+- [x] Build pre-draw UI
+  - [x] Greeting with participant name
+  - [x] Large "Namen ziehen" button
+- [x] Build post-draw UI
+  - [x] Show drawn name with emoji
+  - [x] Disable button after draw
+- [x] Handle revisiting link (show existing draw)
+
+**Additional Implementation Notes:**
+
+- Fixed hardcoded ports by using relative URLs in server functions
+- Server functions return relative links (e.g., `/e/slug?token=xxx`)
+- Client-side prepends `window.location.origin` for display/copying
+- Works on any port (dev 3001, production, etc.)
 
 ---
 
