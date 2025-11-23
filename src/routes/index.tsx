@@ -21,18 +21,27 @@ export const Route = createFileRoute("/")({
   component: Home
 });
 
+type ParticipantField = {
+  id: string;
+  name: string;
+};
+
 function Home() {
   const [result, setResult] = useState<CreateEventOutput | null>(null);
 
   const form = useForm({
     defaultValues: {
       eventName: "",
-      participants: ["", "", ""]
+      participants: [
+        { id: crypto.randomUUID(), name: "" },
+        { id: crypto.randomUUID(), name: "" },
+        { id: crypto.randomUUID(), name: "" }
+      ] as ParticipantField[]
     },
     onSubmit: async ({ value }) => {
       try {
         const filteredNames = value.participants
-          .map(name => name.trim())
+          .map(p => p.name.trim())
           .filter(name => name.length > 0);
 
         const eventResult = await createEvent({
@@ -188,8 +197,11 @@ function Home() {
               {field => (
                 <>
                   <Stack gap="sm">
-                    {field.state.value.map((_, index) => (
-                      <form.Field key={index} name={`participants[${index}]`}>
+                    {field.state.value.map((participant, index) => (
+                      <form.Field
+                        key={participant.id}
+                        name={`participants[${index}].name`}
+                      >
                         {subField => (
                           <Group gap="xs">
                             <TextInput
@@ -216,7 +228,9 @@ function Home() {
                     ))}
                   </Stack>
                   <Button
-                    onClick={() => field.pushValue("")}
+                    onClick={() =>
+                      field.pushValue({ id: crypto.randomUUID(), name: "" })
+                    }
                     variant="light"
                     mt="sm"
                     fullWidth
