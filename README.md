@@ -112,9 +112,8 @@ For detailed setup instructions, see `supabase/README.md`.
 
 - [x] fix: title and favicon
 - [x] refactor: At lest 3 participants
-- [ ] feat(db): Should track drawn participant for each participant
-- [ ] style: Better styling
 - [ ] feat: Add zod
+- [ ] feat(db): Should track drawn participant for each participant
 - [ ] feat: Admin Accounts
   - Events Overview (this also solves the issue of keeping track of created links)
     - Links
@@ -122,5 +121,7 @@ For detailed setup instructions, see `supabase/README.md`.
     - Who drawn already, when and what (what only after the event date)
       - Event date would need be tracked in the event creation
   - Would also fix regenerated link bug
-- [ ] RLS Database warning? Security warning?
-- [ ] Internationalization
+- [ ] style: Better styling
+- [ ] style: Better font
+- [ ] fix: RLS Database warning? Security warning?
+- [ ] feat: Internationalization
