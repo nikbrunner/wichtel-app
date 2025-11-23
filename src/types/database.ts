@@ -1,0 +1,82 @@
+/**
+ * Database entity types matching the Supabase schema
+ */
+
+export type Event = {
+  id: string;
+  name: string;
+  slug: string;
+  admin_token: string;
+  created_at: string;
+};
+
+export type Participant = {
+  id: string;
+  event_id: string;
+  name: string;
+  token: string;
+  has_drawn: boolean;
+  drawn_at: string | null;
+};
+
+export type Draw = {
+  id: string;
+  event_id: string;
+  drawer_id: string;
+  drawn_id: string;
+  created_at: string;
+};
+
+/**
+ * Input/Output types for server functions
+ */
+
+export type CreateEventInput = {
+  eventName: string;
+  participantNames: string[];
+};
+
+export type CreateEventOutput = {
+  eventSlug: string;
+  adminToken: string;
+  participants: Array<{
+    name: string;
+    token: string;
+    link: string;
+  }>;
+};
+
+export type DrawNameInput = {
+  participantToken: string;
+};
+
+export type DrawNameOutput = {
+  drawnName: string;
+};
+
+export type EventDetailsOutput = {
+  eventName: string;
+  participants: Array<{
+    id: string;
+    name: string;
+    hasDrawn: boolean;
+    drawnAt: string | null;
+  }>;
+};
+
+export type ParticipantInfoOutput = {
+  participantName: string;
+  hasDrawn: boolean;
+  drawnName: string | null;
+};
+
+export type RegenerateParticipantLinkInput = {
+  eventSlug: string;
+  adminToken: string;
+  participantId: string;
+};
+
+export type RegenerateParticipantLinkOutput = {
+  newToken: string;
+  newLink: string;
+};

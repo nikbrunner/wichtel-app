@@ -92,11 +92,14 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 
 ## Phase 3: Core Server Functions
 
-- [ ] Create `src/utils/wichtel.ts` for shared utilities
-  - [ ] `generateToken()` function
-  - [ ] `generateSlug(name: string)` function
+- [x] Create `src/utils/wichtel.ts` for shared utilities
+  - [x] `generateToken()` function (uses crypto.randomUUID())
+  - [x] `generateSlug(name: string)` function (URL-friendly with random suffix)
+- [x] Create `src/types/database.ts` for TypeScript types
+  - [x] Database entity types (Event, Participant, Draw)
+  - [x] Input/Output types for all server functions
 - [ ] Create server functions in `src/server/` directory
-  - [ ] `createEvent.ts` - Creates event + participants with tokens
+  - [x] `createEvent.ts` - Creates event + participants with tokens
   - [ ] `drawName.ts` - Drawing algorithm with validation
   - [ ] `getEventDetails.ts` - Admin overview data
   - [ ] `getParticipantInfo.ts` - Participant view data
