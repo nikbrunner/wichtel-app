@@ -112,9 +112,9 @@ For detailed setup instructions, see `supabase/README.md`.
 
 - [x] fix: title and favicon
 - [x] refactor: At lest 3 participants
-- [ ] fix(ui): Regenerated link does immedately disappear
 - [ ] feat(db): Should track drawn participant for each participant
 - [ ] style: Better styling
+- [ ] feat: Add zod
 - [ ] feat: Admin Accounts
   - Events Overview (this also solves the issue of keeping track of created links)
     - Links

@@ -77,9 +77,6 @@ function AdminOverview() {
       setSuccessMessage(
         `Neuer Link generiert! Sende diesen Link an den Teilnehmer:\n${result.newLink}`
       );
-
-      // Reload page to refresh data
-      window.location.reload();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Fehler beim Regenerieren des Links"
