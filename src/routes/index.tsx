@@ -13,6 +13,7 @@ import {
   Alert
 } from "@mantine/core";
 import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
 import { createEvent } from "../server/createEvent";
 import type { CreateEventOutput } from "../types/database";
 
@@ -21,62 +22,36 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const [eventName, setEventName] = useState("");
-  const [participantNames, setParticipantNames] = useState(["", "", ""]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CreateEventOutput | null>(null);
 
-  const addParticipant = () => {
-    setParticipantNames([...participantNames, ""]);
-  };
+  const form = useForm({
+    defaultValues: {
+      eventName: "",
+      participants: ["", "", ""]
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        const filteredNames = value.participants
+          .map(name => name.trim())
+          .filter(name => name.length > 0);
 
-  const removeParticipant = (index: number) => {
-    if (participantNames.length > 3) {
-      setParticipantNames(participantNames.filter((_, i) => i !== index));
-    }
-  };
+        const eventResult = await createEvent({
+          data: {
+            eventName: value.eventName.trim(),
+            participantNames: filteredNames
+          }
+        });
 
-  const updateParticipant = (index: number, value: string) => {
-    const updated = [...participantNames];
-    updated[index] = value;
-    setParticipantNames(updated);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      const filteredNames = participantNames
-        .map(name => name.trim())
-        .filter(name => name.length > 0);
-
-      if (filteredNames.length < 3) {
-        throw new Error("Mindestens 3 Teilnehmer erforderlich");
+        setResult(eventResult);
+      } catch (err) {
+        throw err;
       }
-
-      const eventResult = await createEvent({
-        data: {
-          eventName: eventName.trim(),
-          participantNames: filteredNames
-        }
-      });
-
-      setResult(eventResult);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ein Fehler ist aufgetreten");
-    } finally {
-      setIsLoading(false);
     }
-  };
+  });
 
   const resetForm = () => {
-    setEventName("");
-    setParticipantNames(["", "", ""]);
+    form.reset();
     setResult(null);
-    setError(null);
   };
 
   if (result) {
@@ -175,56 +150,111 @@ function Home() {
         Erstelle ein geheimes Wichtel-Event für deine Familie oder Freunde
       </Text>
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
         <Stack gap="md">
-          <TextInput
-            label="Event-Name"
-            placeholder="Weihnachten 2025"
-            value={eventName}
-            onChange={e => setEventName(e.currentTarget.value)}
-            required
-          />
+          <form.Field
+            name="eventName"
+            validators={{
+              onChange: ({ value }) =>
+                value.trim().length === 0 ? "Event-Name ist erforderlich" : undefined
+            }}
+          >
+            {field => (
+              <div>
+                <TextInput
+                  label="Event-Name"
+                  placeholder="Weihnachten 2025"
+                  value={field.state.value}
+                  onChange={e => field.handleChange(e.currentTarget.value)}
+                  onBlur={field.handleBlur}
+                  error={field.state.meta.errors.join(", ")}
+                  required
+                />
+              </div>
+            )}
+          </form.Field>
 
           <div>
             <Text fw={600} mb="xs">
               Teilnehmer
             </Text>
-            <Stack gap="sm">
-              {participantNames.map((name, index) => (
-                <Group key={index} gap="xs">
-                  <TextInput
-                    placeholder={`Teilnehmer ${index + 1}`}
-                    value={name}
-                    onChange={e => updateParticipant(index, e.currentTarget.value)}
-                    style={{ flex: 1 }}
-                    required
-                  />
-                  {participantNames.length > 3 && (
-                    <ActionIcon
-                      color="red"
-                      variant="light"
-                      onClick={() => removeParticipant(index)}
-                    >
-                      ✕
-                    </ActionIcon>
-                  )}
-                </Group>
-              ))}
-            </Stack>
-            <Button onClick={addParticipant} variant="light" mt="sm" fullWidth>
-              + Teilnehmer hinzufügen
-            </Button>
+            <form.Field name="participants" mode="array">
+              {field => (
+                <>
+                  <Stack gap="sm">
+                    {field.state.value.map((_, index) => (
+                      <form.Field key={index} name={`participants[${index}]`}>
+                        {subField => (
+                          <Group gap="xs">
+                            <TextInput
+                              placeholder={`Teilnehmer ${index + 1}`}
+                              value={subField.state.value}
+                              onChange={e =>
+                                subField.handleChange(e.currentTarget.value)
+                              }
+                              style={{ flex: 1 }}
+                              required
+                            />
+                            {field.state.value.length > 3 && (
+                              <ActionIcon
+                                color="red"
+                                variant="light"
+                                onClick={() => field.removeValue(index)}
+                              >
+                                ✕
+                              </ActionIcon>
+                            )}
+                          </Group>
+                        )}
+                      </form.Field>
+                    ))}
+                  </Stack>
+                  <Button
+                    onClick={() => field.pushValue("")}
+                    variant="light"
+                    mt="sm"
+                    fullWidth
+                    type="button"
+                  >
+                    + Teilnehmer hinzufügen
+                  </Button>
+                </>
+              )}
+            </form.Field>
           </div>
 
-          {error && (
-            <Alert color="red" title="Fehler">
-              {error}
-            </Alert>
-          )}
-
-          <Button type="submit" loading={isLoading} size="lg" fullWidth>
-            Event erstellen
-          </Button>
+          <form.Subscribe
+            selector={state => ({
+              canSubmit: state.canSubmit,
+              isSubmitting: state.isSubmitting,
+              errors: state.errors
+            })}
+          >
+            {({ canSubmit, isSubmitting, errors }) => (
+              <>
+                {errors.length > 0 && (
+                  <Alert color="red" title="Fehler">
+                    {errors.join(", ")}
+                  </Alert>
+                )}
+                <Button
+                  type="submit"
+                  disabled={!canSubmit}
+                  loading={isSubmitting}
+                  size="lg"
+                  fullWidth
+                >
+                  Event erstellen
+                </Button>
+              </>
+            )}
+          </form.Subscribe>
         </Stack>
       </form>
     </Stack>
