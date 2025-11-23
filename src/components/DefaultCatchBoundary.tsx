@@ -7,6 +7,7 @@ import {
   useRouter
 } from "@tanstack/react-router";
 import type { ErrorComponentProps } from "@tanstack/react-router";
+import { Stack, Button, Group, Alert, Title } from "@mantine/core";
 
 export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
   const router = useRouter();
@@ -18,37 +19,40 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
   console.error(error);
 
   return (
-    <div className="min-w-0 flex-1 p-4 flex flex-col items-center justify-center gap-6">
-      <ErrorComponent error={error} />
-      <div className="flex gap-2 items-center flex-wrap">
-        <button
+    <Stack p="xl" gap="lg" maw={600} mx="auto" align="center" mt="xl">
+      <Title order={2}>🎄 Etwas ist schiefgelaufen</Title>
+
+      <Alert color="red" title="Fehler" w="100%">
+        <ErrorComponent error={error} />
+      </Alert>
+
+      <Group gap="md">
+        <Button
           onClick={() => {
             router.invalidate();
           }}
-          className={`px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded-sm text-white uppercase font-extrabold`}
+          variant="filled"
         >
-          Try Again
-        </button>
+          Erneut versuchen
+        </Button>
         {isRoot ? (
-          <Link
-            to="/"
-            className={`px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded-sm text-white uppercase font-extrabold`}
-          >
-            Home
-          </Link>
+          <Button component={Link} to="/" variant="light">
+            Zur Startseite
+          </Button>
         ) : (
-          <Link
+          <Button
+            component={Link}
             to="/"
-            className={`px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded-sm text-white uppercase font-extrabold`}
+            variant="light"
             onClick={e => {
               e.preventDefault();
               window.history.back();
             }}
           >
-            Go Back
-          </Link>
+            Zurück
+          </Button>
         )}
-      </div>
-    </div>
+      </Group>
+    </Stack>
   );
 }
