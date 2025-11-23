@@ -1,4 +1,14 @@
-- [ ] Admin Accounts
+- [x] fix: title and favicon
+- [ ] refactor: At lest 3 participants
+- [ ] fix(ui): Regenerated link does immedately disappear
+- [ ] feat(db): Should track drawn participant for each participant
+- [ ] style: Better styling
+- [ ] feat: Admin Accounts
   - Events Overview (this also solves the issue of keeping track of created links)
+    - Links
+    - Stats
+    - Who drawn already, when and what (what only after the event date)
+      - Event date would need be tracked in the event creation
+  - Would also fix regenerated link bug
 - [ ] RLS Database warning? Security warning?
 - [ ] Internationalization
