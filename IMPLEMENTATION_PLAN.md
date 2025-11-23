@@ -49,16 +49,18 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 
 ## Phase 2: Database Schema
 
-- [ ] Create Supabase project (or use existing)
-- [ ] Set up environment variables
-  - [ ] Create `.env` file
-  - [ ] Add `VITE_SUPABASE_URL`
-  - [ ] Add `VITE_SUPABASE_ANON_KEY`
-- [ ] Create database tables via Supabase SQL Editor
-  - [ ] Create `events` table
-  - [ ] Create `participants` table
-  - [ ] Create `draws` table
-- [ ] Test Supabase connection
+- [x] Create Supabase project (or use existing) - **Manual step**
+- [x] Set up environment variables
+  - [x] Create `.env.example` file with template
+  - [x] Add `VITE_SUPABASE_URL` placeholder
+  - [x] Add `VITE_SUPABASE_ANON_KEY` placeholder
+- [x] Create database migration file
+  - [x] Create `events` table
+  - [x] Create `participants` table
+  - [x] Create `draws` table
+  - [x] Add indexes for performance
+- [x] Create Supabase setup README
+- [ ] Test Supabase connection - **Pending actual Supabase project setup**
 
 ---
 
