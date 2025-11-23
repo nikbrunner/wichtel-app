@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [eventName, setEventName] = useState("");
-  const [participantNames, setParticipantNames] = useState(["", ""]);
+  const [participantNames, setParticipantNames] = useState(["", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CreateEventOutput | null>(null);
@@ -32,7 +32,7 @@ function Home() {
   };
 
   const removeParticipant = (index: number) => {
-    if (participantNames.length > 2) {
+    if (participantNames.length > 3) {
       setParticipantNames(participantNames.filter((_, i) => i !== index));
     }
   };
@@ -53,8 +53,8 @@ function Home() {
         .map(name => name.trim())
         .filter(name => name.length > 0);
 
-      if (filteredNames.length < 2) {
-        throw new Error("Mindestens 2 Teilnehmer erforderlich");
+      if (filteredNames.length < 3) {
+        throw new Error("Mindestens 3 Teilnehmer erforderlich");
       }
 
       const eventResult = await createEvent({
@@ -74,7 +74,7 @@ function Home() {
 
   const resetForm = () => {
     setEventName("");
-    setParticipantNames(["", ""]);
+    setParticipantNames(["", "", ""]);
     setResult(null);
     setError(null);
   };
@@ -199,7 +199,7 @@ function Home() {
                     style={{ flex: 1 }}
                     required
                   />
-                  {participantNames.length > 2 && (
+                  {participantNames.length > 3 && (
                     <ActionIcon
                       color="red"
                       variant="light"

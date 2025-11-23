@@ -17,8 +17,8 @@ export const createEvent = createServerFn({ method: "POST" })
       throw new Error("Event name is required");
     }
 
-    if (!participantNames || participantNames.length < 2) {
-      throw new Error("At least 2 participants are required");
+    if (!participantNames || participantNames.length < 3) {
+      throw new Error("At least 3 participants are required");
     }
 
     const uniqueNames = new Set(participantNames.map((name: string) => name.trim()));

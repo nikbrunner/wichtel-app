@@ -111,7 +111,7 @@ For detailed setup instructions, see `supabase/README.md`.
 ## TODO
 
 - [x] fix: title and favicon
-- [ ] refactor: At lest 3 participants
+- [x] refactor: At lest 3 participants
 - [ ] fix(ui): Regenerated link does immedately disappear
 - [ ] feat(db): Should track drawn participant for each participant
 - [ ] style: Better styling
