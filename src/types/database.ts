@@ -6,8 +6,24 @@ export type Event = {
   id: string;
   name: string;
   slug: string;
-  admin_token: string;
+  admin_token: string | null;
+  admin_user_id: string | null;
+  event_date: string; // ISO date string
   created_at: string;
+};
+
+export type AuthUser = {
+  id: string;
+  email: string;
+  created_at: string;
+};
+
+export type EventWithStats = Event & {
+  participant_count: number;
+  drawn_count: number;
+  not_drawn_count: number;
+  days_until_event: number | null;
+  is_past: boolean;
 };
 
 export type Participant = {
