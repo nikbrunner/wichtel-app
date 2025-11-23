@@ -12,7 +12,7 @@ import {
   Tooltip,
   Alert
 } from "@mantine/core";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "@tanstack/react-form";
 import { createEvent } from "../server/createEvent";
 import type { CreateEventOutput } from "../types/database";
@@ -29,14 +29,19 @@ type ParticipantField = {
 function Home() {
   const [result, setResult] = useState<CreateEventOutput | null>(null);
 
+  const initialParticipants = useMemo(
+    () => [
+      { id: crypto.randomUUID(), name: "" },
+      { id: crypto.randomUUID(), name: "" },
+      { id: crypto.randomUUID(), name: "" }
+    ],
+    []
+  );
+
   const form = useForm({
     defaultValues: {
       eventName: "",
-      participants: [
-        { id: crypto.randomUUID(), name: "" },
-        { id: crypto.randomUUID(), name: "" },
-        { id: crypto.randomUUID(), name: "" }
-      ] as ParticipantField[]
+      participants: initialParticipants
     },
     onSubmit: async ({ value }) => {
       try {
