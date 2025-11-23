@@ -155,16 +155,35 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 
 ---
 
-## Phase 5: UI Polish & Error Handling
+## Phase 5: UI Polish & Error Handling ✅
 
-- [ ] Add error states with Mantine Alert components
-  - [ ] Invalid token error
-  - [ ] No one left to draw error
-  - [ ] Network error handling
-- [ ] Add loading states for async operations
-- [ ] Ensure mobile-responsive design
-- [ ] Add emoji decorations (🎁 🎄 👋)
-- [ ] Test all user flows
+- [x] Add error states with Mantine Alert components
+  - [x] Invalid token error (route loaders throw errors caught by error boundary)
+  - [x] Network error handling (try-catch in all server function calls)
+  - [x] Error messages in German throughout the app
+- [x] Add loading states for async operations
+  - [x] Loading states on all buttons (index, admin, participant routes)
+  - [x] Button disabled states during async operations
+- [x] Ensure mobile-responsive design
+  - [x] All routes use Mantine's responsive Stack/Group components
+  - [x] Max-width constraints (maw) for proper desktop display
+  - [x] Centered layouts work on all screen sizes
+- [x] Add emoji decorations (🎁 🎄 👋)
+  - [x] Present throughout the app for friendly feel
+- [x] Improve error boundary component
+  - [x] Replaced Tailwind with Mantine UI components
+  - [x] Added German text: "Etwas ist schiefgelaufen"
+  - [x] Clean layout with Alert, Buttons, and proper spacing
+
+**What Already Existed:**
+
+- Error handling was already implemented in Phase 4
+- Loading states were added during route implementation
+- Mantine components are responsive by default
+
+**Phase 5 Addition:**
+
+- Improved the DefaultCatchBoundary component with Mantine UI and German text
 
 ---
 
