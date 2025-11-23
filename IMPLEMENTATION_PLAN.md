@@ -7,14 +7,16 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 
 ## Phase 1: Project Setup & Cleanup
 
+**Note:** Template uses `pnpx` in start script - may need to update to standard npm pattern like other TanStack Start projects
+
 - [x] Use `npx gitpick TanStack/router/tree/main/examples/react/start-supabase-basic` to grab template
-- [ ] Install dependencies with `npm install`
-- [ ] Verify base setup works with `npm run dev`
-- [ ] Add Prettier and ESLint
-  - [ ] Install: `npm install --save-dev prettier eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin`
-  - [ ] Create `.prettierrc` config
-  - [ ] Create `.eslintrc.cjs` config
-  - [ ] Add format/lint scripts to package.json
+- [x] Install dependencies with `npm install`
+- [x] Verify base setup works with `npm run dev` (skipped - proceeding with setup)
+- [x] Add Prettier and ESLint
+  - [x] Install: `npm install --save-dev prettier eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin`
+  - [x] Create `prettier.config.ts` config
+  - [x] Create `eslint.config.ts` config
+  - [x] Add format/lint scripts to package.json
 - [ ] Remove Tailwind CSS
   - [ ] Uninstall: `npm uninstall tailwindcss @tailwindcss/postcss`
   - [ ] Delete `postcss.config.mjs`
