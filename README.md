@@ -20,17 +20,20 @@ A family-friendly Secret Santa/Wichtel web app for organizing gift exchanges.
 ## Quick Start
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Set up environment variables**:
+
    ```bash
    cp .env.example .env
    # Fill in your Supabase credentials (see supabase/README.md)
    ```
 
 3. **Link to Supabase and run migrations** (one-time setup):
+
    ```bash
    npm run db:link
    npm run db:push
@@ -44,17 +47,20 @@ A family-friendly Secret Santa/Wichtel web app for organizing gift exchanges.
 ## Important npm Scripts
 
 ### Development
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 
 ### Database
+
 - `npm run db:link` - Link to Supabase project (one-time setup)
 - `npm run db:push` - Push migrations to remote database
 - `npm run db:pull` - Pull schema from remote database
 - `npm run db:diff` - Show schema differences
 
 ### Code Quality
+
 - `npm run format` - Format code with Prettier
 - `npm run lint` - Lint code with ESLint
 
@@ -77,6 +83,7 @@ supabase/
 See `supabase/README.md` for full schema documentation.
 
 **Core tables**:
+
 - `events` - Secret Santa events
 - `participants` - Event participants with unique tokens
 - `draws` - Who drew whom (drawer_id → drawn_id)
@@ -84,6 +91,7 @@ See `supabase/README.md` for full schema documentation.
 ## Mantine + TanStack Start SSR
 
 This app uses specific workarounds for Mantine SSR with TanStack Start:
+
 - CSS imported with `?url` query: `import mantineCss from '@mantine/core/styles.css?url'`
 - `mantineHtmlProps` spread on `<html>` element
 - `ColorSchemeScript` in `<head>`

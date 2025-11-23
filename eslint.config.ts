@@ -76,7 +76,10 @@ export default defineConfig([
     files: ["**/*.md"],
     plugins: { markdown },
     language: "markdown/commonmark",
-    extends: ["markdown/recommended"]
+    extends: ["markdown/recommended"],
+    rules: {
+      "markdown/no-missing-label-refs": "off"
+    }
   },
   {
     name: "project/css-modules-with-custom-properties",

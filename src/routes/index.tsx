@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Button, Stack, Title } from '@mantine/core'
+import { createFileRoute } from "@tanstack/react-router";
+import { Button, Stack, Title } from "@mantine/core";
 
-export const Route = createFileRoute('/')({
-  component: Home,
-})
+export const Route = createFileRoute("/")({
+  component: Home
+});
 
 function Home() {
   return (
@@ -13,5 +13,5 @@ function Home() {
         Test Mantine Button
       </Button>
     </Stack>
-  )
+  );
 }

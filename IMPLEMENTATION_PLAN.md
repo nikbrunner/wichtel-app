@@ -1,6 +1,7 @@
 # Secret Santa App - Implementation Plan
 
 ## Project Overview
+
 Building a simple Secret Santa/Wichtel app for family use (5-10 people) using TanStack Start, Supabase, and Mantine UI.
 
 ---
@@ -50,6 +51,7 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 ## Phase 2: Database Schema
 
 ### Manual Supabase Setup Steps
+
 - [x] Go to https://app.supabase.com and sign up (use GitHub)
 - [x] Click "New Project"
 - [x] Fill in:
@@ -75,6 +77,7 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 - [x] Verify tables were created (check Table Editor or use Supabase MCP)
 
 ### Code Setup
+
 - [x] Create `.env.example` file with template
 - [x] Create database migration file
   - [x] Create `events` table
@@ -85,8 +88,8 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 - [x] Install dotenv-cli for environment variable loading
 - [x] Configure npm scripts for database operations (db:link, db:push, db:pull, db:diff, db:reset)
 - [x] Set up Supabase MCP in .mcp.json with project ref fallback
-- [x] Update supabase.ts to use VITE_ prefixed env vars
-- [x] Update __root.tsx to re-enable user fetch
+- [x] Update supabase.ts to use VITE\_ prefixed env vars
+- [x] Update \_\_root.tsx to re-enable user fetch
 
 ---
 
@@ -110,6 +113,7 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 ## Phase 4: Route Implementation
 
 ### Landing/Create Event Route (`/`)
+
 - [ ] Create `src/routes/index.tsx`
 - [ ] Build form UI with Mantine components
   - [ ] TextInput for event name
@@ -120,6 +124,7 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 - [ ] Add copy-to-clipboard functionality
 
 ### Admin Overview Route (`/admin/$eventSlug`)
+
 - [ ] Create `src/routes/admin.$eventSlug.tsx`
 - [ ] Implement admin token validation
 - [ ] Build participant table UI
@@ -130,6 +135,7 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 - [ ] Implement regenerate link functionality
 
 ### Participant Draw Route (`/e/$eventSlug`)
+
 - [ ] Create `src/routes/e.$eventSlug.tsx`
 - [ ] Implement participant token validation
 - [ ] Build pre-draw UI

@@ -14,7 +14,7 @@
     "check:lint": "eslint .",
     "lint": "eslint . --fix",
     "check:types": "tsc --noEmit",
-    "check": "npm run check:types && npm run check:lint && npm run format:check",
+    "check": "npm run check:types && npm run check:lint && npm run check:format",
     "db:link": "dotenv -e .env -- sh -c 'supabase link --project-ref $SUPABASE_PROJECT_REF'",
     "db:push": "dotenv -e .env -- supabase db push",
     "db:pull": "dotenv -e .env -- supabase db pull",

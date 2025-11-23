@@ -5,6 +5,7 @@
 1. Create a new Supabase project at [https://app.supabase.com](https://app.supabase.com)
 
 2. Copy the `.env.example` file to `.env`:
+
    ```bash
    cp .env.example .env
    ```
@@ -17,9 +18,11 @@
    - Copy your **database password** and paste it as `DB_PASSWORD`
 
 4. Link your local project to Supabase (one-time setup):
+
    ```bash
    npm run db:link
    ```
+
    (It will prompt for your database password)
 
 5. Run the database migration:
@@ -48,6 +51,7 @@ After linking your project, you can use these npm scripts:
 ### Tables
 
 **events**
+
 - `id` (UUID): Primary key
 - `name` (TEXT): Event name (e.g., "Weihnachten 2025")
 - `slug` (TEXT): URL-friendly slug (unique)
@@ -55,6 +59,7 @@ After linking your project, you can use these npm scripts:
 - `created_at` (TIMESTAMP): Creation timestamp
 
 **participants**
+
 - `id` (UUID): Primary key
 - `event_id` (UUID): Foreign key to events
 - `name` (TEXT): Participant name
@@ -64,6 +69,7 @@ After linking your project, you can use these npm scripts:
 - Unique constraint on `(event_id, name)`
 
 **draws**
+
 - `id` (UUID): Primary key
 - `event_id` (UUID): Foreign key to events
 - `drawer_id` (UUID): Who is drawing (participant)
@@ -74,6 +80,7 @@ After linking your project, you can use these npm scripts:
 ## Row Level Security (RLS)
 
 Currently, this app uses token-based authentication without user accounts, so RLS is not configured. The anon key is safe to use on the client since:
+
 - All data access is controlled via unique tokens
 - No sensitive data is stored (just names and gift assignments)
 - Tokens are randomly generated UUIDs
