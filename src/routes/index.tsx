@@ -130,11 +130,13 @@ function Home() {
                       <Group gap="xs">
                         <TextInput
                           readOnly
-                          value={participant.link}
+                          value={`${window.location.origin}${participant.link}`}
                           size="xs"
                           style={{ flex: 1 }}
                         />
-                        <CopyButton value={participant.link}>
+                        <CopyButton
+                          value={`${window.location.origin}${participant.link}`}
+                        >
                           {({ copied, copy }) => (
                             <Tooltip label={copied ? "Kopiert!" : "Kopieren"}>
                               <ActionIcon

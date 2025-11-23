@@ -1,4 +1,4 @@
-import { createServerFn, getWebRequest } from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
 import { getSupabaseServerClient } from "../utils/supabase";
 import { generateToken } from "../utils/wichtel";
 import type {
@@ -62,11 +62,9 @@ export const regenerateParticipantLink = createServerFn({ method: "POST" })
       throw new Error(`Failed to regenerate link: ${updateError.message}`);
     }
 
-    const request = getWebRequest();
-    const origin = new URL(request.url).origin;
-
+    // Return link without origin - client will prepend it
     return {
       newToken,
-      newLink: `${origin}/e/${eventSlug}?token=${newToken}`
+      newLink: `/e/${eventSlug}?token=${newToken}`
     };
   });
