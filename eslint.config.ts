@@ -24,6 +24,14 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: globals.browser }
   },
+  {
+    name: "project/commonjs-files",
+    files: ["**/*.cjs"],
+    languageOptions: {
+      globals: globals.node,
+      sourceType: "commonjs"
+    }
+  },
   ...tseslint.configs.recommended,
   {
     name: "project/react-recommended-config",

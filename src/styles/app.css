@@ -19,5 +19,6 @@ body {
 
 /* Remove outline for mouse users, keep for keyboard users */
 .using-mouse * {
+  /* eslint-disable-next-line css/no-important */
   outline: none !important;
 }

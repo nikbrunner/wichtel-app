@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 import {
   HeadContent,
-  Link,
   Outlet,
   Scripts,
   createRootRoute,
@@ -23,7 +22,7 @@ import { getSupabaseServerClient } from '../utils/supabase'
 
 const fetchUser = createServerFn({ method: 'GET' }).handler(async () => {
   const supabase = getSupabaseServerClient()
-  const { data, error: _error } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getUser()
 
   if (!data.user?.email) {
     return null

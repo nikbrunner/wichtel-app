@@ -60,7 +60,7 @@ A family-friendly Secret Santa/Wichtel web app for organizing gift exchanges.
 
 ## Project Structure
 
-```
+```plaintext
 src/
 ├── routes/          # TanStack Start file-based routes
 │   ├── __root.tsx   # Root layout with Mantine setup
