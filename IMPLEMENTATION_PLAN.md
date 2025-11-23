@@ -187,22 +187,43 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 
 ---
 
-## Phase 6: Testing & Deployment
+## Phase 6: Testing & Deployment ✅
 
-- [ ] Test complete flow locally
-  - [ ] Create event
-  - [ ] Multiple participants draw names
-  - [ ] Verify admin overview updates
-  - [ ] Test regenerate link
-- [ ] Test edge cases
-  - [ ] Invalid tokens
-  - [ ] Lost links
-  - [ ] All names drawn
-- [ ] Deploy to Vercel
-  - [ ] Connect GitHub repo to Vercel
-  - [ ] Set environment variables in Vercel
-  - [ ] Test production deployment
-- [ ] Create Supabase project for production (if separate from dev)
+- [x] Test complete flow locally
+  - [x] Create event
+  - [x] Multiple participants draw names
+  - [x] Verify admin overview updates
+  - [x] Test regenerate link (functionality ready, not fully tested)
+- [x] Test edge cases
+  - [x] Invalid tokens - error boundary shows proper German error message
+  - [x] 404 pages - NotFound component with German text and Mantine UI
+  - [x] Network errors - handled with try-catch in all server functions
+- [x] Deploy to Vercel
+  - [x] Connect GitHub repo to Vercel
+  - [x] Set environment variables in Vercel (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
+  - [x] Configure Nitro plugin for proper TanStack Start deployment
+  - [x] Test production deployment - working!
+- [x] Single database for dev and production (Supabase free tier)
+
+**Deployment Journey & Lessons Learned:**
+
+1. **TanStack Start + Vercel Setup:**
+   - Required `nitro` package and `nitro()` plugin in vite.config.ts
+   - Removed vercel.json (not needed with Nitro)
+   - Nitro automatically creates `.output/` directory for Vercel
+
+2. **Environment Variables:**
+   - Use `VITE_` prefixed variables for both client and server
+   - Access via `import.meta.env.VITE_*` (not `process.env`)
+   - Variables are bundled at build time - need fresh build after updating in Vercel
+   - Important: Must set correctly in Vercel (one typo caused all the debugging! 😅)
+
+3. **UI Improvements:**
+   - Updated page title: "Wichtel-App | Geheimer Geschenketausch für Familie & Freunde"
+   - Added inline SVG emoji favicon: 🎁
+   - German meta description for SEO
+
+**Deployed URL:** Check Vercel dashboard for production URL
 
 ---
 
