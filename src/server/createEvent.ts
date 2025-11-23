@@ -1,4 +1,4 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, getWebRequest } from "@tanstack/react-start";
 import { getSupabaseServerClient } from "../utils/supabase";
 import { generateToken, generateSlug } from "../utils/wichtel";
 import type {
@@ -63,10 +63,8 @@ export const createEvent = createServerFn({ method: "POST" })
       );
     }
 
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? process.env.VITE_APP_URL || "https://wichtel-app.vercel.app"
-        : "http://localhost:3000";
+    const request = getWebRequest();
+    const origin = new URL(request.url).origin;
 
     return {
       eventSlug,
@@ -74,7 +72,7 @@ export const createEvent = createServerFn({ method: "POST" })
       participants: participants.map((participant: Participant) => ({
         name: participant.name,
         token: participant.token,
-        link: `${baseUrl}/e/${eventSlug}?token=${participant.token}`
+        link: `${origin}/e/${eventSlug}?token=${participant.token}`
       }))
     };
   });

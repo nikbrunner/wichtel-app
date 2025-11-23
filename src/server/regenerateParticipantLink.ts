@@ -1,4 +1,4 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, getWebRequest } from "@tanstack/react-start";
 import { getSupabaseServerClient } from "../utils/supabase";
 import { generateToken } from "../utils/wichtel";
 import type {
@@ -62,13 +62,11 @@ export const regenerateParticipantLink = createServerFn({ method: "POST" })
       throw new Error(`Failed to regenerate link: ${updateError.message}`);
     }
 
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? process.env.VITE_APP_URL || "https://wichtel-app.vercel.app"
-        : "http://localhost:3000";
+    const request = getWebRequest();
+    const origin = new URL(request.url).origin;
 
     return {
       newToken,
-      newLink: `${baseUrl}/e/${eventSlug}?token=${newToken}`
+      newLink: `${origin}/e/${eventSlug}?token=${newToken}`
     };
   });
