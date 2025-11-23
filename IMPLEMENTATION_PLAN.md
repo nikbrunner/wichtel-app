@@ -27,22 +27,23 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 - [x] Create `postcss.config.cjs` with Mantine preset
 - [x] Update `vite.config.ts` with SSR externalization for Mantine
 - [x] Update `src/routes/__root.tsx` with MantineProvider and CSS imports
-- [ ] Delete unnecessary routes
-  - [ ] Delete `src/routes/login.tsx`
-  - [ ] Delete `src/routes/signup.tsx`
-  - [ ] Delete `src/routes/logout.tsx`
-  - [ ] Delete `src/routes/_authed.tsx`
-  - [ ] Delete `src/routes/_authed/` directory
-- [ ] Delete unused components
-  - [ ] Delete `src/components/Auth.tsx`
-  - [ ] Delete `src/components/Login.tsx`
-- [ ] Keep useful utilities
-  - [ ] Keep `src/utils/supabase.ts`
-  - [ ] Keep `src/hooks/useMutation.ts`
-  - [ ] Keep `src/components/DefaultCatchBoundary.tsx`
-  - [ ] Keep `src/components/NotFound.tsx`
-- [ ] Delete `src/utils/posts.ts` (demo code)
-- [ ] Update `src/styles/app.css` to remove Tailwind, add basic resets
+- [x] Delete unnecessary routes
+  - [x] Delete `src/routes/login.tsx`
+  - [x] Delete `src/routes/signup.tsx`
+  - [x] Delete `src/routes/logout.tsx`
+  - [x] Delete `src/routes/_authed.tsx`
+  - [x] Delete `src/routes/_authed/` directory
+- [x] Delete unused components
+  - [x] Delete `src/components/Auth.tsx`
+  - [x] Delete `src/components/Login.tsx`
+- [x] Keep useful utilities
+  - [x] Keep `src/utils/supabase.ts`
+  - [x] Keep `src/hooks/useMutation.ts`
+  - [x] Keep `src/components/DefaultCatchBoundary.tsx`
+  - [x] Keep `src/components/NotFound.tsx`
+- [x] Delete `src/utils/posts.ts` (demo code)
+- [x] Update `src/styles/app.css` to remove Tailwind, add basic resets
+- [x] Clean up `__root.tsx` navigation (remove auth/posts links)
 
 ---
 
