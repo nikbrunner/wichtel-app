@@ -13,11 +13,35 @@
    - Go to Project Settings > API
    - Copy the **Project URL** and paste it as `VITE_SUPABASE_URL`
    - Copy the **anon/public key** and paste it as `VITE_SUPABASE_ANON_KEY`
+   - Copy the **project reference** from your URL (e.g., `xskaqpxcxdpepaoirowf`) and paste it as `SUPABASE_PROJECT_REF`
+   - Copy your **database password** and paste it as `DB_PASSWORD`
 
-4. Run the migration:
-   - Go to the SQL Editor in your Supabase dashboard
-   - Copy the contents of `migrations/20250123_create_wichtel_tables.sql`
-   - Paste and run it
+4. Link your local project to Supabase (one-time setup):
+   ```bash
+   npm run db:link
+   ```
+   (It will prompt for your database password)
+
+5. Run the database migration:
+   ```bash
+   npm run db:push
+   ```
+
+## Database Scripts
+
+After linking your project, you can use these npm scripts:
+
+- `npm run db:link` - Link your local project to Supabase (one-time setup)
+- `npm run db:push` - Push new migrations to the remote database
+- `npm run db:pull` - Pull schema changes from the remote database
+- `npm run db:diff` - Show differences between local and remote schema
+- `npm run db:reset` - Reset local database to current migrations
+
+## Creating New Migrations
+
+1. Create a new file in `supabase/migrations/` with the format: `YYYYMMDD_description.sql`
+2. Write your SQL changes in the file
+3. Run `npm run db:push` to apply the migration to your remote database
 
 ## Database Schema
 

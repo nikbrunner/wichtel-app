@@ -49,18 +49,44 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 
 ## Phase 2: Database Schema
 
-- [x] Create Supabase project (or use existing) - **Manual step**
-- [x] Set up environment variables
-  - [x] Create `.env.example` file with template
-  - [x] Add `VITE_SUPABASE_URL` placeholder
-  - [x] Add `VITE_SUPABASE_ANON_KEY` placeholder
+### Manual Supabase Setup Steps
+- [x] Go to https://app.supabase.com and sign up (use GitHub)
+- [x] Click "New Project"
+- [x] Fill in:
+  - [x] Organization: Create new or select existing (used "Personal" free tier)
+  - [x] Project name: `wichtel-app`
+  - [x] Database password: Generate strong password (saved in .env)
+  - [x] Region: Europe
+- [x] Click "Create new project" and wait ~2 minutes for provisioning
+- [x] Once ready, go to Project Settings → API
+- [x] Copy the Project URL (Project ref: xskaqpxcxdpepaoirowf)
+- [x] Copy the `anon` `public` key (NOT the service_role key!)
+- [x] Go to https://supabase.com/dashboard/account/tokens
+- [x] Generate access token for CLI/MCP
+- [x] Create `.env` file in project root (copy from `.env.example`)
+- [x] Fill in all environment variables:
+  - [x] VITE_SUPABASE_URL
+  - [x] VITE_SUPABASE_ANON_KEY
+  - [x] SUPABASE_PROJECT_REF
+  - [x] SUPABASE_ACCESS_TOKEN
+  - [x] DB_PASSWORD
+- [x] Link Supabase CLI: `npm run db:link`
+- [x] Run migration: `npm run db:push`
+- [x] Verify tables were created (check Table Editor or use Supabase MCP)
+
+### Code Setup
+- [x] Create `.env.example` file with template
 - [x] Create database migration file
   - [x] Create `events` table
   - [x] Create `participants` table
   - [x] Create `draws` table
   - [x] Add indexes for performance
 - [x] Create Supabase setup README
-- [ ] Test Supabase connection - **Pending actual Supabase project setup**
+- [x] Install dotenv-cli for environment variable loading
+- [x] Configure npm scripts for database operations (db:link, db:push, db:pull, db:diff, db:reset)
+- [x] Set up Supabase MCP in .mcp.json with project ref fallback
+- [x] Update supabase.ts to use VITE_ prefixed env vars
+- [x] Update __root.tsx to re-enable user fetch
 
 ---
 

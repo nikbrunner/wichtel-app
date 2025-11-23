@@ -36,11 +36,10 @@ const fetchUser = createServerFn({ method: 'GET' }).handler(async () => {
 
 export const Route = createRootRoute({
   beforeLoad: async () => {
-    // TODO: Re-enable after setting up Supabase env vars
-    // const user = await fetchUser()
+    const user = await fetchUser()
 
     return {
-      user: null,
+      user,
     }
   },
   head: () => ({

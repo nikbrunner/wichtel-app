@@ -3,8 +3,8 @@ import { createServerClient } from '@supabase/ssr'
 
 export function getSupabaseServerClient() {
   return createServerClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.VITE_SUPABASE_URL!,
+    process.env.VITE_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
