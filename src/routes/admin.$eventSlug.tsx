@@ -8,7 +8,10 @@ import {
   Button,
   Alert,
   Group,
-  Badge
+  Badge,
+  TextInput,
+  CopyButton,
+  Tooltip
 } from "@mantine/core";
 import { useState } from "react";
 import { getEventDetails } from "../server/getEventDetails";
@@ -55,14 +58,20 @@ function AdminOverview() {
 
   const [regenerating, setRegenerating] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [regeneratedLink, setRegeneratedLink] = useState<{
+    participantName: string;
+    link: string;
+  } | null>(null);
 
   const drawnCount = eventDetails.participants.filter(p => p.hasDrawn).length;
   const totalCount = eventDetails.participants.length;
 
-  const handleRegenerateLink = async (participantId: string) => {
+  const handleRegenerateLink = async (
+    participantId: string,
+    participantName: string
+  ) => {
     setError(null);
-    setSuccessMessage(null);
+    setRegeneratedLink(null);
     setRegenerating(participantId);
 
     try {
@@ -74,9 +83,10 @@ function AdminOverview() {
         }
       });
 
-      setSuccessMessage(
-        `Neuer Link generiert! Sende diesen Link an den Teilnehmer:\n${result.newLink}`
-      );
+      setRegeneratedLink({
+        participantName,
+        link: `${window.location.origin}${result.newLink}`
+      });
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Fehler beim Regenerieren des Links"
@@ -111,14 +121,30 @@ function AdminOverview() {
           </Badge>
         </Group>
 
-        {successMessage && (
+        {regeneratedLink && (
           <Alert
             color="green"
-            title="Erfolg"
+            title="Neuer Link generiert!"
             mb="md"
-            onClose={() => setSuccessMessage(null)}
+            withCloseButton
+            onClose={() => setRegeneratedLink(null)}
           >
-            {successMessage}
+            <Text size="sm" mb="xs">
+              Sende diesen Link an <strong>{regeneratedLink.participantName}</strong>
+              :
+            </Text>
+            <Group gap="xs">
+              <TextInput readOnly value={regeneratedLink.link} style={{ flex: 1 }} />
+              <CopyButton value={regeneratedLink.link}>
+                {({ copied, copy }) => (
+                  <Tooltip label={copied ? "Kopiert!" : "Kopieren"}>
+                    <Button onClick={copy} variant={copied ? "filled" : "light"}>
+                      {copied ? "✓" : "Kopieren"}
+                    </Button>
+                  </Tooltip>
+                )}
+              </CopyButton>
+            </Group>
           </Alert>
         )}
 
@@ -164,7 +190,9 @@ function AdminOverview() {
                     size="xs"
                     variant="light"
                     color="orange"
-                    onClick={() => handleRegenerateLink(participant.id)}
+                    onClick={() =>
+                      handleRegenerateLink(participant.id, participant.name)
+                    }
                     loading={regenerating === participant.id}
                     disabled={regenerating !== null}
                   >
