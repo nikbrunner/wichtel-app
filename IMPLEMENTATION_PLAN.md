@@ -101,12 +101,12 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
 - [x] Create `src/types/database.ts` for TypeScript types
   - [x] Database entity types (Event, Participant, Draw)
   - [x] Input/Output types for all server functions
-- [ ] Create server functions in `src/server/` directory
+- [x] Create server functions in `src/server/` directory
   - [x] `createEvent.ts` - Creates event + participants with tokens
-  - [ ] `drawName.ts` - Drawing algorithm with validation
-  - [ ] `getEventDetails.ts` - Admin overview data
-  - [ ] `getParticipantInfo.ts` - Participant view data
-  - [ ] `regenerateParticipantLink.ts` - Reset individual participant
+  - [x] `drawName.ts` - Drawing algorithm with validation (excludes self and already-drawn)
+  - [x] `getEventDetails.ts` - Admin overview data (GET with query params)
+  - [x] `getParticipantInfo.ts` - Participant view data (GET with token)
+  - [x] `regenerateParticipantLink.ts` - Reset individual participant (deletes draw, generates new token)
 
 ---
 
