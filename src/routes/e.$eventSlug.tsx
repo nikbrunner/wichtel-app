@@ -4,13 +4,9 @@ import { useState } from "react";
 import { getParticipantInfo } from "../server/getParticipantInfo";
 import { drawName } from "../server/drawName";
 
-type ParticipantSearch = {
-  token: string;
-};
-
 export const Route = createFileRoute("/e/$eventSlug")({
   component: ParticipantDraw,
-  validateSearch: (search: Record<string, unknown>): ParticipantSearch => {
+  validateSearch: search => {
     const token = search?.token as string;
     if (!token) {
       throw new Error("Participant token is required");
