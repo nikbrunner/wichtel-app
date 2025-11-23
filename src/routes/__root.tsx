@@ -9,9 +9,15 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { createServerFn } from '@tanstack/react-start'
 import * as React from 'react'
+import {
+  MantineProvider,
+  mantineHtmlProps,
+  ColorSchemeScript,
+} from '@mantine/core'
 import { DefaultCatchBoundary } from '../components/DefaultCatchBoundary'
 import { NotFound } from '../components/NotFound'
 import appCss from '../styles/app.css?url'
+import mantineCss from '@mantine/core/styles.css?url'
 import { seo } from '../utils/seo'
 import { getSupabaseServerClient } from '../utils/supabase'
 
@@ -30,10 +36,11 @@ const fetchUser = createServerFn({ method: 'GET' }).handler(async () => {
 
 export const Route = createRootRoute({
   beforeLoad: async () => {
-    const user = await fetchUser()
+    // TODO: Re-enable after setting up Supabase env vars
+    // const user = await fetchUser()
 
     return {
-      user,
+      user: null,
     }
   },
   head: () => ({
@@ -52,6 +59,7 @@ export const Route = createRootRoute({
       }),
     ],
     links: [
+      { rel: 'stylesheet', href: mantineCss },
       { rel: 'stylesheet', href: appCss },
       {
         rel: 'apple-touch-icon',
@@ -97,43 +105,46 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const { user } = Route.useRouteContext()
 
   return (
-    <html>
+    <html lang="en" {...mantineHtmlProps}>
       <head>
+        <ColorSchemeScript />
         <HeadContent />
       </head>
       <body>
-        <div className="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              className: 'font-bold',
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{' '}
-          <Link
-            to="/posts"
-            activeProps={{
-              className: 'font-bold',
-            }}
-          >
-            Posts
-          </Link>
-          <div className="ml-auto">
-            {user ? (
-              <>
-                <span className="mr-2">{user.email}</span>
-                <Link to="/logout">Logout</Link>
-              </>
-            ) : (
-              <Link to="/login">Login</Link>
-            )}
+        <MantineProvider withGlobalClasses={false}>
+          <div className="p-2 flex gap-2 text-lg">
+            <Link
+              to="/"
+              activeProps={{
+                className: 'font-bold',
+              }}
+              activeOptions={{ exact: true }}
+            >
+              Home
+            </Link>{' '}
+            <Link
+              to="/posts"
+              activeProps={{
+                className: 'font-bold',
+              }}
+            >
+              Posts
+            </Link>
+            <div className="ml-auto">
+              {user ? (
+                <>
+                  <span className="mr-2">{user.email}</span>
+                  <Link to="/logout">Logout</Link>
+                </>
+              ) : (
+                <Link to="/login">Login</Link>
+              )}
+            </div>
           </div>
-        </div>
-        <hr />
-        {children}
-        <TanStackRouterDevtools position="bottom-right" />
+          <hr />
+          {children}
+          <TanStackRouterDevtools position="bottom-right" />
+        </MantineProvider>
         <Scripts />
       </body>
     </html>

@@ -1,12 +1,17 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Button, Stack, Title } from '@mantine/core'
+
 export const Route = createFileRoute('/')({
   component: Home,
 })
 
 function Home() {
   return (
-    <div className="p-2">
-      <h3>Welcome Home!!!</h3>
-    </div>
+    <Stack p="md" gap="md">
+      <Title order={2}>Welcome Home!!!</Title>
+      <Button variant="filled" color="blue">
+        Test Mantine Button
+      </Button>
+    </Stack>
   )
 }

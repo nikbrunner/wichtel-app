@@ -17,16 +17,16 @@ Building a simple Secret Santa/Wichtel app for family use (5-10 people) using Ta
   - [x] Create `prettier.config.ts` config
   - [x] Create `eslint.config.ts` config
   - [x] Add format/lint scripts to package.json
-- [ ] Remove Tailwind CSS
-  - [ ] Uninstall: `npm uninstall tailwindcss @tailwindcss/postcss`
-  - [ ] Delete `postcss.config.mjs`
-  - [ ] Remove Tailwind imports from `src/styles/app.css`
-- [ ] Install Mantine packages
-  - [ ] `npm install @mantine/core @mantine/hooks`
-  - [ ] `npm install --save-dev postcss postcss-preset-mantine postcss-simple-vars`
-- [ ] Create `postcss.config.cjs` with Mantine preset
-- [ ] Update `vite.config.ts` with SSR externalization for Mantine
-- [ ] Update `src/routes/__root.tsx` with MantineProvider and CSS imports
+- [x] Remove Tailwind CSS
+  - [x] Uninstall: `npm uninstall tailwindcss @tailwindcss/postcss`
+  - [x] Delete `postcss.config.mjs`
+  - [x] Remove Tailwind imports from `src/styles/app.css`
+- [x] Install Mantine packages
+  - [x] `npm install @mantine/core @mantine/hooks`
+  - [x] `npm install --save-dev postcss postcss-preset-mantine postcss-simple-vars`
+- [x] Create `postcss.config.cjs` with Mantine preset
+- [x] Update `vite.config.ts` with SSR externalization for Mantine
+- [x] Update `src/routes/__root.tsx` with MantineProvider and CSS imports
 - [ ] Delete unnecessary routes
   - [ ] Delete `src/routes/login.tsx`
   - [ ] Delete `src/routes/signup.tsx`
