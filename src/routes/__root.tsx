@@ -17,11 +17,8 @@ import {
   Group,
   Button,
   Text,
-  Container,
-  Burger,
-  Stack
+  Container
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { DefaultCatchBoundary } from "../components/DefaultCatchBoundary";
 import { NotFound } from "../components/NotFound";
 import appCss from "../styles/app.css?url";
@@ -88,8 +85,6 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const { user } = Route.useRouteContext();
-  const [mobileNavOpened, { toggle: toggleMobileNav, close: closeMobileNav }] =
-    useDisclosure();
 
   return (
     <RootDocument>
@@ -101,65 +96,50 @@ function RootComponent() {
               <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
                 <Group gap="xs">
                   <Text size="xl">🎁</Text>
-                  <Text fw={700} size="lg">
+                  <Text fw={700} size="lg" visibleFrom="xs">
                     Wichtel-App
                   </Text>
                 </Group>
               </Link>
 
-              {/* Desktop Navigation */}
+              {/* Navigation */}
               {user ? (
-                <Group gap="md" visibleFrom="sm">
-                  <Text size="sm" c="dimmed">
+                <Group gap="sm">
+                  <Text size="sm" c="dimmed" visibleFrom="sm">
                     {user.email}
                   </Text>
-                  <Button component={Link} to="/auth/logout" variant="light">
+                  <Button
+                    component={Link}
+                    to="/auth/logout"
+                    variant="light"
+                    size="sm"
+                  >
                     Logout
                   </Button>
                 </Group>
               ) : (
-                <Group gap="md" visibleFrom="sm">
-                  <Button component={Link} to="/auth/login" variant="subtle">
+                <Group gap="sm">
+                  <Button
+                    component={Link}
+                    to="/auth/login"
+                    variant="subtle"
+                    size="sm"
+                  >
                     Login
                   </Button>
-                  <Button component={Link} to="/auth/signup" variant="filled">
+                  <Button
+                    component={Link}
+                    to="/auth/signup"
+                    variant="filled"
+                    size="sm"
+                  >
                     Sign up
                   </Button>
                 </Group>
               )}
-
-              {/* Mobile Burger */}
-              {user && (
-                <Burger
-                  opened={mobileNavOpened}
-                  onClick={toggleMobileNav}
-                  hiddenFrom="sm"
-                  size="sm"
-                />
-              )}
             </Group>
           </Container>
         </AppShell.Header>
-
-        {/* Mobile Navigation Drawer */}
-        {user && mobileNavOpened && (
-          <Container size="xl" py="md" hiddenFrom="sm">
-            <Stack gap="sm">
-              <Text size="sm" c="dimmed" ta="center">
-                {user.email}
-              </Text>
-              <Button
-                component={Link}
-                to="/auth/logout"
-                variant="light"
-                fullWidth
-                onClick={closeMobileNav}
-              >
-                Logout
-              </Button>
-            </Stack>
-          </Container>
-        )}
 
         <AppShell.Main>
           <Container size="xl">
