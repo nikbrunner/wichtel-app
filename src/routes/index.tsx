@@ -127,7 +127,7 @@ function EventCard({ event }: { event: EventWithStats }) {
         <Group gap="sm" mt="sm">
           <Button
             component={Link}
-            to={`/admin/${event.slug}?token=${event.admin_token}`}
+            to={`/admin/${event.slug}`}
             variant="light"
             size="sm"
           >

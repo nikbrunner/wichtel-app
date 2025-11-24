@@ -89,7 +89,7 @@ export type ParticipantInfoOutput = {
 
 export type RegenerateParticipantLinkInput = {
   eventSlug: string;
-  adminToken: string;
+  adminToken?: string;
   participantId: string;
 };
 

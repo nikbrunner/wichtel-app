@@ -1,28 +1,51 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseServerClient } from "../utils/supabase";
+import { getSupabaseServerClient, getCurrentUser } from "../utils/supabase";
 import type { EventDetailsOutput, Event, Participant } from "../types/database";
 
 export const getEventDetails = createServerFn({ method: "GET" })
-  .inputValidator((data: { eventSlug: string; adminToken: string }) => data)
+  .inputValidator((data: { eventSlug: string; adminToken?: string }) => data)
   .handler(async ({ data }): Promise<EventDetailsOutput> => {
     const { eventSlug, adminToken } = data;
 
-    if (!eventSlug || !adminToken) {
-      throw new Error("Event slug and admin token are required");
+    if (!eventSlug) {
+      throw new Error("Event slug is required");
     }
 
     const supabase = getSupabaseServerClient();
+    const user = await getCurrentUser(supabase);
 
-    // Verify admin token and get event
-    const { data: event, error: eventError } = await supabase
-      .from("events")
-      .select("*")
-      .eq("slug", eventSlug)
-      .eq("admin_token", adminToken)
-      .single<Event>();
+    let event: Event | null = null;
 
-    if (eventError || !event) {
-      throw new Error("Invalid event or admin token");
+    // Try auth-based access first (if user is logged in)
+    if (user) {
+      const { data: authEvent, error: authError } = await supabase
+        .from("events")
+        .select("*")
+        .eq("slug", eventSlug)
+        .eq("admin_user_id", user.id)
+        .single<Event>();
+
+      if (authEvent && !authError) {
+        event = authEvent;
+      }
+    }
+
+    // Fall back to token-based access if auth failed and token provided
+    if (!event && adminToken) {
+      const { data: tokenEvent, error: tokenError } = await supabase
+        .from("events")
+        .select("*")
+        .eq("slug", eventSlug)
+        .eq("admin_token", adminToken)
+        .single<Event>();
+
+      if (tokenEvent && !tokenError) {
+        event = tokenEvent;
+      }
+    }
+
+    if (!event) {
+      throw new Error("Event not found or access denied");
     }
 
     // Get all participants for this event

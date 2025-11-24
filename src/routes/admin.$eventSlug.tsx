@@ -18,16 +18,13 @@ import { getEventDetails } from "../server/getEventDetails";
 import { regenerateParticipantLink } from "../server/regenerateParticipantLink";
 
 type AdminSearch = {
-  token: string;
+  token?: string;
 };
 
 export const Route = createFileRoute("/admin/$eventSlug")({
   component: AdminOverview,
   validateSearch: (search: Record<string, unknown>): AdminSearch => {
-    const token = search?.token as string;
-    if (!token) {
-      throw new Error("Admin token is required");
-    }
+    const token = search?.token as string | undefined;
     return { token };
   },
   loaderDeps: ({ search }) => ({ adminToken: search.token }),
