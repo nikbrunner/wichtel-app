@@ -111,10 +111,7 @@ function RootComponent() {
               <Group gap="md" visibleFrom="sm">
                 {user ? (
                   <>
-                    <Button component={Link} to="/dashboard" variant="subtle">
-                      Dashboard
-                    </Button>
-                    <Button component={Link} to="/" variant="subtle">
+                    <Button component={Link} to="/new-event" variant="subtle">
                       Neues Event
                     </Button>
                     <Text size="sm" c="dimmed">
@@ -158,16 +155,7 @@ function RootComponent() {
                   </Text>
                   <Button
                     component={Link}
-                    to="/dashboard"
-                    variant="subtle"
-                    fullWidth
-                    onClick={closeMobileNav}
-                  >
-                    Dashboard
-                  </Button>
-                  <Button
-                    component={Link}
-                    to="/"
+                    to="/new-event"
                     variant="subtle"
                     fullWidth
                     onClick={closeMobileNav}

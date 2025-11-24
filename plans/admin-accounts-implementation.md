@@ -1020,19 +1020,20 @@ feat(events): require auth and add event date to creation flow
 - Update success screen with dashboard link
 ```
 
-### Commit 7: ⬜ Dashboard Route & Components (Part 1 - Basic Layout)
+### Commit 7: ✅ Dashboard Route & Components (Part 1 - Basic Layout)
 
 **Design Notes** (from user feedback):
 
-- Dashboard should be the default view after login (change navigation)
+- Dashboard should be at `/` (home route) - more intuitive UX ✅
+- Event creation moved to `/new-event` route
 - Layout structure:
   ```
   <running events section> | <new event button>
   ---
   <past events section>
   ```
-- "New Event" button should navigate to current form (will become modal later)
-- Need test data: Create multiple events (some past, some future) for testing
+- "New Event" button navigates to `/new-event` (will become modal later)
+- Test data created: 4 events (1 past, 3 upcoming) with 13 participants
 
 **Changes**:
 

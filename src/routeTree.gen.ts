@@ -9,22 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NewEventRouteImport } from './routes/new-event'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as EEventSlugRouteImport } from './routes/e.$eventSlug'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AdminEventSlugRouteImport } from './routes/admin.$eventSlug'
 
+const NewEventRoute = NewEventRouteImport.update({
+  id: '/new-event',
+  path: '/new-event',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EEventSlugRoute = EEventSlugRouteImport.update({
@@ -55,86 +55,86 @@ const AdminEventSlugRoute = AdminEventSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/new-event': typeof NewEventRoute
   '/admin/$eventSlug': typeof AdminEventSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/signup': typeof AuthSignupRoute
   '/e/$eventSlug': typeof EEventSlugRoute
-  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/new-event': typeof NewEventRoute
   '/admin/$eventSlug': typeof AdminEventSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/signup': typeof AuthSignupRoute
   '/e/$eventSlug': typeof EEventSlugRoute
-  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/new-event': typeof NewEventRoute
   '/admin/$eventSlug': typeof AdminEventSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/signup': typeof AuthSignupRoute
   '/e/$eventSlug': typeof EEventSlugRoute
-  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/new-event'
     | '/admin/$eventSlug'
     | '/auth/login'
     | '/auth/logout'
     | '/auth/signup'
     | '/e/$eventSlug'
-    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/new-event'
     | '/admin/$eventSlug'
     | '/auth/login'
     | '/auth/logout'
     | '/auth/signup'
     | '/e/$eventSlug'
-    | '/dashboard'
   id:
     | '__root__'
     | '/'
+    | '/new-event'
     | '/admin/$eventSlug'
     | '/auth/login'
     | '/auth/logout'
     | '/auth/signup'
     | '/e/$eventSlug'
-    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NewEventRoute: typeof NewEventRoute
   AdminEventSlugRoute: typeof AdminEventSlugRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthLogoutRoute: typeof AuthLogoutRoute
   AuthSignupRoute: typeof AuthSignupRoute
   EEventSlugRoute: typeof EEventSlugRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/new-event': {
+      id: '/new-event'
+      path: '/new-event'
+      fullPath: '/new-event'
+      preLoaderRoute: typeof NewEventRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/e/$eventSlug': {
@@ -177,12 +177,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NewEventRoute: NewEventRoute,
   AdminEventSlugRoute: AdminEventSlugRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthLogoutRoute: AuthLogoutRoute,
   AuthSignupRoute: AuthSignupRoute,
   EEventSlugRoute: EEventSlugRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
