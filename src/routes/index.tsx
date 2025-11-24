@@ -12,8 +12,10 @@ import {
   Text,
   Paper,
   Divider,
-  Alert
+  Alert,
+  useMantineTheme
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { getAdminEvents } from "../server/getAdminEvents";
 import { EventListItem } from "../components/EventListItem";
 import { EventListSkeleton } from "../components/EventListSkeleton";
@@ -34,16 +36,22 @@ export const Route = createFileRoute("/")({
 });
 
 function PendingComponent() {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+
   return (
     <Stack gap={{ base: "md", sm: "xl" }} p={{ base: "xs", sm: "xl" }}>
       <Group justify="space-between" align="center">
         <Title order={1}>Deine Wichtel-Events</Title>
-        <Button component={Link} to="/new-event" size="md" visibleFrom="sm">
-          + Neues Event
-        </Button>
-        <Button component={Link} to="/new-event" size="xs" hiddenFrom="sm">
-          + Event
-        </Button>
+        {isMobile ? (
+          <Button component={Link} to="/new-event" size="xs">
+            + Event
+          </Button>
+        ) : (
+          <Button component={Link} to="/new-event" size="md">
+            + Neues Event
+          </Button>
+        )}
       </Group>
 
       <div>
@@ -72,6 +80,8 @@ function ErrorComponent({ error }: ErrorComponentProps) {
 
 function Component() {
   const { events } = Route.useLoaderData();
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   // Split events into running (future) and past
   const runningEvents = events.filter(e => !e.is_past);
@@ -82,12 +92,15 @@ function Component() {
       {/* Header with New Event Button */}
       <Group justify="space-between" align="center">
         <Title order={1}>Deine Wichtel-Events</Title>
-        <Button component={Link} to="/new-event" size="md" visibleFrom="sm">
-          + Neues Event
-        </Button>
-        <Button component={Link} to="/new-event" size="xs" hiddenFrom="sm">
-          + Event
-        </Button>
+        {isMobile ? (
+          <Button component={Link} to="/new-event" size="xs">
+            + Event
+          </Button>
+        ) : (
+          <Button component={Link} to="/new-event" size="md">
+            + Neues Event
+          </Button>
+        )}
       </Group>
 
       {/* Running Events Section */}
