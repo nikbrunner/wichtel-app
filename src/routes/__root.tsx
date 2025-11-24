@@ -111,11 +111,11 @@ function RootComponent() {
               <Group gap="md" visibleFrom="sm">
                 {user ? (
                   <>
-                    <Button component={Link} to="/" variant="subtle">
-                      Create Event
+                    <Button component={Link} to="/dashboard" variant="subtle">
+                      Dashboard
                     </Button>
                     <Button component={Link} to="/" variant="subtle">
-                      Dashboard
+                      Neues Event
                     </Button>
                     <Text size="sm" c="dimmed">
                       {user.email}
@@ -158,12 +158,12 @@ function RootComponent() {
                   </Text>
                   <Button
                     component={Link}
-                    to="/"
+                    to="/dashboard"
                     variant="subtle"
                     fullWidth
                     onClick={closeMobileNav}
                   >
-                    Create Event
+                    Dashboard
                   </Button>
                   <Button
                     component={Link}
@@ -172,7 +172,7 @@ function RootComponent() {
                     fullWidth
                     onClick={closeMobileNav}
                   >
-                    Dashboard
+                    Neues Event
                   </Button>
                   <Button
                     component={Link}

@@ -973,7 +973,7 @@ feat(ui): add authentication-aware navigation
 - Mobile-responsive navigation layout
 ```
 
-### Commit 6: Update Event Creation with Auth & Date ⬜
+### Commit 6: Update Event Creation with Auth & Date ✅
 
 **Changes**:
 
@@ -1022,11 +1022,25 @@ feat(events): require auth and add event date to creation flow
 
 ### Commit 7: ⬜ Dashboard Route & Components (Part 1 - Basic Layout)
 
+**Design Notes** (from user feedback):
+
+- Dashboard should be the default view after login (change navigation)
+- Layout structure:
+  ```
+  <running events section> | <new event button>
+  ---
+  <past events section>
+  ```
+- "New Event" button should navigate to current form (will become modal later)
+- Need test data: Create multiple events (some past, some future) for testing
+
 **Changes**:
 
 - Create `src/routes/dashboard/index.tsx` (basic layout, no components yet)
 - Create `src/server/getAdminEvents.ts`
 - Create `src/hooks/useClipboard.ts`
+- Update navigation to make dashboard the default view
+- Create test events (past and future) for development
 
 **Testing Before Commit**:
 

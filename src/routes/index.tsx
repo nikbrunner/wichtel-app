@@ -164,7 +164,7 @@ function Home() {
           <Button onClick={resetForm} variant="light">
             Neues Event erstellen
           </Button>
-          <Button component={Link} to="/" variant="filled">
+          <Button component={Link} to="/dashboard" variant="filled">
             Zum Dashboard
           </Button>
         </Group>
