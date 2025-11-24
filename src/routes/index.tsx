@@ -40,7 +40,11 @@ function PendingComponent() {
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   return (
-    <Stack gap={{ base: "md", sm: "xl" }} p={{ base: "xs", sm: "xl" }}>
+    <Stack
+      // @ts-expect-error - Mantine supports responsive objects at runtime, but Stack.gap type definition doesn't reflect this
+      gap={{ base: "md", sm: "xl" }}
+      p={{ base: "xs", sm: "xl" }}
+    >
       <Group justify="space-between" align="center">
         <Title order={1}>Deine Wichtel-Events</Title>
         {isMobile ? (
@@ -66,7 +70,11 @@ function PendingComponent() {
 
 function ErrorComponent({ error }: ErrorComponentProps) {
   return (
-    <Stack gap={{ base: "md", sm: "xl" }} p={{ base: "xs", sm: "xl" }}>
+    <Stack
+      // @ts-expect-error - Mantine supports responsive objects at runtime, but Stack.gap type definition doesn't reflect this
+      gap={{ base: "md", sm: "xl" }}
+      p={{ base: "xs", sm: "xl" }}
+    >
       <Title order={1}>Fehler beim Laden der Events</Title>
       <Alert color="red" title="Es ist ein Fehler aufgetreten">
         <Text>{error.message || "Unbekannter Fehler beim Laden der Events"}</Text>
@@ -88,7 +96,11 @@ function Component() {
   const pastEvents = events.filter(e => e.is_past);
 
   return (
-    <Stack gap={{ base: "md", sm: "xl" }} p={{ base: "xs", sm: "xl" }}>
+    <Stack
+      // @ts-expect-error - Mantine supports responsive objects at runtime, but Stack.gap type definition doesn't reflect this
+      gap={{ base: "md", sm: "xl" }}
+      p={{ base: "xs", sm: "xl" }}
+    >
       {/* Header with New Event Button */}
       <Group justify="space-between" align="center">
         <Title order={1}>Deine Wichtel-Events</Title>
