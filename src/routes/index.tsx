@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import {
   Button,
   Stack,
@@ -12,12 +12,19 @@ import {
   Tooltip,
   Alert
 } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
 import { useState, useMemo } from "react";
 import { useForm } from "@tanstack/react-form";
 import { createEvent } from "../server/createEvent";
 import type { CreateEventOutput } from "../types/database";
+import dayjs from "dayjs";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: ({ context }) => {
+    if (!context.user) {
+      throw redirect({ to: "/auth/login" });
+    }
+  },
   component: Home
 });
 
@@ -41,10 +48,15 @@ function Home() {
   const form = useForm({
     defaultValues: {
       eventName: "",
+      eventDate: null as Date | null,
       participants: initialParticipants
     },
     onSubmit: async ({ value }) => {
       try {
+        if (!value.eventDate) {
+          throw new Error("Event-Datum ist erforderlich");
+        }
+
         const filteredNames = value.participants
           .map(p => p.name.trim())
           .filter(name => name.length > 0);
@@ -52,6 +64,7 @@ function Home() {
         const eventResult = await createEvent({
           data: {
             eventName: value.eventName.trim(),
+            eventDate: dayjs(value.eventDate).format("YYYY-MM-DD"),
             participantNames: filteredNames
           }
         });
@@ -147,9 +160,14 @@ function Home() {
           </Stack>
         </Paper>
 
-        <Button onClick={resetForm} variant="light">
-          Neues Event erstellen
-        </Button>
+        <Group justify="center" gap="md">
+          <Button onClick={resetForm} variant="light">
+            Neues Event erstellen
+          </Button>
+          <Button component={Link} to="/" variant="filled">
+            Zum Dashboard
+          </Button>
+        </Group>
       </Stack>
     );
   }
@@ -190,6 +208,40 @@ function Home() {
                   error={field.state.meta.errors.join(", ")}
                   required
                 />
+              </div>
+            )}
+          </form.Field>
+
+          <form.Field
+            name="eventDate"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return "Event-Datum ist erforderlich";
+                const selectedDate = dayjs(value);
+                const today = dayjs().startOf("day");
+                if (selectedDate.isBefore(today)) {
+                  return "Event-Datum muss in der Zukunft liegen";
+                }
+                return undefined;
+              }
+            }}
+          >
+            {field => (
+              <div>
+                <DateInput
+                  label="Event-Datum"
+                  placeholder="Wähle ein Datum"
+                  value={field.state.value}
+                  onChange={value => field.handleChange(value as Date | null)}
+                  onBlur={field.handleBlur}
+                  error={field.state.meta.errors.join(", ")}
+                  required
+                  minDate={new Date()}
+                  valueFormat="DD.MM.YYYY"
+                />
+                <Text size="xs" c="dimmed" mt={4}>
+                  Die Ziehungsergebnisse werden erst nach diesem Datum sichtbar
+                </Text>
               </div>
             )}
           </form.Field>

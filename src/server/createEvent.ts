@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseServerClient } from "../utils/supabase";
+import { getSupabaseServerClient, requireAuth } from "../utils/supabase";
 import { generateToken, generateSlug } from "../utils/wichtel";
 import type {
   CreateEventInput,
@@ -11,10 +11,17 @@ import type {
 export const createEvent = createServerFn({ method: "POST" })
   .inputValidator((data: CreateEventInput) => data)
   .handler(async ({ data }): Promise<CreateEventOutput> => {
-    const { eventName, participantNames } = data;
+    const supabase = getSupabaseServerClient();
+    const user = await requireAuth(supabase);
+
+    const { eventName, eventDate, participantNames } = data;
 
     if (!eventName || eventName.trim().length === 0) {
       throw new Error("Event name is required");
+    }
+
+    if (!eventDate) {
+      throw new Error("Event date is required");
     }
 
     if (!participantNames || participantNames.length < 3) {
@@ -26,8 +33,6 @@ export const createEvent = createServerFn({ method: "POST" })
       throw new Error("Participant names must be unique");
     }
 
-    const supabase = getSupabaseServerClient();
-
     const eventSlug = generateSlug(eventName);
     const adminToken = generateToken();
 
@@ -36,7 +41,9 @@ export const createEvent = createServerFn({ method: "POST" })
       .insert({
         name: eventName.trim(),
         slug: eventSlug,
-        admin_token: adminToken
+        admin_token: adminToken,
+        admin_user_id: user.id,
+        event_date: eventDate
       })
       .select()
       .single<Event>();

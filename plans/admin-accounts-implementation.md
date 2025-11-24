@@ -810,7 +810,7 @@ export const getEventStats = createServerFn({ method: "POST" })
 
 This section outlines the commit strategy with mandatory testing checkpoints before each commit. **IMPORTANT**: Run all tests before committing, and ensure the app builds and runs without errors.
 
-### Commit 1: Database Migration & Schema Updates
+### Commit 1: Database Migration & Schema Updates ✅
 
 **Changes**:
 
@@ -842,7 +842,7 @@ feat(db): add admin accounts schema with RLS policies
 - Update TypeScript types for new schema
 ```
 
-### Commit 2: Supabase Auth Utilities
+### Commit 2: Supabase Auth Utilities ✅
 
 **Changes**:
 
@@ -867,7 +867,7 @@ feat(auth): add Supabase auth utility functions
 - Maintain backward compatibility with existing server client
 ```
 
-### Commit 3: Auth Server Functions
+### Commit 3: Auth Server Functions ✅
 
 **Changes**:
 
@@ -898,7 +898,7 @@ feat(auth): implement authentication server functions
 - Use Supabase Auth with SSR cookie handling
 ```
 
-### Commit 4: Auth Routes (Login/Signup/Logout)
+### Commit 4: Auth Routes (Login/Signup/Logout) ✅
 
 **Changes**:
 
@@ -940,7 +940,7 @@ feat(auth): add login, signup, and logout routes
 - Implement error handling and user feedback
 ```
 
-### Commit 5: Update Root Layout with Auth Nav
+### Commit 5: Update Root Layout with Auth Nav ✅
 
 **Changes**:
 
@@ -973,7 +973,7 @@ feat(ui): add authentication-aware navigation
 - Mobile-responsive navigation layout
 ```
 
-### Commit 6: Update Event Creation with Auth & Date
+### Commit 6: Update Event Creation with Auth & Date ⬜
 
 **Changes**:
 
@@ -1020,7 +1020,7 @@ feat(events): require auth and add event date to creation flow
 - Update success screen with dashboard link
 ```
 
-### Commit 7: Dashboard Route & Components (Part 1 - Basic Layout)
+### Commit 7: ⬜ Dashboard Route & Components (Part 1 - Basic Layout)
 
 **Changes**:
 
@@ -1058,7 +1058,7 @@ feat(dashboard): add basic dashboard route and data fetching
 - Basic layout without detailed components
 ```
 
-### Commit 8: Dashboard Components (Part 2 - Event List UI)
+### Commit 8: ⬜ Dashboard Components (Part 2 - Event List UI)
 
 **Changes**:
 
@@ -1096,7 +1096,7 @@ feat(dashboard): add event list components and UI
 - Mobile-responsive card layout
 ```
 
-### Commit 9: Dashboard Draw Results Section
+### Commit 9: ⬜ Dashboard Draw Results Section
 
 **Changes**:
 
@@ -1137,7 +1137,7 @@ feat(dashboard): add draw results with date-based visibility
 - Implement date-gated visibility logic
 ```
 
-### Commit 10: Link Regeneration from Dashboard
+### Commit 10: ⬜ Link Regeneration from Dashboard
 
 **Changes**:
 
@@ -1178,7 +1178,7 @@ feat(dashboard): add participant link regeneration
 - Invalidate old token
 ```
 
-### Commit 11: Update Admin Event Page
+### Commit 11: ⬜ Update Admin Event Page
 
 **Changes**:
 
@@ -1215,7 +1215,7 @@ feat(admin): update admin event page with auth and date checks
 - Update getEventDetails with auth support
 ```
 
-### Commit 12: Loading States & Error Boundaries
+### Commit 12: ⬜ Loading States & Error Boundaries
 
 **Changes**:
 
@@ -1249,7 +1249,7 @@ feat(ui): add loading states and error boundaries
 - Improve UX during data fetching
 ```
 
-### Commit 13: Mobile Responsiveness Polish
+### Commit 13: ⬜ Mobile Responsiveness Polish
 
 **Changes**:
 
@@ -1289,7 +1289,7 @@ style(responsive): improve mobile and tablet layouts
 - Enhance touch interactions
 ```
 
-### Commit 14: Final Testing & Documentation
+### Commit 14: ⬜ Final Testing & Documentation
 
 **Changes**:
 

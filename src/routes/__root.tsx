@@ -26,6 +26,7 @@ import { DefaultCatchBoundary } from "../components/DefaultCatchBoundary";
 import { NotFound } from "../components/NotFound";
 import appCss from "../styles/app.css?url";
 import mantineCss from "@mantine/core/styles.css?url";
+import mantineDatesCss from "@mantine/dates/styles.css?url";
 import { seo } from "../utils/seo";
 import { getSupabaseServerClient } from "../utils/supabase";
 
@@ -66,6 +67,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: mantineCss },
+      { rel: "stylesheet", href: mantineDatesCss },
       { rel: "stylesheet", href: appCss },
       {
         rel: "icon",

@@ -49,6 +49,7 @@ export type Draw = {
 
 export type CreateEventInput = {
   eventName: string;
+  eventDate: string; // YYYY-MM-DD format
   participantNames: string[];
 };
 
