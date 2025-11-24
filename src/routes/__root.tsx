@@ -88,15 +88,15 @@ function RootComponent() {
 
   return (
     <RootDocument>
-      <AppShell header={{ height: 60 }} padding="md">
+      <AppShell header={{ height: 60 }} padding={{ base: "xs", sm: "md" }}>
         <AppShell.Header>
-          <Container size="xl" h="100%">
-            <Group h="100%" justify="space-between">
+          <Container size="xl" h="100%" px={{ base: "xs", sm: "md" }}>
+            <Group h="100%" justify="space-between" wrap="nowrap">
               {/* Logo/Brand */}
               <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
                 <Group gap="xs">
                   <Text size="xl">🎁</Text>
-                  <Text fw={700} size="lg" visibleFrom="xs">
+                  <Text fw={700} size={{ base: "md", sm: "lg" }}>
                     Wichtel-App
                   </Text>
                 </Group>
@@ -104,26 +104,31 @@ function RootComponent() {
 
               {/* Navigation */}
               {user ? (
-                <Group gap="sm">
-                  <Text size="sm" c="dimmed" visibleFrom="sm">
+                <Group gap="xs" wrap="nowrap">
+                  <Text
+                    size="xs"
+                    c="dimmed"
+                    visibleFrom="sm"
+                    style={{ whiteSpace: "nowrap" }}
+                  >
                     {user.email}
                   </Text>
                   <Button
                     component={Link}
                     to="/auth/logout"
                     variant="light"
-                    size="sm"
+                    size="xs"
                   >
                     Logout
                   </Button>
                 </Group>
               ) : (
-                <Group gap="sm">
+                <Group gap="xs" wrap="nowrap">
                   <Button
                     component={Link}
                     to="/auth/login"
                     variant="subtle"
-                    size="sm"
+                    size="xs"
                   >
                     Login
                   </Button>
@@ -131,7 +136,7 @@ function RootComponent() {
                     component={Link}
                     to="/auth/signup"
                     variant="filled"
-                    size="sm"
+                    size="xs"
                   >
                     Sign up
                   </Button>

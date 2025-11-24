@@ -35,11 +35,14 @@ export const Route = createFileRoute("/")({
 
 function PendingComponent() {
   return (
-    <Stack gap="xl" p="xl">
+    <Stack gap={{ base: "md", sm: "xl" }} p={{ base: "xs", sm: "xl" }}>
       <Group justify="space-between" align="center">
         <Title order={1}>Deine Wichtel-Events</Title>
-        <Button component={Link} to="/new-event" size="lg">
+        <Button component={Link} to="/new-event" size="md" visibleFrom="sm">
           + Neues Event
+        </Button>
+        <Button component={Link} to="/new-event" size="xs" hiddenFrom="sm">
+          + Event
         </Button>
       </Group>
 
@@ -55,7 +58,7 @@ function PendingComponent() {
 
 function ErrorComponent({ error }: ErrorComponentProps) {
   return (
-    <Stack gap="xl" p="xl">
+    <Stack gap={{ base: "md", sm: "xl" }} p={{ base: "xs", sm: "xl" }}>
       <Title order={1}>Fehler beim Laden der Events</Title>
       <Alert color="red" title="Es ist ein Fehler aufgetreten">
         <Text>{error.message || "Unbekannter Fehler beim Laden der Events"}</Text>
@@ -75,12 +78,15 @@ function Component() {
   const pastEvents = events.filter(e => e.is_past);
 
   return (
-    <Stack gap="xl" p="xl">
+    <Stack gap={{ base: "md", sm: "xl" }} p={{ base: "xs", sm: "xl" }}>
       {/* Header with New Event Button */}
       <Group justify="space-between" align="center">
         <Title order={1}>Deine Wichtel-Events</Title>
-        <Button component={Link} to="/new-event" size="lg">
+        <Button component={Link} to="/new-event" size="md" visibleFrom="sm">
           + Neues Event
+        </Button>
+        <Button component={Link} to="/new-event" size="xs" hiddenFrom="sm">
+          + Event
         </Button>
       </Group>
 
@@ -90,7 +96,7 @@ function Component() {
           Aktuelle Events
         </Title>
         {runningEvents.length === 0 ? (
-          <Paper p="xl" withBorder>
+          <Paper p={{ base: "md", sm: "xl" }} withBorder>
             <Text c="dimmed" ta="center">
               Keine aktuellen Events. Erstelle ein neues Event!
             </Text>
