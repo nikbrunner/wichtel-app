@@ -7,7 +7,7 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(
     const supabase = getSupabaseServerClient();
     const user = await requireAuth(supabase);
 
-    // Query events with participant stats
+    // Query events with participants in a single query (avoids N+1)
     const { data: events, error } = await supabase
       .from("events")
       .select(
@@ -18,7 +18,8 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(
         admin_token,
         admin_user_id,
         event_date,
-        created_at
+        created_at,
+        participants (id, name, token, has_drawn, drawn_at)
       `
       )
       .eq("admin_user_id", user.id)
@@ -32,38 +33,39 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(
       return [];
     }
 
-    // Fetch participant counts and draw stats for each event
-    const eventsWithStats: EventWithStats[] = await Promise.all(
-      events.map(async event => {
-        const { data: participants } = await supabase
-          .from("participants")
-          .select("id, name, token, has_drawn, drawn_at")
-          .eq("event_id", event.id)
-          .order("name");
+    // Calculate stats from the fetched data
+    const eventsWithStats: EventWithStats[] = events.map(event => {
+      const participants = (event.participants || []).sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      const participantCount = participants.length;
+      const drawnCount = participants.filter(p => p.has_drawn).length;
+      const notDrawnCount = participantCount - drawnCount;
 
-        const participantCount = participants?.length || 0;
-        const drawnCount = participants?.filter(p => p.has_drawn).length || 0;
-        const notDrawnCount = participantCount - drawnCount;
+      // Calculate days until event
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const eventDate = new Date(event.event_date);
+      eventDate.setHours(0, 0, 0, 0);
+      const diffTime = eventDate.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // Calculate days until event
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const eventDate = new Date(event.event_date);
-        eventDate.setHours(0, 0, 0, 0);
-        const diffTime = eventDate.getTime() - today.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        return {
-          ...event,
-          participant_count: participantCount,
-          drawn_count: drawnCount,
-          not_drawn_count: notDrawnCount,
-          days_until_event: diffDays >= 0 ? diffDays : null,
-          is_past: diffDays < 0,
-          participants: participants || []
-        };
-      })
-    );
+      return {
+        id: event.id,
+        name: event.name,
+        slug: event.slug,
+        admin_token: event.admin_token,
+        admin_user_id: event.admin_user_id,
+        event_date: event.event_date,
+        created_at: event.created_at,
+        participant_count: participantCount,
+        drawn_count: drawnCount,
+        not_drawn_count: notDrawnCount,
+        days_until_event: diffDays >= 0 ? diffDays : null,
+        is_past: diffDays < 0,
+        participants
+      };
+    });
 
     return eventsWithStats;
   }

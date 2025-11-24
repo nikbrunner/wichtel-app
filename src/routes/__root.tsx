@@ -152,7 +152,6 @@ function RootComponent() {
           </Container>
         </AppShell.Main>
       </AppShell>
-      <TanStackRouterDevtools position="bottom-right" />
     </RootDocument>
   );
 }

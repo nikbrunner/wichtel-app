@@ -92,6 +92,27 @@ export const drawName = createServerFn({ method: "POST" })
     });
 
     if (drawError) {
+      // Handle race condition: if another request already created a draw
+      // (unique constraint violation on drawer_id), fetch and return that draw
+      if (drawError.code === "23505") {
+        const { data: existingDraw } = await supabase
+          .from("draws")
+          .select("drawn_id")
+          .eq("drawer_id", participant.id)
+          .single<Draw>();
+
+        if (existingDraw) {
+          const { data: existingDrawnParticipant } = await supabase
+            .from("participants")
+            .select("name")
+            .eq("id", existingDraw.drawn_id)
+            .single<Participant>();
+
+          if (existingDrawnParticipant) {
+            return { drawnName: existingDrawnParticipant.name };
+          }
+        }
+      }
       throw new Error(`Failed to create draw: ${drawError.message}`);
     }
 
