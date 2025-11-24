@@ -1,7 +1,22 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { Stack, Title, Button, Group, Text, Paper, Divider } from "@mantine/core";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  ErrorComponentProps
+} from "@tanstack/react-router";
+import {
+  Stack,
+  Title,
+  Button,
+  Group,
+  Text,
+  Paper,
+  Divider,
+  Alert
+} from "@mantine/core";
 import { getAdminEvents } from "../server/getAdminEvents";
 import { EventListItem } from "../components/EventListItem";
+import { EventListSkeleton } from "../components/EventListSkeleton";
 
 export const Route = createFileRoute("/")({
   beforeLoad: ({ context }) => {
@@ -13,8 +28,44 @@ export const Route = createFileRoute("/")({
     const events = await getAdminEvents();
     return { events };
   },
-  component: Component
+  component: Component,
+  pendingComponent: PendingComponent,
+  errorComponent: ErrorComponent
 });
+
+function PendingComponent() {
+  return (
+    <Stack gap="xl" p="xl">
+      <Group justify="space-between" align="center">
+        <Title order={1}>Deine Wichtel-Events</Title>
+        <Button component={Link} to="/new-event" size="lg">
+          + Neues Event
+        </Button>
+      </Group>
+
+      <div>
+        <Title order={2} size="h3" mb="md">
+          Aktuelle Events
+        </Title>
+        <EventListSkeleton />
+      </div>
+    </Stack>
+  );
+}
+
+function ErrorComponent({ error }: ErrorComponentProps) {
+  return (
+    <Stack gap="xl" p="xl">
+      <Title order={1}>Fehler beim Laden der Events</Title>
+      <Alert color="red" title="Es ist ein Fehler aufgetreten">
+        <Text>{error.message || "Unbekannter Fehler beim Laden der Events"}</Text>
+        <Button component={Link} to="/" mt="md" variant="light">
+          Erneut versuchen
+        </Button>
+      </Alert>
+    </Stack>
+  );
+}
 
 function Component() {
   const { events } = Route.useLoaderData();
