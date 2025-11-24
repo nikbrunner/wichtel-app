@@ -3,12 +3,25 @@ import {
   HeadContent,
   Outlet,
   Scripts,
-  createRootRoute
+  createRootRoute,
+  Link
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import * as React from "react";
-import { MantineProvider, mantineHtmlProps, ColorSchemeScript } from "@mantine/core";
+import {
+  MantineProvider,
+  mantineHtmlProps,
+  ColorSchemeScript,
+  AppShell,
+  Group,
+  Button,
+  Text,
+  Container,
+  Burger,
+  Stack
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { DefaultCatchBoundary } from "../components/DefaultCatchBoundary";
 import { NotFound } from "../components/NotFound";
 import appCss from "../styles/app.css?url";
@@ -72,9 +85,136 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  const { user } = Route.useRouteContext();
+  const [mobileNavOpened, { toggle: toggleMobileNav, close: closeMobileNav }] =
+    useDisclosure();
+
   return (
     <RootDocument>
-      <Outlet />
+      <AppShell header={{ height: 60 }} padding="md">
+        <AppShell.Header>
+          <Container size="xl" h="100%">
+            <Group h="100%" justify="space-between">
+              {/* Logo/Brand */}
+              <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+                <Group gap="xs">
+                  <Text size="xl">🎁</Text>
+                  <Text fw={700} size="lg">
+                    Wichtel-App
+                  </Text>
+                </Group>
+              </Link>
+
+              {/* Desktop Navigation */}
+              <Group gap="md" visibleFrom="sm">
+                {user ? (
+                  <>
+                    <Button component={Link} to="/" variant="subtle">
+                      Create Event
+                    </Button>
+                    <Button component={Link} to="/" variant="subtle">
+                      Dashboard
+                    </Button>
+                    <Text size="sm" c="dimmed">
+                      {user.email}
+                    </Text>
+                    <Button component={Link} to="/auth/logout" variant="light">
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button component={Link} to="/auth/login" variant="subtle">
+                      Login
+                    </Button>
+                    <Button component={Link} to="/auth/signup" variant="filled">
+                      Sign up
+                    </Button>
+                  </>
+                )}
+              </Group>
+
+              {/* Mobile Burger */}
+              <Burger
+                opened={mobileNavOpened}
+                onClick={toggleMobileNav}
+                hiddenFrom="sm"
+                size="sm"
+              />
+            </Group>
+          </Container>
+        </AppShell.Header>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileNavOpened && (
+          <Container size="xl" py="md" hiddenFrom="sm">
+            <Stack gap="sm">
+              {user ? (
+                <>
+                  <Text size="sm" c="dimmed" ta="center">
+                    {user.email}
+                  </Text>
+                  <Button
+                    component={Link}
+                    to="/"
+                    variant="subtle"
+                    fullWidth
+                    onClick={closeMobileNav}
+                  >
+                    Create Event
+                  </Button>
+                  <Button
+                    component={Link}
+                    to="/"
+                    variant="subtle"
+                    fullWidth
+                    onClick={closeMobileNav}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button
+                    component={Link}
+                    to="/auth/logout"
+                    variant="light"
+                    fullWidth
+                    onClick={closeMobileNav}
+                  >
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    component={Link}
+                    to="/auth/login"
+                    variant="subtle"
+                    fullWidth
+                    onClick={closeMobileNav}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    component={Link}
+                    to="/auth/signup"
+                    variant="filled"
+                    fullWidth
+                    onClick={closeMobileNav}
+                  >
+                    Sign up
+                  </Button>
+                </>
+              )}
+            </Stack>
+          </Container>
+        )}
+
+        <AppShell.Main>
+          <Container size="xl">
+            <Outlet />
+          </Container>
+        </AppShell.Main>
+      </AppShell>
+      <TanStackRouterDevtools position="bottom-right" />
     </RootDocument>
   );
 }
