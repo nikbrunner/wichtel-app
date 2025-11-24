@@ -28,11 +28,6 @@ export const Route = createFileRoute("/new-event")({
   component: Home
 });
 
-type ParticipantField = {
-  id: string;
-  name: string;
-};
-
 function Home() {
   const [result, setResult] = useState<CreateEventOutput | null>(null);
 
@@ -52,27 +47,23 @@ function Home() {
       participants: initialParticipants
     },
     onSubmit: async ({ value }) => {
-      try {
-        if (!value.eventDate) {
-          throw new Error("Event-Datum ist erforderlich");
-        }
-
-        const filteredNames = value.participants
-          .map(p => p.name.trim())
-          .filter(name => name.length > 0);
-
-        const eventResult = await createEvent({
-          data: {
-            eventName: value.eventName.trim(),
-            eventDate: dayjs(value.eventDate).format("YYYY-MM-DD"),
-            participantNames: filteredNames
-          }
-        });
-
-        setResult(eventResult);
-      } catch (err) {
-        throw err;
+      if (!value.eventDate) {
+        throw new Error("Event-Datum ist erforderlich");
       }
+
+      const filteredNames = value.participants
+        .map(p => p.name.trim())
+        .filter(name => name.length > 0);
+
+      const eventResult = await createEvent({
+        data: {
+          eventName: value.eventName.trim(),
+          eventDate: dayjs(value.eventDate).format("YYYY-MM-DD"),
+          participantNames: filteredNames
+        }
+      });
+
+      setResult(eventResult);
     }
   });
 

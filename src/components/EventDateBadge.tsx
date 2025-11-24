@@ -6,11 +6,7 @@ type EventDateBadgeProps = {
   isPast: boolean;
 };
 
-export function EventDateBadge({
-  eventDate,
-  daysUntil,
-  isPast
-}: EventDateBadgeProps) {
+export function EventDateBadge({ daysUntil, isPast }: EventDateBadgeProps) {
   if (isPast) {
     return (
       <Badge color="gray" variant="light">
