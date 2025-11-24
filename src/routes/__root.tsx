@@ -17,10 +17,8 @@ import {
   Group,
   Button,
   Text,
-  Container,
-  useMantineTheme
+  Container
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { DefaultCatchBoundary } from "../components/DefaultCatchBoundary";
 import { NotFound } from "../components/NotFound";
 import appCss from "../styles/app.css?url";
@@ -87,8 +85,6 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const { user } = Route.useRouteContext();
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   return (
     <RootDocument>
@@ -100,7 +96,7 @@ function RootComponent() {
               <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
                 <Group gap="xs">
                   <Text size="xl">🎁</Text>
-                  <Text fw={700} size={isMobile ? "md" : "lg"}>
+                  <Text fw={700} size="lg">
                     Wichtel-App
                   </Text>
                 </Group>
