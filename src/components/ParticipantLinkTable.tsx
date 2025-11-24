@@ -17,11 +17,15 @@ type ParticipantLinkTableProps = {
     has_drawn: boolean;
     drawn_at: string | null;
   }>;
+  onRegenerateLink: (participantId: string, participantName: string) => void;
+  regeneratingId: string | null;
 };
 
 export function ParticipantLinkTable({
   eventSlug,
-  participants
+  participants,
+  onRegenerateLink,
+  regeneratingId
 }: ParticipantLinkTableProps) {
   const generateLink = (token: string) => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
@@ -35,6 +39,7 @@ export function ParticipantLinkTable({
           <Table.Th>Teilnehmer</Table.Th>
           <Table.Th>Status</Table.Th>
           <Table.Th>Link</Table.Th>
+          <Table.Th>Aktionen</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
@@ -78,6 +83,18 @@ export function ParticipantLinkTable({
                     )}
                   </CopyButton>
                 </Group>
+              </Table.Td>
+              <Table.Td>
+                <Button
+                  size="xs"
+                  variant="light"
+                  color="orange"
+                  onClick={() => onRegenerateLink(participant.id, participant.name)}
+                  loading={regeneratingId === participant.id}
+                  disabled={regeneratingId !== null}
+                >
+                  Regenerieren
+                </Button>
               </Table.Td>
             </Table.Tr>
           );

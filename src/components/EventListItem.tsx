@@ -1,8 +1,17 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { Paper, Stack, Group, Text, Button, Collapse, Divider } from "@mantine/core";
+import {
+  Paper,
+  Stack,
+  Group,
+  Text,
+  Button,
+  Collapse,
+  Divider,
+  Alert
+} from "@mantine/core";
 import { EventDateBadge } from "./EventDateBadge";
 import { ParticipantLinkTable } from "./ParticipantLinkTable";
+import { regenerateParticipantLink } from "../server/regenerateParticipantLink";
 import type { EventWithStats } from "../types/database";
 
 type EventListItemProps = {
@@ -11,6 +20,37 @@ type EventListItemProps = {
 
 export function EventListItem({ event }: EventListItemProps) {
   const [expanded, setExpanded] = useState(false);
+  const [regenerating, setRegenerating] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleRegenerateLink = async (
+    participantId: string,
+    participantName: string
+  ) => {
+    setError(null);
+    setSuccessMessage(null);
+    setRegenerating(participantId);
+
+    try {
+      await regenerateParticipantLink({
+        data: {
+          eventSlug: event.slug,
+          participantId
+        }
+      });
+
+      setSuccessMessage(
+        `Link für ${participantName} wurde erfolgreich regeneriert. Bitte die Seite neu laden, um den neuen Link zu sehen.`
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Fehler beim Regenerieren des Links"
+      );
+    } finally {
+      setRegenerating(null);
+    }
+  };
 
   return (
     <Paper p="lg" withBorder shadow="sm">
@@ -61,14 +101,6 @@ export function EventListItem({ event }: EventListItemProps) {
 
         {/* Action Buttons */}
         <Group gap="sm" mt="sm">
-          <Button
-            component={Link}
-            to={`/admin/${event.slug}`}
-            variant="light"
-            size="sm"
-          >
-            Event verwalten
-          </Button>
           <Button variant="subtle" size="sm" onClick={() => setExpanded(!expanded)}>
             {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
           </Button>
@@ -78,12 +110,34 @@ export function EventListItem({ event }: EventListItemProps) {
         <Collapse in={expanded}>
           <Divider my="md" />
           <Stack gap="md">
+            {error && (
+              <Alert
+                color="red"
+                title="Fehler"
+                withCloseButton
+                onClose={() => setError(null)}
+              >
+                {error}
+              </Alert>
+            )}
+            {successMessage && (
+              <Alert
+                color="green"
+                title="Erfolg"
+                withCloseButton
+                onClose={() => setSuccessMessage(null)}
+              >
+                {successMessage}
+              </Alert>
+            )}
             <Text size="sm" fw={600}>
               Teilnehmer-Links
             </Text>
             <ParticipantLinkTable
               eventSlug={event.slug}
               participants={event.participants}
+              onRegenerateLink={handleRegenerateLink}
+              regeneratingId={regenerating}
             />
           </Stack>
         </Collapse>
