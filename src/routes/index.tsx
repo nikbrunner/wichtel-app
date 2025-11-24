@@ -1,16 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import {
-  Stack,
-  Title,
-  Button,
-  Group,
-  Text,
-  Paper,
-  Badge,
-  Divider
-} from "@mantine/core";
+import { Stack, Title, Button, Group, Text, Paper, Divider } from "@mantine/core";
 import { getAdminEvents } from "../server/getAdminEvents";
-import type { EventWithStats } from "../types/database";
+import { EventListItem } from "../components/EventListItem";
 
 export const Route = createFileRoute("/")({
   beforeLoad: ({ context }) => {
@@ -56,7 +47,7 @@ function Component() {
         ) : (
           <Stack gap="md">
             {runningEvents.map(event => (
-              <EventCard key={event.id} event={event} />
+              <EventListItem key={event.id} event={event} />
             ))}
           </Stack>
         )}
@@ -73,68 +64,11 @@ function Component() {
           </Title>
           <Stack gap="md">
             {pastEvents.map(event => (
-              <EventCard key={event.id} event={event} />
+              <EventListItem key={event.id} event={event} />
             ))}
           </Stack>
         </div>
       )}
     </Stack>
-  );
-}
-
-function EventCard({ event }: { event: EventWithStats }) {
-  return (
-    <Paper p="lg" withBorder shadow="sm">
-      <Stack gap="sm">
-        <Group justify="space-between">
-          <div>
-            <Group gap="sm">
-              <Text fw={700} size="lg">
-                {event.name}
-              </Text>
-              {event.is_past && <Badge color="gray">Vergangen</Badge>}
-            </Group>
-            <Text size="sm" c="dimmed">
-              {new Date(event.event_date).toLocaleDateString("de-DE", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric"
-              })}
-              {event.days_until_event !== null && (
-                <> • {event.days_until_event} Tage bis Event</>
-              )}
-            </Text>
-          </div>
-        </Group>
-
-        <Group gap="lg">
-          <div>
-            <Text size="xs" c="dimmed">
-              Teilnehmer
-            </Text>
-            <Text fw={600}>{event.participant_count}</Text>
-          </div>
-          <div>
-            <Text size="xs" c="dimmed">
-              Gezogen
-            </Text>
-            <Text fw={600}>
-              {event.drawn_count} / {event.participant_count}
-            </Text>
-          </div>
-        </Group>
-
-        <Group gap="sm" mt="sm">
-          <Button
-            component={Link}
-            to={`/admin/${event.slug}`}
-            variant="light"
-            size="sm"
-          >
-            Event verwalten
-          </Button>
-        </Group>
-      </Stack>
-    </Paper>
   );
 }

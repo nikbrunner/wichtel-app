@@ -37,8 +37,9 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(
       events.map(async event => {
         const { data: participants } = await supabase
           .from("participants")
-          .select("id, has_drawn")
-          .eq("event_id", event.id);
+          .select("id, name, token, has_drawn, drawn_at")
+          .eq("event_id", event.id)
+          .order("name");
 
         const participantCount = participants?.length || 0;
         const drawnCount = participants?.filter(p => p.has_drawn).length || 0;
@@ -58,7 +59,8 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(
           drawn_count: drawnCount,
           not_drawn_count: notDrawnCount,
           days_until_event: diffDays >= 0 ? diffDays : null,
-          is_past: diffDays < 0
+          is_past: diffDays < 0,
+          participants: participants || []
         };
       })
     );

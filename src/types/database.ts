@@ -24,6 +24,13 @@ export type EventWithStats = Event & {
   not_drawn_count: number;
   days_until_event: number | null;
   is_past: boolean;
+  participants: Array<{
+    id: string;
+    name: string;
+    token: string;
+    has_drawn: boolean;
+    drawn_at: string | null;
+  }>;
 };
 
 export type Participant = {
