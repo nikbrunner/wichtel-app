@@ -108,92 +108,55 @@ function RootComponent() {
               </Link>
 
               {/* Desktop Navigation */}
-              <Group gap="md" visibleFrom="sm">
-                {user ? (
-                  <>
-                    <Button component={Link} to="/new-event" variant="subtle">
-                      Neues Event
-                    </Button>
-                    <Text size="sm" c="dimmed">
-                      {user.email}
-                    </Text>
-                    <Button component={Link} to="/auth/logout" variant="light">
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button component={Link} to="/auth/login" variant="subtle">
-                      Login
-                    </Button>
-                    <Button component={Link} to="/auth/signup" variant="filled">
-                      Sign up
-                    </Button>
-                  </>
-                )}
-              </Group>
+              {user ? (
+                <Group gap="md" visibleFrom="sm">
+                  <Text size="sm" c="dimmed">
+                    {user.email}
+                  </Text>
+                  <Button component={Link} to="/auth/logout" variant="light">
+                    Logout
+                  </Button>
+                </Group>
+              ) : (
+                <Group gap="md" visibleFrom="sm">
+                  <Button component={Link} to="/auth/login" variant="subtle">
+                    Login
+                  </Button>
+                  <Button component={Link} to="/auth/signup" variant="filled">
+                    Sign up
+                  </Button>
+                </Group>
+              )}
 
               {/* Mobile Burger */}
-              <Burger
-                opened={mobileNavOpened}
-                onClick={toggleMobileNav}
-                hiddenFrom="sm"
-                size="sm"
-              />
+              {user && (
+                <Burger
+                  opened={mobileNavOpened}
+                  onClick={toggleMobileNav}
+                  hiddenFrom="sm"
+                  size="sm"
+                />
+              )}
             </Group>
           </Container>
         </AppShell.Header>
 
         {/* Mobile Navigation Drawer */}
-        {mobileNavOpened && (
+        {user && mobileNavOpened && (
           <Container size="xl" py="md" hiddenFrom="sm">
             <Stack gap="sm">
-              {user ? (
-                <>
-                  <Text size="sm" c="dimmed" ta="center">
-                    {user.email}
-                  </Text>
-                  <Button
-                    component={Link}
-                    to="/new-event"
-                    variant="subtle"
-                    fullWidth
-                    onClick={closeMobileNav}
-                  >
-                    Neues Event
-                  </Button>
-                  <Button
-                    component={Link}
-                    to="/auth/logout"
-                    variant="light"
-                    fullWidth
-                    onClick={closeMobileNav}
-                  >
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    component={Link}
-                    to="/auth/login"
-                    variant="subtle"
-                    fullWidth
-                    onClick={closeMobileNav}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    component={Link}
-                    to="/auth/signup"
-                    variant="filled"
-                    fullWidth
-                    onClick={closeMobileNav}
-                  >
-                    Sign up
-                  </Button>
-                </>
-              )}
+              <Text size="sm" c="dimmed" ta="center">
+                {user.email}
+              </Text>
+              <Button
+                component={Link}
+                to="/auth/logout"
+                variant="light"
+                fullWidth
+                onClick={closeMobileNav}
+              >
+                Logout
+              </Button>
             </Stack>
           </Container>
         )}
