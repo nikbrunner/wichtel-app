@@ -66,7 +66,7 @@ export function EventListItem({ event }: EventListItemProps) {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-4 md:items-center">
           {/* Name Column */}
           <div>
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-8 mb-4">
               <span className="text-2xl font-bold">{event.name}</span>
               <EventDateBadge
                 eventDate={event.event_date}

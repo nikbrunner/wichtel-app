@@ -23,5 +23,5 @@ export function EventDateBadge({ daysUntil, isPast }: EventDateBadgeProps) {
     );
   }
 
-  return <Badge variant="outline">in {daysUntil} Tagen</Badge>;
+  return <Badge variant="outline font-mono">in {daysUntil} Tagen</Badge>;
 }
