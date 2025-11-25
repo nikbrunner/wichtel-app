@@ -77,7 +77,7 @@ function RootComponent() {
     <RootDocument>
       <div className="min-h-screen flex flex-col">
         {/* Header */}
-        <header className="h-16 border-b-2 border-border bg-card">
+        <header className="h-16 border-b-2 border-border bg-primary text-primary-foreground">
           <div className="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
             {/* Logo/Brand */}
             <Link to="/" className="flex items-center gap-2 no-underline">
@@ -88,9 +88,7 @@ function RootComponent() {
             {/* Navigation */}
             {user ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground hidden sm:block">
-                  {user.email}
-                </span>
+                <span className="text-sm hidden sm:block">{user.email}</span>
                 <Button asChild variant="outline" size="sm">
                   <Link to="/auth/logout">Logout</Link>
                 </Button>

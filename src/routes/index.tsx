@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
 
 function PendingComponent() {
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 p-2 sm:p-6">
+    <div className="flex flex-col gap-6 sm:gap-8">
       <div className="flex justify-between items-center">
         <h1 className="font-head text-2xl sm:text-3xl">Deine Wichtel-Events</h1>
         <Button asChild size="sm" className="sm:hidden">
@@ -49,7 +49,7 @@ function PendingComponent() {
 
 function ErrorComponent({ error }: ErrorComponentProps) {
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 p-2 sm:p-6">
+    <div className="flex flex-col gap-6 sm:gap-8">
       <h1 className="font-head text-2xl sm:text-3xl">
         Fehler beim Laden der Events
       </h1>
@@ -74,7 +74,7 @@ function Component() {
   const pastEvents = events.filter(e => e.is_past);
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 p-2 sm:p-6">
+    <div className="flex flex-col gap-6 sm:gap-8">
       {/* Header with New Event Button */}
       <div className="flex justify-between items-center">
         <h1 className="font-head text-2xl sm:text-3xl">Deine Wichtel-Events</h1>
