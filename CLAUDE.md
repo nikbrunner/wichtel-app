@@ -46,29 +46,30 @@ npm run check         # Run all checks (types, lint, format)
 - **SSR**: Fully server-rendered React application with hydration
 - **Generated route tree**: `src/routeTree.gen.ts` is auto-generated, never edit manually
 
-### UI: Mantine v8 with SSR Workarounds
+### UI: RetroUI + Tailwind CSS
 
-**Critical**: Mantine requires specific SSR configuration for TanStack Start:
+**Stack**: RetroUI (Neo-Brutalism styled, ShadCN-based components) with Tailwind CSS v4.
 
-1. **CSS Import**: Use `?url` query string
+**Component Architecture**:
 
-   ```ts
-   import mantineCss from "@mantine/core/styles.css?url";
-   ```
+```text
+src/components/
+  retroui/      # RetroUI components (customized directly as needed)
+  ui/           # ShadCN fallbacks styled to match (Calendar, Skeleton, etc.)
+```
 
-2. **HTML Setup** (in `__root.tsx`):
-   - Spread `mantineHtmlProps` on `<html>` element
-   - Add `<ColorSchemeScript />` in `<head>`
-   - Use `<MantineProvider withGlobalClasses={false}>`
+**Key Design Principles**:
 
-3. **Vite Config**: SSR externalization required
-   ```ts
-   ssr: {
-     noExternal: ["@mantine/core", "@mantine/hooks"];
-   }
-   ```
+- Neo-Brutalism aesthetic: thick borders, stark drop shadows, bold colors
+- Typography: Archivo Black (headings), Space Grotesk (body)
+- Colors: Yellow primary, cream backgrounds, multi-color accents
 
-See `src/routes/__root.tsx` for reference implementation.
+**Utilities**:
+
+- `cn()` utility in `src/lib/utils.ts` for class merging (uses CVA's `cx` + tailwind-merge)
+- Tailwind responsive classes instead of media query hooks
+
+See `src/styles/app.css` for theme variables and `src/routes/__root.tsx` for layout.
 
 ### Database: Supabase (PostgreSQL)
 
@@ -95,7 +96,7 @@ See `src/routes/__root.tsx` for reference implementation.
 ```text
 src/
 ├── routes/                    # File-based routing
-│   ├── __root.tsx            # Root layout with Mantine setup
+│   ├── __root.tsx            # Root layout with RetroUI/Tailwind
 │   ├── index.tsx             # Home page (create event form)
 │   ├── e.$eventSlug.tsx      # Participant view (draw names)
 │   └── admin.$eventSlug.tsx  # Admin view (event management)

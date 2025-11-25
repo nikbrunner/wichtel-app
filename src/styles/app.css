@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
 /* RetroUI Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+
+@import "tailwindcss";
 
 /* RetroUI Theme */
 @theme {
