@@ -4,17 +4,24 @@ import {
   Outlet,
   Scripts,
   createRootRoute,
-  Link
+  Link,
+  useRouter
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import * as React from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/retroui/Button";
+import { Toaster } from "@/components/retroui/Sonner";
+import { AuthModal } from "../components/AuthModal";
 import { DefaultCatchBoundary } from "../components/DefaultCatchBoundary";
 import { NotFound } from "../components/NotFound";
+import { useAuthModal } from "../stores/authModal";
 import appCss from "../styles/app.css?url";
 import { seo } from "../utils/seo";
 import { getSupabaseServerClient } from "../utils/supabase";
+import { signOut } from "../server/auth/signOut";
 
 const fetchUser = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseServerClient();
@@ -72,6 +79,23 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const { user } = Route.useRouteContext();
+  const router = useRouter();
+  const authModal = useAuthModal();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+      toast.success("Erfolgreich abgemeldet");
+      router.navigate({ to: "/" });
+      router.invalidate();
+    } catch {
+      toast.error("Fehler beim Abmelden");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <RootDocument>
@@ -80,7 +104,10 @@ function RootComponent() {
         <header className="h-16 border-b-2 border-border bg-primary text-primary-foreground">
           <div className="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
             {/* Logo/Brand */}
-            <Link to="/" className="flex items-center gap-2 no-underline">
+            <Link
+              to={user ? "/dashboard" : "/"}
+              className="flex items-center gap-2 no-underline"
+            >
               <span className="text-2xl">🎁</span>
               <span className="font-head text-xl">Wichtel-App</span>
             </Link>
@@ -89,17 +116,26 @@ function RootComponent() {
             {user ? (
               <div className="flex items-center gap-2">
                 <span className="text-sm hidden sm:block">{user.email}</span>
-                <Button asChild variant="outline" size="sm">
-                  <Link to="/auth/logout">Logout</Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                >
+                  {isLoggingOut ? "..." : "Logout"}
                 </Button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button asChild variant="link" size="sm">
-                  <Link to="/auth/login">Login</Link>
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => authModal.open("login")}
+                >
+                  Login
                 </Button>
-                <Button asChild size="sm">
-                  <Link to="/auth/signup">Sign up</Link>
+                <Button size="sm" onClick={() => authModal.open("signup")}>
+                  Registrieren
                 </Button>
               </div>
             )}
@@ -113,6 +149,7 @@ function RootComponent() {
           </div>
         </main>
       </div>
+      <AuthModal />
       <TanStackRouterDevtools position="bottom-right" />
     </RootDocument>
   );
@@ -126,6 +163,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="font-sans bg-background text-foreground">
         {children}
+        <Toaster position="top-right" richColors />
         <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>

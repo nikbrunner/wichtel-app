@@ -110,3 +110,38 @@ export type RegenerateParticipantLinkOutput = {
   newToken: string;
   newLink: string;
 };
+
+// Delete Event
+export type DeleteEventInput = {
+  eventId: string;
+};
+
+export type DeleteEventOutput = {
+  success: boolean;
+};
+
+// Delete Participant
+export type DeleteParticipantInput = {
+  eventId: string;
+  participantId: string;
+};
+
+export type DeleteParticipantOutput = {
+  success: boolean;
+  resetParticipantIds: string[];
+};
+
+// Add Participant
+export type AddParticipantInput = {
+  eventId: string;
+  participantName: string;
+};
+
+export type AddParticipantOutput = {
+  participant: {
+    id: string;
+    name: string;
+    token: string;
+    link: string;
+  };
+};

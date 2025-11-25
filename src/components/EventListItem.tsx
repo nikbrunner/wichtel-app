@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Button } from "@/components/retroui/Button";
 import { Card } from "@/components/retroui/Card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
@@ -7,7 +9,13 @@ import { ParticipantLinkTable } from "./ParticipantLinkTable";
 import { DrawResultsSection } from "./DrawResultsSection";
 import { CopyAllLinksButton } from "./CopyAllLinksButton";
 import { RegenerateLinkModal } from "./RegenerateLinkModal";
+import { DeleteEventModal } from "./DeleteEventModal";
+import { DeleteParticipantModal } from "./DeleteParticipantModal";
+import { AddParticipantModal } from "./AddParticipantModal";
 import { regenerateParticipantLink } from "../server/regenerateParticipantLink";
+import { deleteEvent } from "../server/deleteEvent";
+import { deleteParticipant } from "../server/deleteParticipant";
+import { addParticipant } from "../server/addParticipant";
 import type { EventWithStats } from "../types/database";
 
 type EventListItemProps = {
@@ -15,47 +23,147 @@ type EventListItemProps = {
 };
 
 export function EventListItem({ event }: EventListItemProps) {
+  const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const [regenerating, setRegenerating] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [modalOpened, setModalOpened] = useState(false);
-  const [selectedParticipant, setSelectedParticipant] = useState<{
+
+  // Regenerate link modal state
+  const [regenerateModalOpened, setRegenerateModalOpened] = useState(false);
+  const [selectedForRegenerate, setSelectedForRegenerate] = useState<{
     id: string;
     name: string;
   } | null>(null);
 
+  // Delete event modal state
+  const [deleteEventModalOpened, setDeleteEventModalOpened] = useState(false);
+  const [deletingEvent, setDeletingEvent] = useState(false);
+
+  // Delete participant modal state
+  const [deleteParticipantModalOpened, setDeleteParticipantModalOpened] =
+    useState(false);
+  const [selectedForDeletion, setSelectedForDeletion] = useState<{
+    id: string;
+    name: string;
+    hasDraws: boolean;
+  } | null>(null);
+  const [deletingParticipant, setDeletingParticipant] = useState<string | null>(
+    null
+  );
+
+  // Add participant modal state
+  const [addParticipantModalOpened, setAddParticipantModalOpened] = useState(false);
+  const [addingParticipant, setAddingParticipant] = useState(false);
+  const [addParticipantError, setAddParticipantError] = useState<string | null>(
+    null
+  );
+
+  // Can only add participants if no draws have been made
+  const canAddParticipants = event.drawn_count === 0;
+
+  // Regenerate link handlers
   const handleRegenerateClick = (participantId: string, participantName: string) => {
-    setSelectedParticipant({ id: participantId, name: participantName });
-    setModalOpened(true);
+    setSelectedForRegenerate({ id: participantId, name: participantName });
+    setRegenerateModalOpened(true);
   };
 
   const handleRegenerateConfirm = async () => {
-    if (!selectedParticipant) return;
+    if (!selectedForRegenerate) return;
 
     setError(null);
-    setSuccessMessage(null);
-    setRegenerating(selectedParticipant.id);
+    setRegenerating(selectedForRegenerate.id);
 
     try {
       await regenerateParticipantLink({
         data: {
           eventSlug: event.slug,
-          participantId: selectedParticipant.id
+          participantId: selectedForRegenerate.id
         }
       });
 
-      setSuccessMessage(
-        `Link für ${selectedParticipant.name} wurde erfolgreich regeneriert. Bitte die Seite neu laden, um den neuen Link zu sehen.`
+      toast.success(
+        `Link für ${selectedForRegenerate.name} wurde erfolgreich regeneriert.`
       );
-      setModalOpened(false);
+      setRegenerateModalOpened(false);
+      router.invalidate();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Fehler beim Regenerieren des Links"
       );
     } finally {
       setRegenerating(null);
-      setSelectedParticipant(null);
+      setSelectedForRegenerate(null);
+    }
+  };
+
+  // Delete event handlers
+  const handleDeleteEventConfirm = async () => {
+    setError(null);
+    setDeletingEvent(true);
+
+    try {
+      await deleteEvent({ data: { eventId: event.id } });
+      setDeleteEventModalOpened(false);
+      router.invalidate();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Fehler beim Löschen des Events"
+      );
+    } finally {
+      setDeletingEvent(false);
+    }
+  };
+
+  // Delete participant handlers
+  const handleDeleteParticipantClick = (
+    participantId: string,
+    participantName: string
+  ) => {
+    const participant = event.participants.find(p => p.id === participantId);
+    const hasDraws = participant?.has_drawn ?? false;
+    setSelectedForDeletion({ id: participantId, name: participantName, hasDraws });
+    setDeleteParticipantModalOpened(true);
+  };
+
+  const handleDeleteParticipantConfirm = async () => {
+    if (!selectedForDeletion) return;
+
+    setError(null);
+    setDeletingParticipant(selectedForDeletion.id);
+
+    try {
+      await deleteParticipant({
+        data: { eventId: event.id, participantId: selectedForDeletion.id }
+      });
+      toast.success(`${selectedForDeletion.name} wurde entfernt.`);
+      setDeleteParticipantModalOpened(false);
+      setSelectedForDeletion(null);
+      router.invalidate();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Fehler beim Löschen des Teilnehmers"
+      );
+    } finally {
+      setDeletingParticipant(null);
+    }
+  };
+
+  // Add participant handlers
+  const handleAddParticipantConfirm = async (name: string) => {
+    setAddParticipantError(null);
+    setAddingParticipant(true);
+
+    try {
+      await addParticipant({ data: { eventId: event.id, participantName: name } });
+      toast.success(`${name} wurde hinzugefügt.`);
+      setAddParticipantModalOpened(false);
+      router.invalidate();
+    } catch (err) {
+      setAddParticipantError(
+        err instanceof Error ? err.message : "Fehler beim Hinzufügen"
+      );
+    } finally {
+      setAddingParticipant(false);
     }
   };
 
@@ -63,7 +171,7 @@ export function EventListItem({ event }: EventListItemProps) {
     <Card className="p-6">
       <div className="flex flex-col gap-4">
         {/* Event Header - 3 column grid on desktop, stacked on mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-4 md:items-center">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 md:items-start">
           {/* Name Column */}
           <div>
             <div className="flex items-center gap-8 mb-4">
@@ -103,13 +211,23 @@ export function EventListItem({ event }: EventListItemProps) {
           </div>
 
           {/* Actions Column */}
-          <div>
+          <div className="flex gap-2">
             <Button
               size="sm"
               variant={expanded ? "outline" : "info"}
               onClick={() => setExpanded(!expanded)}
             >
               {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
+            </Button>
+          </div>
+
+          <div className="flex gap-2 justify-self-end">
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => setDeleteEventModalOpened(true)}
+            >
+              Löschen
             </Button>
           </div>
         </div>
@@ -131,24 +249,16 @@ export function EventListItem({ event }: EventListItemProps) {
                   </button>
                 </Alert>
               )}
-              {successMessage && (
-                <Alert variant="success">
-                  <AlertTitle>Erfolg</AlertTitle>
-                  <AlertDescription>{successMessage}</AlertDescription>
-                  <button
-                    onClick={() => setSuccessMessage(null)}
-                    className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
-                  >
-                    ×
-                  </button>
-                </Alert>
-              )}
               <span className="text-xl font-semibold">Teilnehmer-Links</span>
               <ParticipantLinkTable
                 eventSlug={event.slug}
                 participants={event.participants}
                 onRegenerateLink={handleRegenerateClick}
                 regeneratingId={regenerating}
+                onDeleteParticipant={handleDeleteParticipantClick}
+                deletingId={deletingParticipant}
+                canAddParticipants={canAddParticipants}
+                onAddParticipant={() => setAddParticipantModalOpened(true)}
               />
               <CopyAllLinksButton
                 eventName={event.name}
@@ -165,15 +275,51 @@ export function EventListItem({ event }: EventListItemProps) {
           </>
         )}
       </div>
+      {/* Regenerate Link Modal */}
       <RegenerateLinkModal
-        opened={modalOpened}
+        opened={regenerateModalOpened}
         onClose={() => {
-          setModalOpened(false);
-          setSelectedParticipant(null);
+          setRegenerateModalOpened(false);
+          setSelectedForRegenerate(null);
         }}
         onConfirm={handleRegenerateConfirm}
-        participantName={selectedParticipant?.name || ""}
+        participantName={selectedForRegenerate?.name ?? ""}
         isLoading={regenerating !== null}
+      />
+
+      {/* Delete Event Modal */}
+      <DeleteEventModal
+        opened={deleteEventModalOpened}
+        onClose={() => setDeleteEventModalOpened(false)}
+        onConfirm={handleDeleteEventConfirm}
+        eventName={event.name}
+        participantCount={event.participant_count}
+        isLoading={deletingEvent}
+      />
+
+      {/* Delete Participant Modal */}
+      <DeleteParticipantModal
+        opened={deleteParticipantModalOpened}
+        onClose={() => {
+          setDeleteParticipantModalOpened(false);
+          setSelectedForDeletion(null);
+        }}
+        onConfirm={handleDeleteParticipantConfirm}
+        participantName={selectedForDeletion?.name ?? ""}
+        hasDraws={selectedForDeletion?.hasDraws ?? false}
+        isLoading={deletingParticipant !== null}
+      />
+
+      {/* Add Participant Modal */}
+      <AddParticipantModal
+        opened={addParticipantModalOpened}
+        onClose={() => {
+          setAddParticipantModalOpened(false);
+          setAddParticipantError(null);
+        }}
+        onConfirm={handleAddParticipantConfirm}
+        isLoading={addingParticipant}
+        error={addParticipantError}
       />
     </Card>
   );

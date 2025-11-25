@@ -23,6 +23,10 @@ type ParticipantLinkTableProps = {
   }>;
   onRegenerateLink: (participantId: string, participantName: string) => void;
   regeneratingId: string | null;
+  onDeleteParticipant: (participantId: string, participantName: string) => void;
+  deletingId: string | null;
+  canAddParticipants: boolean;
+  onAddParticipant: () => void;
 };
 
 function useCopyToClipboard() {
@@ -45,7 +49,11 @@ export function ParticipantLinkTable({
   eventSlug,
   participants,
   onRegenerateLink,
-  regeneratingId
+  regeneratingId,
+  onDeleteParticipant,
+  deletingId,
+  canAddParticipants,
+  onAddParticipant
 }: ParticipantLinkTableProps) {
   const { copiedId, copy } = useCopyToClipboard();
 
@@ -90,10 +98,20 @@ export function ParticipantLinkTable({
                     onClick={() =>
                       onRegenerateLink(participant.id, participant.name)
                     }
-                    disabled={regeneratingId !== null}
+                    disabled={regeneratingId !== null || deletingId !== null}
                     className="flex-1"
                   >
                     {regeneratingId === participant.id ? "..." : "Regenerieren"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() =>
+                      onDeleteParticipant(participant.id, participant.name)
+                    }
+                    disabled={regeneratingId !== null || deletingId !== null}
+                  >
+                    {deletingId === participant.id ? "..." : "×"}
                   </Button>
                 </div>
               </div>
@@ -144,22 +162,48 @@ export function ParticipantLinkTable({
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      size="sm"
-                      variant="pink"
-                      onClick={() =>
-                        onRegenerateLink(participant.id, participant.name)
-                      }
-                      disabled={regeneratingId !== null}
-                    >
-                      {regeneratingId === participant.id ? "..." : "Regenerieren"}
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="pink"
+                        onClick={() =>
+                          onRegenerateLink(participant.id, participant.name)
+                        }
+                        disabled={regeneratingId !== null || deletingId !== null}
+                      >
+                        {regeneratingId === participant.id ? "..." : "Regenerieren"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() =>
+                          onDeleteParticipant(participant.id, participant.name)
+                        }
+                        disabled={regeneratingId !== null || deletingId !== null}
+                      >
+                        {deletingId === participant.id ? "..." : "Löschen"}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Add Participant Button or Info */}
+      <div className="mt-4">
+        {canAddParticipants ? (
+          <Button variant="success" onClick={onAddParticipant}>
+            + Teilnehmer hinzufügen
+          </Button>
+        ) : (
+          <p className="text-sm text-muted-foreground italic">
+            Neue Teilnehmer können nicht mehr hinzugefügt werden, da bereits
+            Ziehungen stattgefunden haben.
+          </p>
+        )}
       </div>
     </>
   );

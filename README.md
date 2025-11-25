@@ -137,3 +137,7 @@ For detailed setup instructions, see `supabase/README.md`.
 ## TODO
 
 [See ROADMAP.md](ROADMAP.md)
+
+## Links
+
+- https://www.nngroup.com/articles/neobrutalism/

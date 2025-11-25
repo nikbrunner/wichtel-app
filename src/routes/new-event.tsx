@@ -14,7 +14,7 @@ import { format } from "date-fns";
 export const Route = createFileRoute("/new-event")({
   beforeLoad: ({ context }) => {
     if (!context.user) {
-      throw redirect({ to: "/auth/login" });
+      throw redirect({ to: "/" });
     }
   },
   component: Home

@@ -10,15 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as NewEventRouteImport } from './routes/new-event'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EEventSlugRouteImport } from './routes/e.$eventSlug'
-import { Route as AuthSignupRouteImport } from './routes/auth/signup'
-import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
 
 const NewEventRoute = NewEventRouteImport.update({
   id: '/new-event',
   path: '/new-event',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -31,80 +34,38 @@ const EEventSlugRoute = EEventSlugRouteImport.update({
   path: '/e/$eventSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/auth/signup',
-  path: '/auth/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthLogoutRoute = AuthLogoutRouteImport.update({
-  id: '/auth/logout',
-  path: '/auth/logout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
   '/new-event': typeof NewEventRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/logout': typeof AuthLogoutRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/e/$eventSlug': typeof EEventSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
   '/new-event': typeof NewEventRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/logout': typeof AuthLogoutRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/e/$eventSlug': typeof EEventSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
   '/new-event': typeof NewEventRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/logout': typeof AuthLogoutRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/e/$eventSlug': typeof EEventSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/new-event'
-    | '/auth/login'
-    | '/auth/logout'
-    | '/auth/signup'
-    | '/e/$eventSlug'
+  fullPaths: '/' | '/dashboard' | '/new-event' | '/e/$eventSlug'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/new-event'
-    | '/auth/login'
-    | '/auth/logout'
-    | '/auth/signup'
-    | '/e/$eventSlug'
-  id:
-    | '__root__'
-    | '/'
-    | '/new-event'
-    | '/auth/login'
-    | '/auth/logout'
-    | '/auth/signup'
-    | '/e/$eventSlug'
+  to: '/' | '/dashboard' | '/new-event' | '/e/$eventSlug'
+  id: '__root__' | '/' | '/dashboard' | '/new-event' | '/e/$eventSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRoute
   NewEventRoute: typeof NewEventRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthLogoutRoute: typeof AuthLogoutRoute
-  AuthSignupRoute: typeof AuthSignupRoute
   EEventSlugRoute: typeof EEventSlugRoute
 }
 
@@ -115,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/new-event'
       fullPath: '/new-event'
       preLoaderRoute: typeof NewEventRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -131,36 +99,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EEventSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/signup': {
-      id: '/auth/signup'
-      path: '/auth/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/logout': {
-      id: '/auth/logout'
-      path: '/auth/logout'
-      fullPath: '/auth/logout'
-      preLoaderRoute: typeof AuthLogoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRoute,
   NewEventRoute: NewEventRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthLogoutRoute: AuthLogoutRoute,
-  AuthSignupRoute: AuthSignupRoute,
   EEventSlugRoute: EEventSlugRoute,
 }
 export const routeTree = rootRouteImport

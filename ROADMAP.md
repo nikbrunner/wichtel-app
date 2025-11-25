@@ -17,6 +17,8 @@
 
 - [ ] feat: Internationalization
 - [ ] feat: A participant can optinally provide a list of interests
+  - Maybe a pre-draw date until adding new participants is possible and interests can also be added
+  - Then everything is locked in and everybody can draw
 - [ ] feat: light/dark mode
 
 ---
@@ -24,10 +26,15 @@
 ## 2025.11.25 - Tuesday
 
 - [x] style: Better styling (new framework)
+- [x] feat: custom stylings
+- [x] style: Better font
+- [x] feat: delete events
+- [x] feat: delete participants
+- [x] feat: add participants to existing events
+- [x] sign-in/up: via Modal
 - [ ] feat: landing page when not logged in
-- [ ] style: Better font
-- [ ] sign-in/up: via Modal
 - [ ] fix: button loading state in sign-in
   - Shows loading state when clicked but reverts to original state before submission
 - [ ] style: create Logo in Figma
 - [ ] feat: Add zod for validation
+- [ ] refactor: cleanup

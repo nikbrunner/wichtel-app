@@ -6,41 +6,42 @@ import {
   DialogFooter
 } from "@/components/retroui/Dialog";
 
-type RegenerateLinkModalProps = {
+type DeleteEventModalProps = {
   opened: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  participantName: string;
+  eventName: string;
+  participantCount: number;
   isLoading: boolean;
 };
 
-export function RegenerateLinkModal({
+export function DeleteEventModal({
   opened,
   onClose,
   onConfirm,
-  participantName,
+  eventName,
+  participantCount,
   isLoading
-}: RegenerateLinkModalProps) {
+}: DeleteEventModalProps) {
   return (
     <Dialog open={opened} onOpenChange={open => !open && onClose()}>
       <DialogContent>
-        <DialogHeader>Link regenerieren?</DialogHeader>
+        <DialogHeader>Event löschen?</DialogHeader>
         <div className="flex flex-col gap-4 p-6">
           <p>
-            Möchtest du wirklich einen neuen Link für{" "}
-            <strong>{participantName}</strong> generieren?
+            Möchtest du wirklich das Event <strong>{eventName}</strong> löschen?
           </p>
           <p className="text-sm text-muted-foreground">
-            Der alte Link wird ungültig und die bisherige Ziehung (falls vorhanden)
-            wird gelöscht. Der Teilnehmer muss erneut ziehen.
+            {participantCount} Teilnehmer und alle Ziehungen werden unwiderruflich
+            gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.
           </p>
         </div>
         <DialogFooter>
           <Button variant="link" onClick={onClose} disabled={isLoading}>
             Abbrechen
           </Button>
-          <Button onClick={onConfirm} disabled={isLoading}>
-            {isLoading ? "Wird regeneriert..." : "Regenerieren"}
+          <Button variant="destructive" onClick={onConfirm} disabled={isLoading}>
+            {isLoading ? "Wird gelöscht..." : "Löschen"}
           </Button>
         </DialogFooter>
       </DialogContent>
