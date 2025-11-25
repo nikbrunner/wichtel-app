@@ -67,13 +67,9 @@ export function ParticipantLinkTable({
                 <div className="flex justify-between items-start">
                   <span className="font-semibold">{participant.name}</span>
                   {participant.has_drawn ? (
-                    <Badge variant="solid" className="bg-green-500 text-white">
-                      Gezogen
-                    </Badge>
+                    <Badge variant="success">Gezogen</Badge>
                   ) : (
-                    <Badge variant="default" className="bg-muted">
-                      Noch nicht
-                    </Badge>
+                    <Badge variant="default">Noch nicht</Badge>
                   )}
                 </div>
 
@@ -82,15 +78,15 @@ export function ParticipantLinkTable({
                 <div className="flex gap-2">
                   <Button
                     onClick={() => copy(link, participant.id)}
-                    variant={isCopied ? "default" : "outline"}
+                    variant={isCopied ? "success" : "outline"}
                     size="sm"
                     className="flex-1"
                   >
-                    {isCopied ? "Kopiert" : "Kopieren"}
+                    {isCopied ? "Kopiert!" : "Kopieren"}
                   </Button>
                   <Button
                     size="sm"
-                    variant="outline"
+                    variant="pink"
                     onClick={() =>
                       onRegenerateLink(participant.id, participant.name)
                     }
@@ -126,13 +122,9 @@ export function ParticipantLinkTable({
                   <TableCell className="font-semibold">{participant.name}</TableCell>
                   <TableCell>
                     {participant.has_drawn ? (
-                      <Badge variant="solid" className="bg-green-500 text-white">
-                        Gezogen
-                      </Badge>
+                      <Badge variant="success">Gezogen</Badge>
                     ) : (
-                      <Badge variant="default" className="bg-muted">
-                        Noch nicht
-                      </Badge>
+                      <Badge variant="default">Noch nicht</Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -144,17 +136,17 @@ export function ParticipantLinkTable({
                       />
                       <Button
                         onClick={() => copy(link, participant.id)}
-                        variant={isCopied ? "default" : "outline"}
+                        variant={isCopied ? "success" : "outline"}
                         size="sm"
                       >
-                        {isCopied ? "Kopiert" : "Kopieren"}
+                        {isCopied ? "Kopiert!" : "Kopieren"}
                       </Button>
                     </div>
                   </TableCell>
                   <TableCell>
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="pink"
                       onClick={() =>
                         onRegenerateLink(participant.id, participant.name)
                       }

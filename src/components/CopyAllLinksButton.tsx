@@ -45,10 +45,10 @@ Viel Spaß beim Wichteln!`;
   return (
     <Button
       onClick={handleCopy}
-      variant={copied ? "default" : "outline"}
+      variant={copied ? "success" : "secondary"}
       className="w-full"
     >
-      {copied ? "Alle Links kopiert" : "Alle Links kopieren"}
+      {copied ? "Alle Links kopiert!" : "Alle Links kopieren"}
     </Button>
   );
 }

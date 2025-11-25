@@ -78,6 +78,7 @@
   --font-sans: "TX-02", sans-serif;
   --radius: var(--radius);
 
+  /* Size-based shadows (black border) */
   --shadow-xs: 1px 1px 0 0 var(--border);
   --shadow-sm: 2px 2px 0 0 var(--border);
   --shadow: 3px 3px 0 0 var(--border);
@@ -85,6 +86,20 @@
   --shadow-lg: 6px 6px 0 0 var(--border);
   --shadow-xl: 10px 10px 0 1px var(--border);
   --shadow-2xl: 16px 16px 0 1px var(--border);
+
+  /* Color-matched shadows */
+  --shadow-primary: 4px 4px 0 0 var(--primary);
+  --shadow-primary-sm: 2px 2px 0 0 var(--primary);
+  --shadow-success: 4px 4px 0 0 var(--success);
+  --shadow-success-sm: 2px 2px 0 0 var(--success);
+  --shadow-destructive: 4px 4px 0 0 var(--destructive);
+  --shadow-destructive-sm: 2px 2px 0 0 var(--destructive);
+  --shadow-info: 4px 4px 0 0 var(--info);
+  --shadow-info-sm: 2px 2px 0 0 var(--info);
+  --shadow-warning: 4px 4px 0 0 var(--warning);
+  --shadow-warning-sm: 2px 2px 0 0 var(--warning);
+  --shadow-pink: 4px 4px 0 0 var(--pink);
+  --shadow-pink-sm: 2px 2px 0 0 var(--pink);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -101,14 +116,22 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-pink: var(--pink);
+  --color-pink-foreground: var(--pink-foreground);
   --color-border: var(--border);
 }
 
 :root {
-  --radius: 0;
-  --background: #fff;
+  --radius: 0.5rem;
+  --background: #f0e6d3; /* bold warm cream */
   --foreground: #000;
-  --card: #fff;
+  --card: #faf6ef; /* lighter cream for cards */
   --card-foreground: #000;
   --primary: #ffdb33;
   --primary-hover: #ffcc00;
@@ -121,6 +144,14 @@
   --accent-foreground: #000;
   --destructive: #e63946;
   --destructive-foreground: #fff;
+  --success: #22c55e;
+  --success-foreground: #000;
+  --info: #3b82f6;
+  --info-foreground: #fff;
+  --warning: #f59e0b;
+  --warning-foreground: #000;
+  --pink: #ff6b9d;
+  --pink-foreground: #000;
   --border: #000;
 }
 
@@ -141,6 +172,14 @@
   --accent-foreground: #000;
   --destructive: #e63946;
   --destructive-foreground: #fff;
+  --success: #22c55e;
+  --success-foreground: #000;
+  --info: #3b82f6;
+  --info-foreground: #fff;
+  --warning: #f59e0b;
+  --warning-foreground: #000;
+  --pink: #ff6b9d;
+  --pink-foreground: #000;
   --border: #3a3a3a;
 }
 

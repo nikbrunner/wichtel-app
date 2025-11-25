@@ -8,24 +8,16 @@ type EventDateBadgeProps = {
 
 export function EventDateBadge({ daysUntil, isPast }: EventDateBadgeProps) {
   if (isPast) {
-    return (
-      <Badge variant="default" className="bg-muted text-muted-foreground">
-        Vergangen
-      </Badge>
-    );
+    return <Badge variant="default">Vergangen</Badge>;
   }
 
   if (daysUntil === 0) {
-    return (
-      <Badge variant="solid" className="bg-orange-500">
-        Heute!
-      </Badge>
-    );
+    return <Badge variant="warning">Heute!</Badge>;
   }
 
   if (daysUntil !== null && daysUntil <= 7) {
     return (
-      <Badge variant="solid" className="bg-yellow-500 text-black">
+      <Badge variant="surface">
         in {daysUntil} {daysUntil === 1 ? "Tag" : "Tagen"}
       </Badge>
     );

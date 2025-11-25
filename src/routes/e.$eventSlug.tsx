@@ -74,7 +74,7 @@ function ParticipantDraw() {
         <Card className="p-6 w-full">
           <div className="flex flex-col items-center gap-4">
             <p className="text-lg font-medium">Du beschenkst:</p>
-            <h2 className="font-head text-2xl text-green-600 text-center">
+            <h2 className="font-head text-2xl text-success text-center">
               {drawnName}
             </h2>
           </div>
@@ -108,6 +108,7 @@ function ParticipantDraw() {
       <Button
         onClick={handleDraw}
         disabled={isDrawing}
+        variant="success"
         size="lg"
         className="w-full max-w-sm"
       >

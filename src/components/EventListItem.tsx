@@ -102,7 +102,11 @@ export function EventListItem({ event }: EventListItemProps) {
 
         {/* Action Buttons */}
         <div className="flex gap-2 mt-2">
-          <Button size="sm" onClick={() => setExpanded(!expanded)}>
+          <Button
+            size="sm"
+            variant={expanded ? "outline" : "info"}
+            onClick={() => setExpanded(!expanded)}
+          >
             {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
           </Button>
         </div>

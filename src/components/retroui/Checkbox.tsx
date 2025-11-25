@@ -3,11 +3,15 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { cva, VariantProps } from "class-variance-authority";
 import { Check } from "lucide-react";
 
-const checkboxVariants = cva("border-2 rounded", {
+const checkboxVariants = cva("border-2 rounded-lg shadow-sm", {
   variants: {
     variant: {
       default:
-        "data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground ",
+        "data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:shadow-primary-sm",
+      success:
+        "data-[state=checked]:bg-success data-[state=checked]:text-success-foreground data-[state=checked]:shadow-success-sm",
+      info: "data-[state=checked]:bg-info data-[state=checked]:text-info-foreground data-[state=checked]:shadow-info-sm",
+      pink: "data-[state=checked]:bg-pink data-[state=checked]:text-pink-foreground data-[state=checked]:shadow-pink-sm",
       outline: "",
       solid:
         "data-[state=checked]:bg-foreground data-[state=checked]:text-background"
