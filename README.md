@@ -136,17 +136,4 @@ For detailed setup instructions, see `supabase/README.md`.
 
 ## TODO
 
-- [x] fix: title and favicon
-- [x] refactor: At least 3 participants
-- [x] feat: Admin Accounts
-  - [x] Events Overview Dashboard
-  - [x] Participant Links Management
-  - [x] Draw Stats
-  - [x] Date-based draw results visibility
-  - [x] Event date tracking
-  - [x] Link regeneration with modal
-  - [x] RLS Security
-- [ ] feat: Add zod for validation
-- [ ] style: Better styling
-- [ ] style: Better font
-- [ ] feat: Internationalization
+[See ROADMAP.md](ROADMAP.md)
