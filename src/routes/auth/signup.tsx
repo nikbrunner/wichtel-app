@@ -53,10 +53,10 @@ function SignupPage() {
   if (success) {
     return (
       <div className="flex flex-col gap-6 max-w-md mx-auto mt-12">
-        <Card className="p-6">
+        <Card variant="success" className="p-6">
           <div className="flex flex-col items-center gap-4">
-            <h3 className="font-head text-xl text-green-600">Account created!</h3>
-            <p className="text-muted-foreground text-center">
+            <h3 className="font-head text-xl">Account created!</h3>
+            <p className="opacity-90 text-center">
               Your account has been created successfully. Redirecting to login...
             </p>
           </div>
@@ -90,6 +90,7 @@ function SignupPage() {
                   setEmail(e.target.value)
                 }
                 required
+                variant="info"
               />
             </div>
 
@@ -106,6 +107,7 @@ function SignupPage() {
                   setPassword(e.target.value)
                 }
                 required
+                variant="success"
               />
             </div>
 
@@ -122,6 +124,7 @@ function SignupPage() {
                   setConfirmPassword(e.target.value)
                 }
                 required
+                variant="pink"
               />
             </div>
 

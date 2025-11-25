@@ -71,12 +71,10 @@ function ParticipantDraw() {
           Hallo {participantInfo.participantName}!
         </h1>
 
-        <Card className="p-6 w-full">
+        <Card variant="success" className="p-6 w-full">
           <div className="flex flex-col items-center gap-4">
             <p className="text-lg font-medium">Du beschenkst:</p>
-            <h2 className="font-head text-2xl text-success text-center">
-              {drawnName}
-            </h2>
+            <h2 className="font-head text-2xl text-center">{drawnName}</h2>
           </div>
         </Card>
 

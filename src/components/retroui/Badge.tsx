@@ -2,13 +2,13 @@ import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 import React, { HTMLAttributes } from "react";
 
-const badgeVariants = cva("font-semibold rounded-lg border-2 border-black", {
+const badgeVariants = cva("font-semibold rounded-lg border-2 border-border", {
   variants: {
     variant: {
-      default: "bg-muted text-muted-foreground shadow-sm",
+      default: "bg-card text-card-foreground shadow-sm",
       outline: "bg-transparent text-foreground shadow-sm",
       solid: "bg-foreground text-background shadow-sm",
-      surface: "bg-primary text-primary-foreground shadow-primary-sm",
+      primary: "bg-primary text-primary-foreground shadow-primary-sm",
       success: "bg-success text-success-foreground shadow-success-sm",
       destructive:
         "bg-destructive text-destructive-foreground shadow-destructive-sm",

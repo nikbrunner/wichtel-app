@@ -17,7 +17,7 @@ export function EventDateBadge({ daysUntil, isPast }: EventDateBadgeProps) {
 
   if (daysUntil !== null && daysUntil <= 7) {
     return (
-      <Badge variant="surface">
+      <Badge variant="primary">
         in {daysUntil} {daysUntil === 1 ? "Tag" : "Tagen"}
       </Badge>
     );

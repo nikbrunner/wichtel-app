@@ -125,62 +125,70 @@
   --color-pink: var(--pink);
   --color-pink-foreground: var(--pink-foreground);
   --color-border: var(--border);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 }
 
 :root {
   --radius: 0.5rem;
-  --background: #f0e6d3; /* bold warm cream */
-  --foreground: #000;
-  --card: #faf6ef; /* lighter cream for cards */
-  --card-foreground: #000;
-  --primary: #ffdb33;
-  --primary-hover: #ffcc00;
-  --primary-foreground: #000;
-  --secondary: #000;
-  --secondary-foreground: #fff;
-  --muted: #aeaeae;
+  /* Windows 98 Inspired Palette */
+  --background: #f6f3df; /* eggshell - warm cream background */
+  --foreground: #1a1a1a; /* carbon black */
+  --card: #faf8f0; /* slightly lighter eggshell for cards */
+  --card-foreground: #1a1a1a;
+  --primary: #fac706; /* bright amber - main yellow */
+  --primary-hover: #e0b305;
+  --primary-foreground: #1a1a1a;
+  --secondary: #1a1a1a; /* carbon black */
+  --secondary-foreground: #f6f3df;
+  --muted: #d4d0c0; /* muted eggshell */
   --muted-foreground: #5a5a5a;
-  --accent: #fae583;
-  --accent-foreground: #000;
-  --destructive: #e63946;
+  --accent: #fae583; /* lighter amber for accents */
+  --accent-foreground: #1a1a1a;
+  --destructive: #ff2d3b; /* strawberry red */
   --destructive-foreground: #fff;
-  --success: #22c55e;
-  --success-foreground: #000;
-  --info: #3b82f6;
+  --success: #17835e; /* sea green */
+  --success-foreground: #fff;
+  --info: #21a8ee; /* fresh sky blue */
   --info-foreground: #fff;
-  --warning: #f59e0b;
-  --warning-foreground: #000;
-  --pink: #ff6b9d;
-  --pink-foreground: #000;
-  --border: #000;
+  --warning: #fac706; /* bright amber */
+  --warning-foreground: #1a1a1a;
+  --pink: #ff8fc8; /* pink carnation */
+  --pink-foreground: #1a1a1a;
+  --border: #1a1a1a; /* carbon black for borders */
+  --popover: #faf8f0; /* same as card */
+  --popover-foreground: #1a1a1a;
 }
 
 .dark {
-  --radius: 0;
-  --background: #1a1a1a;
-  --foreground: #f5f5f5;
-  --card: #242424;
-  --card-foreground: #f5f5f5;
-  --primary: #ffdb33;
-  --primary-hover: #ffcc00;
-  --primary-foreground: #000;
+  --radius: 0.5rem;
+  /* Windows 98 Dark Mode */
+  --background: #1a1a1a; /* carbon black */
+  --foreground: #f6f3df; /* eggshell */
+  --card: #2a2a2a;
+  --card-foreground: #f6f3df;
+  --primary: #fac706; /* bright amber */
+  --primary-hover: #e0b305;
+  --primary-foreground: #1a1a1a;
   --secondary: #3a3a3a;
-  --secondary-foreground: #f5f5f5;
+  --secondary-foreground: #f6f3df;
   --muted: #3f3f46;
   --muted-foreground: #a0a0a0;
   --accent: #fae583;
-  --accent-foreground: #000;
-  --destructive: #e63946;
+  --accent-foreground: #1a1a1a;
+  --destructive: #ff2d3b; /* strawberry red */
   --destructive-foreground: #fff;
-  --success: #22c55e;
-  --success-foreground: #000;
-  --info: #3b82f6;
+  --success: #17835e; /* sea green */
+  --success-foreground: #fff;
+  --info: #21a8ee; /* fresh sky */
   --info-foreground: #fff;
-  --warning: #f59e0b;
-  --warning-foreground: #000;
-  --pink: #ff6b9d;
-  --pink-foreground: #000;
-  --border: #3a3a3a;
+  --warning: #fac706; /* bright amber */
+  --warning-foreground: #1a1a1a;
+  --pink: #ff8fc8; /* pink carnation */
+  --pink-foreground: #1a1a1a;
+  --border: #4a4a4a;
+  --popover: #2a2a2a;
+  --popover-foreground: #f6f3df;
 }
 
 /* Base styles */

@@ -199,6 +199,7 @@ function Home() {
                   }
                   onBlur={field.handleBlur}
                   required
+                  variant="info"
                 />
                 {field.state.meta.errors.length > 0 && (
                   <p className="text-red-600 text-sm">
@@ -265,6 +266,7 @@ function Home() {
                               }
                               className="flex-1"
                               required
+                              variant="pink"
                             />
                             {field.state.value.length > 3 && (
                               <Button
@@ -317,6 +319,7 @@ function Home() {
                   disabled={!canSubmit || isSubmitting}
                   size="lg"
                   className="w-full"
+                  variant="success"
                 >
                   {isSubmitting ? "Wird erstellt..." : "Event erstellen"}
                 </Button>

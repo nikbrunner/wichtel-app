@@ -4,16 +4,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Text } from "@/components/retroui/Text";
 
-const alertVariants = cva("relative w-full rounded-lg border-2 p-4", {
+const alertVariants = cva("relative w-full rounded-lg border-2 border-border p-4", {
   variants: {
     variant: {
       default: "bg-card text-foreground shadow-md [&_svg]:shrink-0",
-      solid: "bg-black text-white shadow-md",
-      danger:
-        "bg-destructive/20 text-destructive border-destructive shadow-destructive",
-      success: "bg-success/20 text-success border-success shadow-success",
-      warning: "bg-warning/20 text-warning border-warning shadow-warning",
-      info: "bg-info/20 text-info border-info shadow-info"
+      solid: "bg-foreground text-background shadow-md",
+      danger: "bg-destructive text-destructive-foreground shadow-destructive",
+      success: "bg-success text-success-foreground shadow-success",
+      warning: "bg-warning text-warning-foreground shadow-warning",
+      info: "bg-info text-info-foreground shadow-info",
+      pink: "bg-pink text-pink-foreground shadow-pink"
     }
   },
   defaultVariants: {
@@ -42,7 +42,7 @@ AlertTitle.displayName = "AlertTitle";
 
 type IAlertDescriptionProps = HtmlHTMLAttributes<HTMLParagraphElement>;
 const AlertDescription = ({ className, ...props }: IAlertDescriptionProps) => (
-  <div className={cn("text-muted-foreground", className)} {...props} />
+  <div className={cn("opacity-90", className)} {...props} />
 );
 
 AlertDescription.displayName = "AlertDescription";

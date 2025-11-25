@@ -4,17 +4,18 @@ import { HTMLAttributes } from "react";
 import { Text } from "@/components/retroui/Text";
 
 const cardVariants = cva(
-  "inline-block border-2 rounded-lg transition-all hover:shadow-none bg-card",
+  "inline-block border-2 border-border rounded-lg transition-all hover:shadow-none",
   {
     variants: {
       variant: {
-        default: "shadow-md",
-        primary: "shadow-primary border-primary",
-        success: "shadow-success border-success",
-        info: "shadow-info border-info",
-        warning: "shadow-warning border-warning",
-        pink: "shadow-pink border-pink",
-        destructive: "shadow-destructive border-destructive"
+        default: "shadow-md bg-card",
+        primary: "shadow-primary bg-primary text-primary-foreground",
+        success: "shadow-success bg-success text-success-foreground",
+        info: "shadow-info bg-info text-info-foreground",
+        warning: "shadow-warning bg-warning text-warning-foreground",
+        pink: "shadow-pink bg-pink text-pink-foreground",
+        destructive: "shadow-destructive bg-destructive text-destructive-foreground",
+        muted: "shadow-sm bg-muted text-muted-foreground"
       }
     },
     defaultVariants: {

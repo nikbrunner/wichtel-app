@@ -56,6 +56,7 @@ function LoginPage() {
                   setEmail(e.target.value)
                 }
                 required
+                variant="info"
               />
             </div>
 
@@ -72,6 +73,7 @@ function LoginPage() {
                   setPassword(e.target.value)
                 }
                 required
+                variant="success"
               />
             </div>
 
