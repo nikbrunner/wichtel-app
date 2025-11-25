@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Button } from "@/components/retroui/Button";
 import { useState } from "react";
 
 type CopyAllLinksButtonProps = {
@@ -31,7 +31,7 @@ ${participants
   })
   .join("\n\n")}
 
-Viel Spaß beim Wichteln! 🎁`;
+Viel Spaß beim Wichteln!`;
 
     try {
       await navigator.clipboard.writeText(message);
@@ -45,11 +45,10 @@ Viel Spaß beim Wichteln! 🎁`;
   return (
     <Button
       onClick={handleCopy}
-      variant={copied ? "filled" : "light"}
-      color={copied ? "green" : "blue"}
-      fullWidth
+      variant={copied ? "default" : "outline"}
+      className="w-full"
     >
-      {copied ? "✓ Alle Links kopiert" : "Alle Links kopieren"}
+      {copied ? "Alle Links kopiert" : "Alle Links kopieren"}
     </Button>
   );
 }

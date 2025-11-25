@@ -1,15 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-  TextInput,
-  PasswordInput,
-  Button,
-  Stack,
-  Title,
-  Text,
-  Anchor,
-  Paper
-} from "@mantine/core";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Button } from "@/components/retroui/Button";
+import { Input } from "@/components/retroui/Input";
+import { Card } from "@/components/retroui/Card";
 import { signIn } from "~/server/auth/signIn";
 
 export const Route = createFileRoute("/auth/login")({
@@ -30,7 +23,6 @@ function LoginPage() {
 
     try {
       await signIn({ data: { email, password } });
-      // TODO: Navigate to dashboard once it's created
       navigate({ to: "/" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
@@ -40,53 +32,64 @@ function LoginPage() {
   };
 
   return (
-    <Stack gap="xl" maw={400} mx="auto" mt="xl">
+    <div className="flex flex-col gap-6 max-w-md mx-auto mt-12">
       <div>
-        <Title order={2}>Welcome back</Title>
-        <Text c="dimmed" size="sm" mt={5}>
+        <h2 className="font-head text-2xl">Welcome back</h2>
+        <p className="text-muted-foreground text-sm mt-1">
           Sign in to manage your Secret Santa events
-        </Text>
+        </p>
       </div>
 
-      <Paper withBorder shadow="md" p={30} radius="md">
+      <Card className="p-6">
         <form onSubmit={handleSubmit}>
-          <Stack gap="md">
-            <TextInput
-              label="Email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={e => setEmail(e.currentTarget.value)}
-              required
-              type="email"
-            />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+                required
+              />
+            </div>
 
-            <PasswordInput
-              label="Password"
-              placeholder="Your password"
-              value={password}
-              onChange={e => setPassword(e.currentTarget.value)}
-              required
-            />
+            <div className="flex flex-col gap-1">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Your password"
+                value={password}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
+                required
+              />
+            </div>
 
-            {error && (
-              <Text c="red" size="sm">
-                {error}
-              </Text>
-            )}
+            {error && <p className="text-red-600 text-sm">{error}</p>}
 
-            <Button type="submit" fullWidth loading={isLoading}>
-              Sign in
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
-          </Stack>
+          </div>
         </form>
 
-        <Text c="dimmed" size="sm" ta="center" mt="md">
+        <p className="text-muted-foreground text-sm text-center mt-4">
           Don't have an account?{" "}
-          <Anchor size="sm" component="a" href="/auth/signup">
+          <Link to="/auth/signup" className="underline hover:text-foreground">
             Sign up
-          </Anchor>
-        </Text>
-      </Paper>
-    </Stack>
+          </Link>
+        </p>
+      </Card>
+    </div>
   );
 }

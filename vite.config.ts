@@ -17,8 +17,5 @@ export default defineConfig({
     tanstackStart(),
     nitro(),
     viteReact()
-  ],
-  ssr: {
-    noExternal: ["@mantine/core", "@mantine/hooks"]
-  }
+  ]
 });

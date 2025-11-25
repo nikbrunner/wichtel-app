@@ -1,14 +1,7 @@
 import { useState } from "react";
-import {
-  Paper,
-  Stack,
-  Group,
-  Text,
-  Button,
-  Collapse,
-  Divider,
-  Alert
-} from "@mantine/core";
+import { Button } from "@/components/retroui/Button";
+import { Card } from "@/components/retroui/Card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
 import { EventDateBadge } from "./EventDateBadge";
 import { ParticipantLinkTable } from "./ParticipantLinkTable";
 import { DrawResultsSection } from "./DrawResultsSection";
@@ -67,106 +60,104 @@ export function EventListItem({ event }: EventListItemProps) {
   };
 
   return (
-    <Paper p="lg" withBorder shadow="sm">
-      <Stack gap="sm">
+    <Card className="p-6">
+      <div className="flex flex-col gap-3">
         {/* Event Header */}
-        <Group justify="space-between" wrap="nowrap">
-          <div style={{ flex: 1 }}>
-            <Group gap="sm" mb={4}>
-              <Text fw={700} size="lg">
-                {event.name}
-              </Text>
+        <div className="flex justify-between flex-nowrap">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-head text-lg">{event.name}</span>
               <EventDateBadge
                 eventDate={event.event_date}
                 daysUntil={event.days_until_event}
                 isPast={event.is_past}
               />
-            </Group>
-            <Text size="sm" c="dimmed">
+            </div>
+            <p className="text-sm text-muted-foreground">
               {new Date(event.event_date).toLocaleDateString("de-DE", {
                 day: "2-digit",
                 month: "long",
                 year: "numeric"
               })}
               {event.days_until_event !== null && (
-                <> • {event.days_until_event} Tage bis Event</>
+                <> · {event.days_until_event} Tage bis Event</>
               )}
-            </Text>
+            </p>
           </div>
-        </Group>
+        </div>
 
         {/* Stats */}
-        <Group gap="lg">
+        <div className="flex gap-6">
           <div>
-            <Text size="xs" c="dimmed">
-              Teilnehmer
-            </Text>
-            <Text fw={600}>{event.participant_count}</Text>
+            <span className="text-xs text-muted-foreground">Teilnehmer</span>
+            <p className="font-semibold">{event.participant_count}</p>
           </div>
           <div>
-            <Text size="xs" c="dimmed">
-              Gezogen
-            </Text>
-            <Text fw={600}>
+            <span className="text-xs text-muted-foreground">Gezogen</span>
+            <p className="font-semibold">
               {event.drawn_count} / {event.participant_count}
-            </Text>
+            </p>
           </div>
-        </Group>
+        </div>
 
         {/* Action Buttons */}
-        <Group gap="sm" mt="sm">
-          <Button variant="filled" size="sm" onClick={() => setExpanded(!expanded)}>
+        <div className="flex gap-2 mt-2">
+          <Button size="sm" onClick={() => setExpanded(!expanded)}>
             {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
           </Button>
-        </Group>
+        </div>
 
         {/* Collapsible Participant Details */}
-        <Collapse in={expanded}>
-          <Divider my="md" />
-          <Stack gap="md">
-            {error && (
-              <Alert
-                color="red"
-                title="Fehler"
-                withCloseButton
-                onClose={() => setError(null)}
-              >
-                {error}
-              </Alert>
-            )}
-            {successMessage && (
-              <Alert
-                color="green"
-                title="Erfolg"
-                withCloseButton
-                onClose={() => setSuccessMessage(null)}
-              >
-                {successMessage}
-              </Alert>
-            )}
-            <Text size="sm" fw={600}>
-              Teilnehmer-Links
-            </Text>
-            <ParticipantLinkTable
-              eventSlug={event.slug}
-              participants={event.participants}
-              onRegenerateLink={handleRegenerateClick}
-              regeneratingId={regenerating}
-            />
-            <CopyAllLinksButton
-              eventName={event.name}
-              eventSlug={event.slug}
-              participants={event.participants}
-            />
-            <Divider my="md" />
-            <DrawResultsSection
-              eventDate={event.event_date}
-              isPast={event.is_past}
-              drawResults={event.draw_results}
-            />
-          </Stack>
-        </Collapse>
-      </Stack>
+        {expanded && (
+          <>
+            <hr className="border-t-2 border-border my-4" />
+            <div className="flex flex-col gap-4">
+              {error && (
+                <Alert variant="danger">
+                  <AlertTitle>Fehler</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                  <button
+                    onClick={() => setError(null)}
+                    className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+                  >
+                    ×
+                  </button>
+                </Alert>
+              )}
+              {successMessage && (
+                <Alert variant="success">
+                  <AlertTitle>Erfolg</AlertTitle>
+                  <AlertDescription>{successMessage}</AlertDescription>
+                  <button
+                    onClick={() => setSuccessMessage(null)}
+                    className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+                  >
+                    ×
+                  </button>
+                </Alert>
+              )}
+              <span className="text-sm font-semibold">Teilnehmer-Links</span>
+              <ParticipantLinkTable
+                eventSlug={event.slug}
+                participants={event.participants}
+                onRegenerateLink={handleRegenerateClick}
+                regeneratingId={regenerating}
+              />
+              <CopyAllLinksButton
+                eventName={event.name}
+                eventSlug={event.slug}
+                participants={event.participants}
+              />
+              <hr className="border-t-2 border-border my-4" />
+              <DrawResultsSection
+                eventDate={event.event_date}
+                isPast={event.is_past}
+                drawResults={event.draw_results}
+              />
+            </div>
+          </>
+        )}
+      </div>
       <RegenerateLinkModal
         opened={modalOpened}
         onClose={() => {
@@ -177,6 +168,6 @@ export function EventListItem({ event }: EventListItemProps) {
         participantName={selectedParticipant?.name || ""}
         isLoading={regenerating !== null}
       />
-    </Paper>
+    </Card>
   );
 }

@@ -106,7 +106,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, IDialogContentProps>(
 );
 DialogContent.displayName = "DialogContent";
 
-interface IDialogDescriptionProps extends HTMLAttributes<HTMLDivElement> {}
+type IDialogDescriptionProps = HTMLAttributes<HTMLDivElement>;
 const DialogDescription = ({
   children,
   className,
@@ -215,12 +215,24 @@ const DialogHeader = ({
   );
 };
 
+// Alias for DialogHeader (commonly expected name)
+const DialogTitle = DialogHeader;
+
 const DialogComponent = Object.assign(Dialog, {
   Trigger: DialogTrigger,
   Header: DialogHeader,
   Content: DialogContent,
   Description: DialogDescription,
-  Footer: DialogFooter
+  Footer: DialogFooter,
+  Title: DialogTitle
 });
 
-export { DialogComponent as Dialog };
+export {
+  DialogComponent as Dialog,
+  DialogTrigger,
+  DialogHeader,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle
+};

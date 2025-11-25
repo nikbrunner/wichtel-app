@@ -1,39 +1,40 @@
-import { Paper, Stack, Group, Skeleton } from "@mantine/core";
+import { Card } from "@/components/retroui/Card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function EventListSkeleton() {
   return (
-    <Stack gap="md">
+    <div className="flex flex-col gap-4">
       {[1, 2, 3].map(i => (
-        <Paper key={i} p="lg" withBorder shadow="sm">
-          <Stack gap="sm">
+        <Card key={i} className="p-6">
+          <div className="flex flex-col gap-3">
             {/* Header */}
-            <Group justify="space-between" wrap="nowrap">
-              <div style={{ flex: 1 }}>
-                <Group gap="sm" mb={4}>
-                  <Skeleton height={28} width={200} />
-                  <Skeleton height={24} width={80} />
-                </Group>
-                <Skeleton height={16} width={300} />
+            <div className="flex justify-between flex-nowrap">
+              <div className="flex-1">
+                <div className="flex gap-2 mb-1">
+                  <Skeleton className="h-7 w-48" />
+                  <Skeleton className="h-6 w-20" />
+                </div>
+                <Skeleton className="h-4 w-72" />
               </div>
-            </Group>
+            </div>
 
             {/* Stats */}
-            <Group gap="lg">
+            <div className="flex gap-6">
               <div>
-                <Skeleton height={12} width={80} mb={4} />
-                <Skeleton height={20} width={30} />
+                <Skeleton className="h-3 w-20 mb-1" />
+                <Skeleton className="h-5 w-8" />
               </div>
               <div>
-                <Skeleton height={12} width={80} mb={4} />
-                <Skeleton height={20} width={50} />
+                <Skeleton className="h-3 w-20 mb-1" />
+                <Skeleton className="h-5 w-12" />
               </div>
-            </Group>
+            </div>
 
             {/* Button */}
-            <Skeleton height={36} width={200} mt="sm" />
-          </Stack>
-        </Paper>
+            <Skeleton className="h-9 w-48 mt-2" />
+          </div>
+        </Card>
       ))}
-    </Stack>
+    </div>
   );
 }

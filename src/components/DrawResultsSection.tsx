@@ -1,4 +1,13 @@
-import { Stack, Title, Text, Paper, Table, Alert } from "@mantine/core";
+import { Card } from "@/components/retroui/Card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell
+} from "@/components/retroui/Table";
 import type { DrawResult } from "../types/database";
 import dayjs from "dayjs";
 
@@ -16,71 +25,60 @@ export function DrawResultsSection({
   // If event date hasn't passed, show lock message
   if (!isPast) {
     return (
-      <Stack gap="md">
-        <Title order={3} size="h4">
-          🔒 Ziehungsergebnisse
-        </Title>
-        <Alert color="blue" title="Noch nicht verfügbar">
-          <Text size="sm">
-            Die Ziehungsergebnisse werden erst nach dem Event-Datum ({" "}
+      <div className="flex flex-col gap-4">
+        <h3 className="font-head text-lg">Ziehungsergebnisse</h3>
+        <Alert variant="info">
+          <AlertTitle>Noch nicht verfügbar</AlertTitle>
+          <AlertDescription>
+            Die Ziehungsergebnisse werden erst nach dem Event-Datum (
             {dayjs(eventDate).format("DD.MM.YYYY")}) sichtbar, um die Überraschung zu
             bewahren.
-          </Text>
+          </AlertDescription>
         </Alert>
-      </Stack>
+      </div>
     );
   }
 
   // If past but no results yet
   if (!drawResults || drawResults.length === 0) {
     return (
-      <Stack gap="md">
-        <Title order={3} size="h4">
-          Ziehungsergebnisse
-        </Title>
-        <Paper p="md" withBorder>
-          <Text c="dimmed" ta="center">
+      <div className="flex flex-col gap-4">
+        <h3 className="font-head text-lg">Ziehungsergebnisse</h3>
+        <Card className="p-4">
+          <p className="text-muted-foreground text-center">
             Noch niemand hat gezogen.
-          </Text>
-        </Paper>
-      </Stack>
+          </p>
+        </Card>
+      </div>
     );
   }
 
   // Show results
   return (
-    <Stack gap="md">
-      <Title order={3} size="h4">
-        Ziehungsergebnisse
-      </Title>
-      <Paper withBorder>
-        <Table striped highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Wer zieht</Table.Th>
-              <Table.Th>Hat gezogen</Table.Th>
-              <Table.Th>Wann</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
+    <div className="flex flex-col gap-4">
+      <h3 className="font-head text-lg">Ziehungsergebnisse</h3>
+      <Card>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Wer zieht</TableHead>
+              <TableHead>Hat gezogen</TableHead>
+              <TableHead>Wann</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {drawResults.map((result, index) => (
-              <Table.Tr key={index}>
-                <Table.Td>
-                  <Text fw={600}>{result.drawer_name}</Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text>{result.drawn_name}</Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="dimmed">
-                    {dayjs(result.created_at).format("DD.MM.YYYY HH:mm")}
-                  </Text>
-                </Table.Td>
-              </Table.Tr>
+              <TableRow key={index}>
+                <TableCell className="font-semibold">{result.drawer_name}</TableCell>
+                <TableCell>{result.drawn_name}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  {dayjs(result.created_at).format("DD.MM.YYYY HH:mm")}
+                </TableCell>
+              </TableRow>
             ))}
-          </Table.Tbody>
+          </TableBody>
         </Table>
-      </Paper>
-    </Stack>
+      </Card>
+    </div>
   );
 }

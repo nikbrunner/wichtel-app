@@ -1,15 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-  TextInput,
-  PasswordInput,
-  Button,
-  Stack,
-  Title,
-  Text,
-  Anchor,
-  Paper
-} from "@mantine/core";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Button } from "@/components/retroui/Button";
+import { Input } from "@/components/retroui/Input";
+import { Card } from "@/components/retroui/Card";
 import { signUp } from "~/server/auth/signUp";
 
 export const Route = createFileRoute("/auth/signup")({
@@ -59,77 +52,94 @@ function SignupPage() {
 
   if (success) {
     return (
-      <Stack gap="xl" maw={400} mx="auto" mt="xl">
-        <Paper withBorder shadow="md" p={30} radius="md">
-          <Stack gap="md" align="center">
-            <Title order={3} c="green">
-              Account created!
-            </Title>
-            <Text c="dimmed" ta="center">
+      <div className="flex flex-col gap-6 max-w-md mx-auto mt-12">
+        <Card className="p-6">
+          <div className="flex flex-col items-center gap-4">
+            <h3 className="font-head text-xl text-green-600">Account created!</h3>
+            <p className="text-muted-foreground text-center">
               Your account has been created successfully. Redirecting to login...
-            </Text>
-          </Stack>
-        </Paper>
-      </Stack>
+            </p>
+          </div>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Stack gap="xl" maw={400} mx="auto" mt="xl">
+    <div className="flex flex-col gap-6 max-w-md mx-auto mt-12">
       <div>
-        <Title order={2}>Create an account</Title>
-        <Text c="dimmed" size="sm" mt={5}>
+        <h2 className="font-head text-2xl">Create an account</h2>
+        <p className="text-muted-foreground text-sm mt-1">
           Sign up to start organizing Secret Santa events
-        </Text>
+        </p>
       </div>
 
-      <Paper withBorder shadow="md" p={30} radius="md">
+      <Card className="p-6">
         <form onSubmit={handleSubmit}>
-          <Stack gap="md">
-            <TextInput
-              label="Email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={e => setEmail(e.currentTarget.value)}
-              required
-              type="email"
-            />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+                required
+              />
+            </div>
 
-            <PasswordInput
-              label="Password"
-              placeholder="At least 6 characters"
-              value={password}
-              onChange={e => setPassword(e.currentTarget.value)}
-              required
-            />
+            <div className="flex flex-col gap-1">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="At least 6 characters"
+                value={password}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
+                required
+              />
+            </div>
 
-            <PasswordInput
-              label="Confirm password"
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={e => setConfirmPassword(e.currentTarget.value)}
-              required
-            />
+            <div className="flex flex-col gap-1">
+              <label htmlFor="confirmPassword" className="text-sm font-medium">
+                Confirm password
+              </label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setConfirmPassword(e.target.value)
+                }
+                required
+              />
+            </div>
 
-            {error && (
-              <Text c="red" size="sm">
-                {error}
-              </Text>
-            )}
+            {error && <p className="text-red-600 text-sm">{error}</p>}
 
-            <Button type="submit" fullWidth loading={isLoading}>
-              Sign up
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? "Creating account..." : "Sign up"}
             </Button>
-          </Stack>
+          </div>
         </form>
 
-        <Text c="dimmed" size="sm" ta="center" mt="md">
+        <p className="text-muted-foreground text-sm text-center mt-4">
           Already have an account?{" "}
-          <Anchor size="sm" component="a" href="/auth/login">
+          <Link to="/auth/login" className="underline hover:text-foreground">
             Sign in
-          </Anchor>
-        </Text>
-      </Paper>
-    </Stack>
+          </Link>
+        </p>
+      </Card>
+    </div>
   );
 }

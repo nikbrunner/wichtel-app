@@ -1,20 +1,10 @@
 import { createFileRoute, redirect, Link } from "@tanstack/react-router";
-import {
-  Button,
-  Stack,
-  Title,
-  TextInput,
-  Text,
-  Paper,
-  Group,
-  ActionIcon,
-  CopyButton,
-  Tooltip,
-  Alert
-} from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 import { useState, useMemo } from "react";
 import { useForm } from "@tanstack/react-form";
+import { Button } from "@/components/retroui/Button";
+import { Input } from "@/components/retroui/Input";
+import { Card } from "@/components/retroui/Card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
 import { createEvent } from "../server/createEvent";
 import type { CreateEventOutput } from "../types/database";
 import dayjs from "dayjs";
@@ -28,8 +18,25 @@ export const Route = createFileRoute("/new-event")({
   component: Home
 });
 
+function useCopyToClipboard() {
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copy = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (error) {
+      console.error("Failed to copy:", error);
+    }
+  };
+
+  return { copiedId, copy };
+}
+
 function Home() {
   const [result, setResult] = useState<CreateEventOutput | null>(null);
+  const { copiedId, copy } = useCopyToClipboard();
 
   const initialParticipants = useMemo(
     () => [
@@ -43,7 +50,7 @@ function Home() {
   const form = useForm({
     defaultValues: {
       eventName: "",
-      eventDate: null as Date | null,
+      eventDate: "",
       participants: initialParticipants
     },
     onSubmit: async ({ value }) => {
@@ -58,7 +65,7 @@ function Home() {
       const eventResult = await createEvent({
         data: {
           eventName: value.eventName.trim(),
-          eventDate: dayjs(value.eventDate).format("YYYY-MM-DD"),
+          eventDate: value.eventDate,
           participantNames: filteredNames
         }
       });
@@ -73,105 +80,93 @@ function Home() {
   };
 
   if (result) {
-    return (
-      <Stack p="xl" gap="lg" maw={800} mx="auto">
-        <Title order={1} ta="center">
-          🎄 Wichtel-Event erstellt!
-        </Title>
+    const adminLink = `${window.location.origin}/admin/${result.eventSlug}?token=${result.adminToken}`;
 
-        <Alert color="green" title="Erfolg">
-          Dein Wichtel-Event &quot;{result.eventSlug}&quot; wurde erstellt!
+    return (
+      <div className="flex flex-col gap-6 max-w-3xl mx-auto p-4 sm:p-6">
+        <h1 className="font-head text-2xl sm:text-3xl text-center">
+          Wichtel-Event erstellt!
+        </h1>
+
+        <Alert variant="success">
+          <AlertTitle>Erfolg</AlertTitle>
+          <AlertDescription>
+            Dein Wichtel-Event &quot;{result.eventSlug}&quot; wurde erstellt!
+          </AlertDescription>
         </Alert>
 
-        <Paper p="lg" withBorder>
-          <Stack gap="md">
+        <Card className="p-6">
+          <div className="flex flex-col gap-6">
             <div>
-              <Text fw={700} mb="xs">
-                Admin-Link (für dich):
-              </Text>
-              <Group gap="xs">
-                <TextInput
-                  readOnly
-                  value={`${window.location.origin}/admin/${result.eventSlug}?token=${result.adminToken}`}
-                  style={{ flex: 1 }}
-                />
-                <CopyButton
-                  value={`${window.location.origin}/admin/${result.eventSlug}?token=${result.adminToken}`}
+              <p className="font-semibold mb-2">Admin-Link (für dich):</p>
+              <div className="flex gap-2">
+                <Input readOnly value={adminLink} className="flex-1" />
+                <Button
+                  onClick={() => copy(adminLink, "admin")}
+                  variant={copiedId === "admin" ? "default" : "outline"}
                 >
-                  {({ copied, copy }) => (
-                    <Tooltip label={copied ? "Kopiert!" : "Kopieren"}>
-                      <Button onClick={copy} variant={copied ? "filled" : "light"}>
-                        {copied ? "✓" : "Kopieren"}
-                      </Button>
-                    </Tooltip>
-                  )}
-                </CopyButton>
-              </Group>
+                  {copiedId === "admin" ? "Kopiert" : "Kopieren"}
+                </Button>
+              </div>
             </div>
 
             <div>
-              <Text fw={700} mb="xs">
-                Teilnehmer-Links:
-              </Text>
-              <Stack gap="sm">
-                {result.participants.map(participant => (
-                  <Paper key={participant.token} p="sm" withBorder bg="gray.0">
-                    <Stack gap="xs">
-                      <Text size="sm" fw={600}>
-                        {participant.name}
-                      </Text>
-                      <Group gap="xs">
-                        <TextInput
-                          readOnly
-                          value={`${window.location.origin}${participant.link}`}
-                          size="xs"
-                          style={{ flex: 1 }}
-                        />
-                        <CopyButton
-                          value={`${window.location.origin}${participant.link}`}
-                        >
-                          {({ copied, copy }) => (
-                            <Tooltip label={copied ? "Kopiert!" : "Kopieren"}>
-                              <ActionIcon
-                                onClick={copy}
-                                variant={copied ? "filled" : "light"}
-                                size="lg"
-                              >
-                                {copied ? "✓" : "📋"}
-                              </ActionIcon>
-                            </Tooltip>
-                          )}
-                        </CopyButton>
-                      </Group>
-                    </Stack>
-                  </Paper>
-                ))}
-              </Stack>
+              <p className="font-semibold mb-2">Teilnehmer-Links:</p>
+              <div className="flex flex-col gap-3">
+                {result.participants.map(participant => {
+                  const participantLink = `${window.location.origin}${participant.link}`;
+                  return (
+                    <Card key={participant.token} className="p-3 bg-muted/30">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm font-semibold">
+                          {participant.name}
+                        </span>
+                        <div className="flex gap-2">
+                          <Input
+                            readOnly
+                            value={participantLink}
+                            className="flex-1 text-xs"
+                          />
+                          <Button
+                            onClick={() => copy(participantLink, participant.token)}
+                            variant={
+                              copiedId === participant.token ? "default" : "outline"
+                            }
+                            size="sm"
+                          >
+                            {copiedId === participant.token ? "Kopiert" : "Kopieren"}
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
-          </Stack>
-        </Paper>
+          </div>
+        </Card>
 
-        <Group justify="center" gap="md">
-          <Button onClick={resetForm} variant="light">
+        <div className="flex justify-center gap-4">
+          <Button onClick={resetForm} variant="outline">
             Neues Event erstellen
           </Button>
-          <Button component={Link} to="/" variant="filled">
-            Zum Dashboard
+          <Button asChild>
+            <Link to="/">Zum Dashboard</Link>
           </Button>
-        </Group>
-      </Stack>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Stack p="xl" gap="lg" maw={600} mx="auto">
-      <Title order={1} ta="center">
-        🎁 Wichtel-Event erstellen
-      </Title>
+    <div className="flex flex-col gap-6 max-w-xl mx-auto p-4 sm:p-6">
+      <h1 className="font-head text-2xl sm:text-3xl text-center">
+        Wichtel-Event erstellen
+      </h1>
 
-      <Text ta="center" c="dimmed">
+      <p className="text-center text-muted-foreground">
         Erstelle ein geheimes Wichtel-Event für deine Familie oder Freunde
-      </Text>
+      </p>
 
       <form
         onSubmit={e => {
@@ -180,7 +175,7 @@ function Home() {
           form.handleSubmit();
         }}
       >
-        <Stack gap="md">
+        <div className="flex flex-col gap-4">
           <form.Field
             name="eventName"
             validators={{
@@ -189,16 +184,25 @@ function Home() {
             }}
           >
             {field => (
-              <div>
-                <TextInput
-                  label="Event-Name"
+              <div className="flex flex-col gap-1">
+                <label htmlFor="eventName" className="text-sm font-medium">
+                  Event-Name
+                </label>
+                <Input
+                  id="eventName"
                   placeholder="Weihnachten 2025"
                   value={field.state.value}
-                  onChange={e => field.handleChange(e.currentTarget.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
                   onBlur={field.handleBlur}
-                  error={field.state.meta.errors.join(", ")}
                   required
                 />
+                {field.state.meta.errors.length > 0 && (
+                  <p className="text-red-600 text-sm">
+                    {field.state.meta.errors.join(", ")}
+                  </p>
+                )}
               </div>
             )}
           </form.Field>
@@ -218,71 +222,78 @@ function Home() {
             }}
           >
             {field => (
-              <div>
-                <DateInput
-                  label="Event-Datum"
-                  placeholder="Wähle ein Datum"
+              <div className="flex flex-col gap-1">
+                <label htmlFor="eventDate" className="text-sm font-medium">
+                  Event-Datum
+                </label>
+                <Input
+                  id="eventDate"
+                  type="date"
                   value={field.state.value}
-                  onChange={value => field.handleChange(value as Date | null)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
                   onBlur={field.handleBlur}
-                  error={field.state.meta.errors.join(", ")}
+                  min={dayjs().format("YYYY-MM-DD")}
                   required
-                  minDate={new Date()}
-                  valueFormat="DD.MM.YYYY"
                 />
-                <Text size="xs" c="dimmed" mt={4}>
+                <p className="text-xs text-muted-foreground">
                   Die Ziehungsergebnisse werden erst nach diesem Datum sichtbar
-                </Text>
+                </p>
+                {field.state.meta.errors.length > 0 && (
+                  <p className="text-red-600 text-sm">
+                    {field.state.meta.errors.join(", ")}
+                  </p>
+                )}
               </div>
             )}
           </form.Field>
 
           <div>
-            <Text fw={600} mb="xs">
-              Teilnehmer
-            </Text>
+            <p className="font-semibold mb-2">Teilnehmer</p>
             <form.Field name="participants" mode="array">
               {field => (
                 <>
-                  <Stack gap="sm">
+                  <div className="flex flex-col gap-2">
                     {field.state.value.map((participant, index) => (
                       <form.Field
                         key={participant.id}
                         name={`participants[${index}].name`}
                       >
                         {subField => (
-                          <Group gap="xs">
-                            <TextInput
+                          <div className="flex gap-2">
+                            <Input
                               placeholder={`Teilnehmer ${index + 1}`}
                               value={subField.state.value}
-                              onChange={e =>
-                                subField.handleChange(e.currentTarget.value)
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                subField.handleChange(e.target.value)
                               }
-                              style={{ flex: 1 }}
+                              className="flex-1"
                               required
                             />
                             {field.state.value.length > 3 && (
-                              <ActionIcon
-                                color="red"
-                                variant="light"
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
                                 onClick={() => field.removeValue(index)}
+                                className="text-red-600"
                               >
-                                ✕
-                              </ActionIcon>
+                                x
+                              </Button>
                             )}
-                          </Group>
+                          </div>
                         )}
                       </form.Field>
                     ))}
-                  </Stack>
+                  </div>
                   <Button
+                    type="button"
                     onClick={() =>
                       field.pushValue({ id: crypto.randomUUID(), name: "" })
                     }
-                    variant="light"
-                    mt="sm"
-                    fullWidth
-                    type="button"
+                    variant="outline"
+                    className="w-full mt-2"
                   >
                     + Teilnehmer hinzufügen
                   </Button>
@@ -301,24 +312,24 @@ function Home() {
             {({ canSubmit, isSubmitting, errors }) => (
               <>
                 {errors.length > 0 && (
-                  <Alert color="red" title="Fehler">
-                    {errors.join(", ")}
+                  <Alert variant="danger">
+                    <AlertTitle>Fehler</AlertTitle>
+                    <AlertDescription>{errors.join(", ")}</AlertDescription>
                   </Alert>
                 )}
                 <Button
                   type="submit"
-                  disabled={!canSubmit}
-                  loading={isSubmitting}
+                  disabled={!canSubmit || isSubmitting}
                   size="lg"
-                  fullWidth
+                  className="w-full"
                 >
-                  Event erstellen
+                  {isSubmitting ? "Wird erstellt..." : "Event erstellen"}
                 </Button>
               </>
             )}
           </form.Subscribe>
-        </Stack>
+        </div>
       </form>
-    </Stack>
+    </div>
   );
 }

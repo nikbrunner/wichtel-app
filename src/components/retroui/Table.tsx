@@ -125,4 +125,13 @@ const TableObj = Object.assign(Table, {
   Caption: TableCaption
 });
 
-export { TableObj as Table };
+export {
+  TableObj as Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption
+};

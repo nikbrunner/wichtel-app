@@ -9,21 +9,10 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import * as React from "react";
-import {
-  MantineProvider,
-  mantineHtmlProps,
-  ColorSchemeScript,
-  AppShell,
-  Group,
-  Button,
-  Text,
-  Container
-} from "@mantine/core";
+import { Button } from "@/components/retroui/Button";
 import { DefaultCatchBoundary } from "../components/DefaultCatchBoundary";
 import { NotFound } from "../components/NotFound";
 import appCss from "../styles/app.css?url";
-import mantineCss from "@mantine/core/styles.css?url";
-import mantineDatesCss from "@mantine/dates/styles.css?url";
 import { seo } from "../utils/seo";
 import { getSupabaseServerClient } from "../utils/supabase";
 
@@ -63,8 +52,6 @@ export const Route = createRootRoute({
       })
     ],
     links: [
-      { rel: "stylesheet", href: mantineCss },
-      { rel: "stylesheet", href: mantineDatesCss },
       { rel: "stylesheet", href: appCss },
       {
         rel: "icon",
@@ -88,70 +75,46 @@ function RootComponent() {
 
   return (
     <RootDocument>
-      <AppShell header={{ height: 60 }} padding={{ base: "xs", sm: "md" }}>
-        <AppShell.Header>
-          <Container size="xl" h="100%" px={{ base: "xs", sm: "md" }}>
-            <Group h="100%" justify="space-between" wrap="nowrap">
-              {/* Logo/Brand */}
-              <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-                <Group gap="xs">
-                  <Text size="xl">🎁</Text>
-                  <Text fw={700} size="lg">
-                    Wichtel-App
-                  </Text>
-                </Group>
-              </Link>
+      <div className="min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="h-16 border-b-2 border-border bg-card">
+          <div className="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
+            {/* Logo/Brand */}
+            <Link to="/" className="flex items-center gap-2 no-underline">
+              <span className="text-2xl">🎁</span>
+              <span className="font-head text-xl">Wichtel-App</span>
+            </Link>
 
-              {/* Navigation */}
-              {user ? (
-                <Group gap="xs" wrap="nowrap">
-                  <Text
-                    size="xs"
-                    c="dimmed"
-                    visibleFrom="sm"
-                    style={{ whiteSpace: "nowrap" }}
-                  >
-                    {user.email}
-                  </Text>
-                  <Button
-                    component={Link}
-                    to="/auth/logout"
-                    variant="light"
-                    size="xs"
-                  >
-                    Logout
-                  </Button>
-                </Group>
-              ) : (
-                <Group gap="xs" wrap="nowrap">
-                  <Button
-                    component={Link}
-                    to="/auth/login"
-                    variant="subtle"
-                    size="xs"
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    component={Link}
-                    to="/auth/signup"
-                    variant="filled"
-                    size="xs"
-                  >
-                    Sign up
-                  </Button>
-                </Group>
-              )}
-            </Group>
-          </Container>
-        </AppShell.Header>
+            {/* Navigation */}
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground hidden sm:block">
+                  {user.email}
+                </span>
+                <Button asChild variant="outline" size="sm">
+                  <Link to="/auth/logout">Logout</Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button asChild variant="link" size="sm">
+                  <Link to="/auth/login">Login</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link to="/auth/signup">Sign up</Link>
+                </Button>
+              </div>
+            )}
+          </div>
+        </header>
 
-        <AppShell.Main>
-          <Container size="xl">
+        {/* Main Content */}
+        <main className="flex-1 py-4 sm:py-6">
+          <div className="max-w-6xl mx-auto px-4">
             <Outlet />
-          </Container>
-        </AppShell.Main>
-      </AppShell>
+          </div>
+        </main>
+      </div>
       <TanStackRouterDevtools position="bottom-right" />
     </RootDocument>
   );
@@ -159,16 +122,13 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang="en">
       <head>
-        <ColorSchemeScript />
         <HeadContent />
       </head>
-      <body>
-        <MantineProvider withGlobalClasses={false}>
-          {children}
-          <TanStackRouterDevtools position="bottom-right" />
-        </MantineProvider>
+      <body className="font-sans bg-background text-foreground">
+        {children}
+        <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>

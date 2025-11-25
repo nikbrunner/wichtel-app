@@ -1,23 +1,21 @@
 import { Link } from "@tanstack/react-router";
-import { Stack, Button, Group, Text, Title } from "@mantine/core";
+import { Button } from "@/components/retroui/Button";
 
 export function NotFound({ children }: { children?: React.ReactNode }) {
   return (
-    <Stack p="xl" gap="lg" maw={600} mx="auto" align="center" mt="xl">
-      <Title order={2}>🎄 Seite nicht gefunden</Title>
+    <div className="flex flex-col items-center gap-6 max-w-xl mx-auto mt-12 p-6">
+      <h2 className="font-head text-2xl">Seite nicht gefunden</h2>
 
-      <Text c="dimmed" ta="center">
+      <p className="text-muted-foreground text-center">
         {children || "Die Seite, die du suchst, existiert nicht."}
-      </Text>
+      </p>
 
-      <Group gap="md">
-        <Button onClick={() => window.history.back()} variant="filled">
-          Zurück
+      <div className="flex gap-4">
+        <Button onClick={() => window.history.back()}>Zurück</Button>
+        <Button asChild variant="outline">
+          <Link to="/">Zur Startseite</Link>
         </Button>
-        <Link to="/">
-          <Button variant="light">Zur Startseite</Button>
-        </Link>
-      </Group>
-    </Stack>
+      </div>
+    </div>
   );
 }

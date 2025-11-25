@@ -1,4 +1,11 @@
-import { Modal, Stack, Text, Group, Button } from "@mantine/core";
+import { Button } from "@/components/retroui/Button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from "@/components/retroui/Dialog";
 
 type RegenerateLinkModalProps = {
   opened: boolean;
@@ -16,30 +23,30 @@ export function RegenerateLinkModal({
   isLoading
 }: RegenerateLinkModalProps) {
   return (
-    <Modal opened={opened} onClose={onClose} title="Link regenerieren?" centered>
-      <Stack gap="md">
-        <Text>
-          Möchtest du wirklich einen neuen Link für{" "}
-          <strong>{participantName}</strong> generieren?
-        </Text>
-        <Text size="sm" c="dimmed">
-          Der alte Link wird ungültig und die bisherige Ziehung (falls vorhanden)
-          wird gelöscht. Der Teilnehmer muss erneut ziehen.
-        </Text>
-        <Group justify="flex-end" gap="xs">
-          <Button variant="subtle" onClick={onClose} disabled={isLoading}>
+    <Dialog open={opened} onOpenChange={open => !open && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Link regenerieren?</DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col gap-4 py-4">
+          <p>
+            Möchtest du wirklich einen neuen Link für{" "}
+            <strong>{participantName}</strong> generieren?
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Der alte Link wird ungültig und die bisherige Ziehung (falls vorhanden)
+            wird gelöscht. Der Teilnehmer muss erneut ziehen.
+          </p>
+        </div>
+        <DialogFooter>
+          <Button variant="link" onClick={onClose} disabled={isLoading}>
             Abbrechen
           </Button>
-          <Button
-            color="orange"
-            onClick={onConfirm}
-            loading={isLoading}
-            disabled={isLoading}
-          >
-            Regenerieren
+          <Button onClick={onConfirm} disabled={isLoading}>
+            {isLoading ? "Wird regeneriert..." : "Regenerieren"}
           </Button>
-        </Group>
-      </Stack>
-    </Modal>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

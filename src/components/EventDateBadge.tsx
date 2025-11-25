@@ -1,4 +1,4 @@
-import { Badge } from "@mantine/core";
+import { Badge } from "@/components/retroui/Badge";
 
 type EventDateBadgeProps = {
   eventDate: string;
@@ -9,7 +9,7 @@ type EventDateBadgeProps = {
 export function EventDateBadge({ daysUntil, isPast }: EventDateBadgeProps) {
   if (isPast) {
     return (
-      <Badge color="gray" variant="light">
+      <Badge variant="default" className="bg-muted text-muted-foreground">
         Vergangen
       </Badge>
     );
@@ -17,7 +17,7 @@ export function EventDateBadge({ daysUntil, isPast }: EventDateBadgeProps) {
 
   if (daysUntil === 0) {
     return (
-      <Badge color="orange" variant="filled">
+      <Badge variant="solid" className="bg-orange-500">
         Heute!
       </Badge>
     );
@@ -25,15 +25,11 @@ export function EventDateBadge({ daysUntil, isPast }: EventDateBadgeProps) {
 
   if (daysUntil !== null && daysUntil <= 7) {
     return (
-      <Badge color="yellow" variant="filled">
+      <Badge variant="solid" className="bg-yellow-500 text-black">
         in {daysUntil} {daysUntil === 1 ? "Tag" : "Tagen"}
       </Badge>
     );
   }
 
-  return (
-    <Badge color="blue" variant="light">
-      in {daysUntil} Tagen
-    </Badge>
-  );
+  return <Badge variant="outline">in {daysUntil} Tagen</Badge>;
 }

@@ -4,18 +4,9 @@ import {
   redirect,
   ErrorComponentProps
 } from "@tanstack/react-router";
-import {
-  Stack,
-  Title,
-  Button,
-  Group,
-  Text,
-  Paper,
-  Divider,
-  Alert,
-  useMantineTheme
-} from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { Button } from "@/components/retroui/Button";
+import { Card } from "@/components/retroui/Card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
 import { getAdminEvents } from "../server/getAdminEvents";
 import { EventListItem } from "../components/EventListItem";
 import { EventListSkeleton } from "../components/EventListSkeleton";
@@ -36,121 +27,97 @@ export const Route = createFileRoute("/")({
 });
 
 function PendingComponent() {
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-
   return (
-    <Stack
-      // @ts-expect-error - Mantine supports responsive objects at runtime, but Stack.gap type definition doesn't reflect this
-      gap={{ base: "md", sm: "xl" }}
-      p={{ base: "xs", sm: "xl" }}
-    >
-      <Group justify="space-between" align="center">
-        <Title order={1}>Deine Wichtel-Events</Title>
-        {isMobile ? (
-          <Button component={Link} to="/new-event" size="xs">
-            + Event
-          </Button>
-        ) : (
-          <Button component={Link} to="/new-event" size="md">
-            + Neues Event
-          </Button>
-        )}
-      </Group>
+    <div className="flex flex-col gap-6 sm:gap-8 p-2 sm:p-6">
+      <div className="flex justify-between items-center">
+        <h1 className="font-head text-2xl sm:text-3xl">Deine Wichtel-Events</h1>
+        <Button asChild size="sm" className="sm:hidden">
+          <Link to="/new-event">+ Event</Link>
+        </Button>
+        <Button asChild className="hidden sm:flex">
+          <Link to="/new-event">+ Neues Event</Link>
+        </Button>
+      </div>
 
       <div>
-        <Title order={2} size="h3" mb="md">
-          Aktuelle Events
-        </Title>
+        <h2 className="font-head text-xl mb-4">Aktuelle Events</h2>
         <EventListSkeleton />
       </div>
-    </Stack>
+    </div>
   );
 }
 
 function ErrorComponent({ error }: ErrorComponentProps) {
   return (
-    <Stack
-      // @ts-expect-error - Mantine supports responsive objects at runtime, but Stack.gap type definition doesn't reflect this
-      gap={{ base: "md", sm: "xl" }}
-      p={{ base: "xs", sm: "xl" }}
-    >
-      <Title order={1}>Fehler beim Laden der Events</Title>
-      <Alert color="red" title="Es ist ein Fehler aufgetreten">
-        <Text>{error.message || "Unbekannter Fehler beim Laden der Events"}</Text>
-        <Button component={Link} to="/" mt="md" variant="light">
-          Erneut versuchen
-        </Button>
+    <div className="flex flex-col gap-6 sm:gap-8 p-2 sm:p-6">
+      <h1 className="font-head text-2xl sm:text-3xl">
+        Fehler beim Laden der Events
+      </h1>
+      <Alert variant="danger">
+        <AlertTitle>Es ist ein Fehler aufgetreten</AlertTitle>
+        <AlertDescription>
+          {error.message || "Unbekannter Fehler beim Laden der Events"}
+        </AlertDescription>
       </Alert>
-    </Stack>
+      <Button asChild variant="outline">
+        <Link to="/">Erneut versuchen</Link>
+      </Button>
+    </div>
   );
 }
 
 function Component() {
   const { events } = Route.useLoaderData();
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   // Split events into running (future) and past
   const runningEvents = events.filter(e => !e.is_past);
   const pastEvents = events.filter(e => e.is_past);
 
   return (
-    <Stack
-      // @ts-expect-error - Mantine supports responsive objects at runtime, but Stack.gap type definition doesn't reflect this
-      gap={{ base: "md", sm: "xl" }}
-      p={{ base: "xs", sm: "xl" }}
-    >
+    <div className="flex flex-col gap-6 sm:gap-8 p-2 sm:p-6">
       {/* Header with New Event Button */}
-      <Group justify="space-between" align="center">
-        <Title order={1}>Deine Wichtel-Events</Title>
-        {isMobile ? (
-          <Button component={Link} to="/new-event" size="xs">
-            + Event
-          </Button>
-        ) : (
-          <Button component={Link} to="/new-event" size="md">
-            + Neues Event
-          </Button>
-        )}
-      </Group>
+      <div className="flex justify-between items-center">
+        <h1 className="font-head text-2xl sm:text-3xl">Deine Wichtel-Events</h1>
+        <Button asChild size="sm" className="sm:hidden">
+          <Link to="/new-event">+ Event</Link>
+        </Button>
+        <Button asChild className="hidden sm:flex">
+          <Link to="/new-event">+ Neues Event</Link>
+        </Button>
+      </div>
 
       {/* Running Events Section */}
       <div>
-        <Title order={2} size="h3" mb="md">
-          Aktuelle Events
-        </Title>
+        <h2 className="font-head text-xl mb-4">Aktuelle Events</h2>
         {runningEvents.length === 0 ? (
-          <Paper p={{ base: "md", sm: "xl" }} withBorder>
-            <Text c="dimmed" ta="center">
+          <Card className="p-4 sm:p-6">
+            <p className="text-muted-foreground text-center">
               Keine aktuellen Events. Erstelle ein neues Event!
-            </Text>
-          </Paper>
+            </p>
+          </Card>
         ) : (
-          <Stack gap="md">
+          <div className="flex flex-col gap-4">
             {runningEvents.map(event => (
               <EventListItem key={event.id} event={event} />
             ))}
-          </Stack>
+          </div>
         )}
       </div>
 
       {/* Divider */}
-      {pastEvents.length > 0 && <Divider />}
+      {pastEvents.length > 0 && <hr className="border-t-2 border-border" />}
 
       {/* Past Events Section */}
       {pastEvents.length > 0 && (
         <div>
-          <Title order={2} size="h3" mb="md">
-            Vergangene Events
-          </Title>
-          <Stack gap="md">
+          <h2 className="font-head text-xl mb-4">Vergangene Events</h2>
+          <div className="flex flex-col gap-4">
             {pastEvents.map(event => (
               <EventListItem key={event.id} event={event} />
             ))}
-          </Stack>
+          </div>
         </div>
       )}
-    </Stack>
+    </div>
   );
 }

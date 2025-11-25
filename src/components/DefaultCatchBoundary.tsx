@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   ErrorComponent,
   Link,
@@ -7,7 +6,8 @@ import {
   useRouter
 } from "@tanstack/react-router";
 import type { ErrorComponentProps } from "@tanstack/react-router";
-import { Stack, Button, Group, Alert, Title } from "@mantine/core";
+import { Button } from "@/components/retroui/Button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/retroui/Alert";
 
 export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
   const router = useRouter();
@@ -19,32 +19,32 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
   console.error(error);
 
   return (
-    <Stack p="xl" gap="lg" maw={600} mx="auto" align="center" mt="xl">
-      <Title order={2}>🎄 Etwas ist schiefgelaufen</Title>
+    <div className="flex flex-col items-center gap-6 max-w-xl mx-auto mt-12 p-6">
+      <h2 className="font-head text-2xl">Etwas ist schiefgelaufen</h2>
 
-      <Alert color="red" title="Fehler" w="100%">
-        <ErrorComponent error={error} />
+      <Alert variant="danger" className="w-full">
+        <AlertTitle>Fehler</AlertTitle>
+        <AlertDescription>
+          <ErrorComponent error={error} />
+        </AlertDescription>
       </Alert>
 
-      <Group gap="md">
+      <div className="flex gap-4">
         <Button
           onClick={() => {
             router.invalidate();
           }}
-          variant="filled"
         >
           Erneut versuchen
         </Button>
         {isRoot ? (
-          <Button component={Link} to="/" variant="light">
-            Zur Startseite
+          <Button asChild variant="outline">
+            <Link to="/">Zur Startseite</Link>
           </Button>
         ) : (
           <Button
-            component={Link}
-            to="/"
-            variant="light"
-            onClick={e => {
+            variant="outline"
+            onClick={(e: React.MouseEvent) => {
               e.preventDefault();
               window.history.back();
             }}
@@ -52,7 +52,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
             Zurück
           </Button>
         )}
-      </Group>
-    </Stack>
+      </div>
+    </div>
   );
 }

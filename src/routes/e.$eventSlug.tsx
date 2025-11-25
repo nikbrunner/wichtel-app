@@ -1,6 +1,8 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
-import { Stack, Title, Text, Button, Paper, Alert } from "@mantine/core";
 import { useState } from "react";
+import { Button } from "@/components/retroui/Button";
+import { Card } from "@/components/retroui/Card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
 import { getParticipantInfo } from "../server/getParticipantInfo";
 import { drawName } from "../server/drawName";
 
@@ -64,53 +66,57 @@ function ParticipantDraw() {
 
   if (drawnName) {
     return (
-      <Stack p="xl" gap="lg" maw={600} mx="auto" align="center">
-        <Title order={1} ta="center">
-          🎁 Hallo {participantInfo.participantName}!
-        </Title>
+      <div className="flex flex-col items-center gap-6 max-w-xl mx-auto p-6">
+        <h1 className="font-head text-2xl sm:text-3xl text-center">
+          Hallo {participantInfo.participantName}!
+        </h1>
 
-        <Paper p="xl" withBorder w="100%">
-          <Stack gap="md" align="center">
-            <Text size="lg" fw={500}>
-              Du beschenkst:
-            </Text>
-            <Title order={2} c="green" ta="center">
-              🎄 {drawnName} 🎄
-            </Title>
-          </Stack>
-        </Paper>
+        <Card className="p-6 w-full">
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-lg font-medium">Du beschenkst:</p>
+            <h2 className="font-head text-2xl text-green-600 text-center">
+              {drawnName}
+            </h2>
+          </div>
+        </Card>
 
-        <Text size="sm" c="dimmed" ta="center">
+        <p className="text-sm text-muted-foreground text-center">
           Merke dir diesen Namen gut! Du kannst diese Seite jederzeit wieder
           aufrufen.
-        </Text>
-      </Stack>
+        </p>
+      </div>
     );
   }
 
   return (
-    <Stack p="xl" gap="lg" maw={600} mx="auto" align="center">
-      <Title order={1} ta="center">
-        🎁 Hallo {participantInfo.participantName}!
-      </Title>
+    <div className="flex flex-col items-center gap-6 max-w-xl mx-auto p-6">
+      <h1 className="font-head text-2xl sm:text-3xl text-center">
+        Hallo {participantInfo.participantName}!
+      </h1>
 
-      <Text ta="center" size="lg">
+      <p className="text-center text-lg">
         Klicke auf den Button unten, um zu erfahren, wen du beschenkst.
-      </Text>
+      </p>
 
       {error && (
-        <Alert color="red" title="Fehler" w="100%">
-          {error}
+        <Alert variant="danger" className="w-full">
+          <AlertTitle>Fehler</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
-      <Button onClick={handleDraw} loading={isDrawing} size="xl" fullWidth maw={400}>
-        🎄 Namen ziehen 🎄
+      <Button
+        onClick={handleDraw}
+        disabled={isDrawing}
+        size="lg"
+        className="w-full max-w-sm"
+      >
+        {isDrawing ? "Wird gezogen..." : "Namen ziehen"}
       </Button>
 
-      <Text size="xs" c="dimmed" ta="center">
+      <p className="text-xs text-muted-foreground text-center">
         Du ziehst zufällig einen Namen aus den verbleibenden Teilnehmern
-      </Text>
-    </Stack>
+      </p>
+    </div>
   );
 }
