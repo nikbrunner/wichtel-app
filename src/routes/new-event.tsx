@@ -5,9 +5,11 @@ import { Button } from "@/components/retroui/Button";
 import { Input } from "@/components/retroui/Input";
 import { Card } from "@/components/retroui/Card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
+import { DatePicker } from "@/components/ui/date-picker";
 import { createEvent } from "../server/createEvent";
 import type { CreateEventOutput } from "../types/database";
 import dayjs from "dayjs";
+import { format } from "date-fns";
 
 export const Route = createFileRoute("/new-event")({
   beforeLoad: ({ context }) => {
@@ -50,7 +52,7 @@ function Home() {
   const form = useForm({
     defaultValues: {
       eventName: "",
-      eventDate: "",
+      eventDate: undefined as Date | undefined,
       participants: initialParticipants
     },
     onSubmit: async ({ value }) => {
@@ -65,7 +67,7 @@ function Home() {
       const eventResult = await createEvent({
         data: {
           eventName: value.eventName.trim(),
-          eventDate: value.eventDate,
+          eventDate: format(value.eventDate, "yyyy-MM-dd"),
           participantNames: filteredNames
         }
       });
@@ -223,19 +225,12 @@ function Home() {
           >
             {field => (
               <div className="flex flex-col gap-1">
-                <label htmlFor="eventDate" className="text-sm font-medium">
-                  Event-Datum
-                </label>
-                <Input
-                  id="eventDate"
-                  type="date"
+                <label className="text-sm font-medium">Event-Datum</label>
+                <DatePicker
                   value={field.state.value}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    field.handleChange(e.target.value)
-                  }
-                  onBlur={field.handleBlur}
-                  min={dayjs().format("YYYY-MM-DD")}
-                  required
+                  onChange={date => field.handleChange(date)}
+                  placeholder="Datum auswählen"
+                  minDate={new Date()}
                 />
                 <p className="text-xs text-muted-foreground">
                   Die Ziehungsergebnisse werden erst nach diesem Datum sichtbar
