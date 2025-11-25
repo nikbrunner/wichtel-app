@@ -17,6 +17,7 @@
 
 - [ ] feat: Internationalization
 - [ ] feat: A participant can optinally provide a list of interests
+- [ ] feat: light/dark mode
 
 ---
 
