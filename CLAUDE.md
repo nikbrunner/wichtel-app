@@ -249,6 +249,33 @@ Tools for browser automation and testing:
 4. Use interaction tools to test flows (fill forms, click buttons)
 5. Check console/network for errors
 
+### Ref MCP
+
+Tools for searching and reading documentation:
+
+- `mcp__Ref__ref_search_documentation` - Search docs for libraries, frameworks, APIs
+- `mcp__Ref__ref_read_url` - Read content from a URL as markdown
+
+**When to use**:
+
+- Looking up documentation for libraries (React, TanStack, Tailwind, etc.)
+- Reading API references and guides
+- Checking latest docs when implementing features
+
+### Exa MCP
+
+Tools for web search and code context:
+
+- `mcp__exa__web_search_exa` - Search the web with AI-powered results
+- `mcp__exa__get_code_context_exa` - Get relevant context for programming tasks
+
+**When to use**:
+
+- Searching for up-to-date information beyond knowledge cutoff
+- Finding code examples and best practices
+- Researching libraries, SDKs, and APIs
+- Getting context for implementation decisions
+
 ## Testing Strategy
 
 Currently no automated tests. App relies on:
