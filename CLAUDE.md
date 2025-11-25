@@ -92,7 +92,7 @@ See `src/routes/__root.tsx` for reference implementation.
 
 ## Project Structure
 
-```
+```text
 src/
 ├── routes/                    # File-based routing
 │   ├── __root.tsx            # Root layout with Mantine setup

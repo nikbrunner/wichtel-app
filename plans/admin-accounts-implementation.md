@@ -33,7 +33,7 @@ This document outlines the implementation plan for adding admin accounts to the 
 
 ### Migration: `20250124_add_admin_accounts.sql`
 
-```sql
+````sql
 -- Add event_date column to track when Secret Santa reveal should happen
 ALTER TABLE events
 ADD COLUMN event_date DATE NOT NULL;
@@ -110,7 +110,7 @@ CREATE POLICY "Users can create draws" ON draws
       AND events.admin_user_id = auth.uid()
     )
   );
-```
+```text
 
 ### Updated TypeScript Types
 
@@ -140,7 +140,7 @@ export interface EventWithStats extends Event {
   days_until_event: number | null;
   is_past: boolean;
 }
-```
+```text
 
 ## Implementation Phases
 
@@ -188,7 +188,7 @@ export interface EventWithStats extends Event {
 // Calls signIn server function
 // Redirects to dashboard on success
 // Shows error messages on failure
-```
+```text
 
 **File**: `src/routes/auth/signup.tsx`
 
@@ -197,14 +197,14 @@ export interface EventWithStats extends Event {
 // Uses Mantine form validation
 // Calls signUp server function
 // Shows success message and redirects to login
-```
+```text
 
 **File**: `src/routes/auth/logout.tsx`
 
 ```typescript
 // Simple redirect route that calls signOut
 // Redirects to home page after logout
-```
+```text
 
 #### 2.2 Create Auth Server Functions
 
@@ -222,7 +222,7 @@ export const signUp = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { success: true, user: authData.user };
   });
-```
+```text
 
 **File**: `src/server/auth/signIn.ts`
 
@@ -238,7 +238,7 @@ export const signIn = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { success: true, user: authData.user };
   });
-```
+```text
 
 **File**: `src/server/auth/signOut.ts`
 
@@ -248,7 +248,7 @@ export const signOut = createServerFn({ method: "POST" }).handler(async () => {
   await supabase.auth.signOut();
   return { success: true };
 });
-```
+```text
 
 **File**: `src/server/auth/getCurrentUser.ts`
 
@@ -262,7 +262,7 @@ export const getCurrentUser = createServerFn({ method: "GET" }).handler(async ()
   if (error || !user) return { user: null };
   return { user };
 });
-```
+```text
 
 #### 2.3 Update Root Layout
 
@@ -336,7 +336,7 @@ export const getCurrentUser = createServerFn({ method: "GET" }).handler(async ()
 //     - Draw results section (only if event date passed):
 //       - Table: Drawer | Drew | Timestamp
 //     - Regenerate link modal/form
-```
+```text
 
 **Components to create**:
 
@@ -419,7 +419,7 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(async ()
 
   return { events: eventsWithDetails };
 });
-```
+```text
 
 **File**: `src/server/getEventStats.ts`
 
@@ -454,7 +454,7 @@ export const getEventStats = createServerFn({ method: "POST" })
       isPast: daysUntil < 0
     };
   });
-```
+```text
 
 ### Phase 5: Update Existing Admin Page
 
@@ -501,7 +501,7 @@ export const getEventStats = createServerFn({ method: "POST" })
 ```typescript
 // Regenerate tokens for all participants in an event
 // Useful for security if links were shared inappropriately
-```
+```text
 
 **File**: `src/server/exportEventLinks.ts`
 
@@ -512,7 +512,7 @@ export const getEventStats = createServerFn({ method: "POST" })
 //  - Alice: https://...
 //  - Bob: https://...
 //  - Charlie: https://..."
-```
+```text
 
 ### Phase 7: UI/UX Polish
 
@@ -536,7 +536,7 @@ export const getEventStats = createServerFn({ method: "POST" })
 // "in 5 days" (blue) for upcoming
 // "today" (orange) for today
 // "ended 2 days ago" (gray) for past
-```
+```text
 
 **File**: `src/components/DrawResultsSection.tsx`
 
@@ -544,7 +544,7 @@ export const getEventStats = createServerFn({ method: "POST" })
 // Section showing draw results with date-based visibility
 // Shows lock icon + explanation if date hasn't passed
 // Shows table of results if date has passed
-```
+```text
 
 #### 7.3 Mobile Responsiveness
 
@@ -570,7 +570,7 @@ export const getEventStats = createServerFn({ method: "POST" })
 ```typescript
 // Hook for copying to clipboard with feedback
 // Shows toast notification on success/failure
-```
+```text
 
 ### Phase 8: Security & Testing
 
@@ -723,7 +723,7 @@ export const getEventStats = createServerFn({ method: "POST" })
    SELECT column_name, data_type, is_nullable
    FROM information_schema.columns
    WHERE table_name = 'events';
-   ```
+````
 
 3. **Create test data** (via Supabase SQL editor or MCP):
 
@@ -831,7 +831,7 @@ This section outlines the commit strategy with mandatory testing checkpoints bef
 
 **Commit Message**:
 
-```
+````text
 feat(db): add admin accounts schema with RLS policies
 
 - Add event_date column to events table
@@ -840,7 +840,7 @@ feat(db): add admin accounts schema with RLS policies
 - Enable Row Level Security on events, participants, draws
 - Add RLS policies for user-scoped data access
 - Update TypeScript types for new schema
-```
+```text
 
 ### Commit 2: Supabase Auth Utilities ✅
 
@@ -858,14 +858,14 @@ feat(db): add admin accounts schema with RLS policies
 
 **Commit Message**:
 
-```
+```text
 feat(auth): add Supabase auth utility functions
 
 - Add getSupabaseClientClient for client-side auth
 - Add getCurrentUser helper to get authenticated user
 - Add requireAuth helper for protected server functions
 - Maintain backward compatibility with existing server client
-```
+```text
 
 ### Commit 3: Auth Server Functions ✅
 
@@ -888,7 +888,7 @@ feat(auth): add Supabase auth utility functions
 
 **Commit Message**:
 
-```
+```text
 feat(auth): implement authentication server functions
 
 - Add signUp server function for user registration
@@ -896,7 +896,7 @@ feat(auth): implement authentication server functions
 - Add signOut server function for logout
 - Add getCurrentUser server function for session check
 - Use Supabase Auth with SSR cookie handling
-```
+```text
 
 ### Commit 4: Auth Routes (Login/Signup/Logout) ✅
 
@@ -930,7 +930,7 @@ feat(auth): implement authentication server functions
 
 **Commit Message**:
 
-```
+```text
 feat(auth): add login, signup, and logout routes
 
 - Add login page with email/password form
@@ -938,7 +938,7 @@ feat(auth): add login, signup, and logout routes
 - Add logout redirect route
 - Use Mantine form components for consistent UI
 - Implement error handling and user feedback
-```
+```text
 
 ### Commit 5: Update Root Layout with Auth Nav ✅
 
@@ -963,7 +963,7 @@ feat(auth): add login, signup, and logout routes
 
 **Commit Message**:
 
-```
+```text
 feat(ui): add authentication-aware navigation
 
 - Add navigation header with conditional links based on auth state
@@ -971,7 +971,7 @@ feat(ui): add authentication-aware navigation
 - Show dashboard, create event, logout when authenticated
 - Display user email in navigation
 - Mobile-responsive navigation layout
-```
+```text
 
 ### Commit 6: Update Event Creation with Auth & Date ✅
 
@@ -1009,7 +1009,7 @@ feat(ui): add authentication-aware navigation
 
 **Commit Message**:
 
-```
+```text
 feat(events): require auth and add event date to creation flow
 
 - Add authentication requirement for event creation
@@ -1018,7 +1018,7 @@ feat(events): require auth and add event date to creation flow
 - Link created events to authenticated admin user
 - Install @mantine/dates and dayjs dependencies
 - Update success screen with dashboard link
-```
+```text
 
 ### Commit 7: ✅ Dashboard Route & Components (Part 1 - Basic Layout)
 
@@ -1027,9 +1027,12 @@ feat(events): require auth and add event date to creation flow
 - Dashboard should be at `/` (home route) - more intuitive UX ✅
 - Event creation moved to `/new-event` route
 - Layout structure:
-  ```
-  <running events section> | <new event button>
-  ---
+````
+
+<running events section> | <new event button>
+
+---
+
   <past events section>
   ```
 - "New Event" button navigates to `/new-event` (will become modal later)
@@ -1063,7 +1066,7 @@ feat(events): require auth and add event date to creation flow
 
 **Commit Message**:
 
-```
+````text
 feat(dashboard): add basic dashboard route and data fetching
 
 - Add dashboard route with protected access
@@ -1071,7 +1074,7 @@ feat(dashboard): add basic dashboard route and data fetching
 - Fetch and display user's events
 - Add useClipboard hook for link copying
 - Basic layout without detailed components
-```
+```text
 
 ### Commit 8: ⬜ Dashboard Components (Part 2 - Event List UI)
 
@@ -1101,7 +1104,7 @@ feat(dashboard): add basic dashboard route and data fetching
 
 **Commit Message**:
 
-```
+```text
 feat(dashboard): add event list components and UI
 
 - Add EventListItem component with expand/collapse
@@ -1109,7 +1112,7 @@ feat(dashboard): add event list components and UI
 - Add ParticipantLinkTable with copy buttons
 - Implement collapsible event details
 - Mobile-responsive card layout
-```
+```text
 
 ### Commit 9: ⬜ Dashboard Draw Results Section
 
@@ -1142,7 +1145,7 @@ feat(dashboard): add event list components and UI
 
 **Commit Message**:
 
-```
+```text
 feat(dashboard): add draw results with date-based visibility
 
 - Add DrawResultsSection component
@@ -1150,7 +1153,7 @@ feat(dashboard): add draw results with date-based visibility
 - Show lock icon and explanation for future events
 - Add CopyAllLinksButton for bulk link sharing
 - Implement date-gated visibility logic
-```
+```text
 
 ### Commit 10: ⬜ Link Regeneration from Dashboard
 
@@ -1183,7 +1186,7 @@ feat(dashboard): add draw results with date-based visibility
 
 **Commit Message**:
 
-```
+```text
 feat(dashboard): add participant link regeneration
 
 - Add RegenerateLinkModal component
@@ -1191,7 +1194,7 @@ feat(dashboard): add participant link regeneration
 - Reset participant draw status on regeneration
 - Display new link immediately in dashboard
 - Invalidate old token
-```
+```text
 
 ### Commit 11: ⬜ Update Admin Event Page
 
@@ -1219,7 +1222,7 @@ feat(dashboard): add participant link regeneration
 
 **Commit Message**:
 
-```
+```text
 feat(admin): update admin event page with auth and date checks
 
 - Add authentication as primary access method
@@ -1228,7 +1231,7 @@ feat(admin): update admin event page with auth and date checks
 - Show event date prominently
 - Implement date-based draw results visibility
 - Update getEventDetails with auth support
-```
+```text
 
 ### Commit 12: ⬜ Loading States & Error Boundaries
 
@@ -1255,14 +1258,14 @@ feat(admin): update admin event page with auth and date checks
 
 **Commit Message**:
 
-```
+```text
 feat(ui): add loading states and error boundaries
 
 - Add EventListSkeleton for loading state
 - Add loading indicators to dashboard
 - Add error boundaries to handle failures gracefully
 - Improve UX during data fetching
-```
+```text
 
 ### Commit 13: ⬜ Mobile Responsiveness Polish
 
@@ -1294,7 +1297,7 @@ feat(ui): add loading states and error boundaries
 
 **Commit Message**:
 
-```
+```text
 style(responsive): improve mobile and tablet layouts
 
 - Optimize layouts for mobile (375px) and tablet (768px)
@@ -1302,7 +1305,7 @@ style(responsive): improve mobile and tablet layouts
 - Improve navigation on small screens
 - Fix horizontal scroll issues
 - Enhance touch interactions
-```
+```text
 
 ### Commit 14: ⬜ Final Testing & Documentation
 
@@ -1327,7 +1330,7 @@ style(responsive): improve mobile and tablet layouts
 
 **Commit Message**:
 
-```
+```text
 docs: update README with admin accounts feature
 
 - Document new authentication flow
@@ -1335,7 +1338,7 @@ docs: update README with admin accounts feature
 - Update feature list
 - Document event date visibility rules
 - Add deployment considerations
-```
+```text
 
 ## Testing Commands Summary
 
@@ -1353,20 +1356,20 @@ npm run build
 
 # Start dev server (for MCP testing)
 npm run dev
-```
+```text
 
 ## Dependencies to Install
 
 ```bash
 npm install @mantine/dates dayjs
-```
+```text
 
 - `@mantine/dates` - Date picker component for event creation
 - `dayjs` - Date manipulation and formatting (lightweight alternative to moment.js)
 
 ## File Structure After Implementation
 
-```
+```text
 src/
 ├── routes/
 │   ├── __root.tsx                      # Updated with auth nav
@@ -1413,7 +1416,7 @@ src/
 │
 └── types/
     └── database.ts                     # Updated with new types
-```
+```text
 
 ## Backward Compatibility Notes
 
@@ -1479,3 +1482,4 @@ Consider these enhancements for future versions:
 **Created**: 2025-01-24
 **Author**: Claude (with Nik)
 **Status**: Ready for Implementation
+````

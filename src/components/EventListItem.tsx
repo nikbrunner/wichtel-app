@@ -11,6 +11,9 @@ import {
 } from "@mantine/core";
 import { EventDateBadge } from "./EventDateBadge";
 import { ParticipantLinkTable } from "./ParticipantLinkTable";
+import { DrawResultsSection } from "./DrawResultsSection";
+import { CopyAllLinksButton } from "./CopyAllLinksButton";
+import { RegenerateLinkModal } from "./RegenerateLinkModal";
 import { regenerateParticipantLink } from "../server/regenerateParticipantLink";
 import type { EventWithStats } from "../types/database";
 
@@ -23,32 +26,43 @@ export function EventListItem({ event }: EventListItemProps) {
   const [regenerating, setRegenerating] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [modalOpened, setModalOpened] = useState(false);
+  const [selectedParticipant, setSelectedParticipant] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
-  const handleRegenerateLink = async (
-    participantId: string,
-    participantName: string
-  ) => {
+  const handleRegenerateClick = (participantId: string, participantName: string) => {
+    setSelectedParticipant({ id: participantId, name: participantName });
+    setModalOpened(true);
+  };
+
+  const handleRegenerateConfirm = async () => {
+    if (!selectedParticipant) return;
+
     setError(null);
     setSuccessMessage(null);
-    setRegenerating(participantId);
+    setRegenerating(selectedParticipant.id);
 
     try {
       await regenerateParticipantLink({
         data: {
           eventSlug: event.slug,
-          participantId
+          participantId: selectedParticipant.id
         }
       });
 
       setSuccessMessage(
-        `Link für ${participantName} wurde erfolgreich regeneriert. Bitte die Seite neu laden, um den neuen Link zu sehen.`
+        `Link für ${selectedParticipant.name} wurde erfolgreich regeneriert. Bitte die Seite neu laden, um den neuen Link zu sehen.`
       );
+      setModalOpened(false);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Fehler beim Regenerieren des Links"
       );
     } finally {
       setRegenerating(null);
+      setSelectedParticipant(null);
     }
   };
 
@@ -101,7 +115,7 @@ export function EventListItem({ event }: EventListItemProps) {
 
         {/* Action Buttons */}
         <Group gap="sm" mt="sm">
-          <Button variant="subtle" size="sm" onClick={() => setExpanded(!expanded)}>
+          <Button variant="filled" size="sm" onClick={() => setExpanded(!expanded)}>
             {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
           </Button>
         </Group>
@@ -136,12 +150,33 @@ export function EventListItem({ event }: EventListItemProps) {
             <ParticipantLinkTable
               eventSlug={event.slug}
               participants={event.participants}
-              onRegenerateLink={handleRegenerateLink}
+              onRegenerateLink={handleRegenerateClick}
               regeneratingId={regenerating}
+            />
+            <CopyAllLinksButton
+              eventName={event.name}
+              eventSlug={event.slug}
+              participants={event.participants}
+            />
+            <Divider my="md" />
+            <DrawResultsSection
+              eventDate={event.event_date}
+              isPast={event.is_past}
+              drawResults={event.draw_results}
             />
           </Stack>
         </Collapse>
       </Stack>
+      <RegenerateLinkModal
+        opened={modalOpened}
+        onClose={() => {
+          setModalOpened(false);
+          setSelectedParticipant(null);
+        }}
+        onConfirm={handleRegenerateConfirm}
+        participantName={selectedParticipant?.name || ""}
+        isLoading={regenerating !== null}
+      />
     </Paper>
   );
 }

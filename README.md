@@ -7,15 +7,33 @@ A family-friendly Secret Santa/Wichtel web app for organizing gift exchanges.
 - **Frontend**: TanStack Start (React Router SSR framework)
 - **UI**: Mantine v8 (with SSR workarounds for TanStack Start)
 - **Database**: Supabase (PostgreSQL)
-- **Auth**: Token-based (no user accounts needed)
+- **Auth**: Supabase Auth (email/password) with Row Level Security
 
 ## Key Features
 
-- Admin creates events with participant names
+### Admin Features
+
+- **User Accounts**: Sign up and log in to manage your events
+- **Dashboard**: View all your events at `/` with participant stats and draw progress
+- **Event Management**:
+  - Create events with participant names and event dates
+  - View participant links with copy functionality
+  - Copy all participant links at once for easy sharing
+  - Regenerate individual participant links with confirmation modal
+- **Draw Results**: View who drew whom after the event date passes (date-gated visibility)
+- **Date-Based Visibility**: Draw results hidden until event date to preserve surprise
+
+### Participant Features
+
 - Each participant gets a unique link to draw their Secret Santa
 - Can't draw yourself or already-drawn names
-- Admin can regenerate individual participant links
-- Mobile-first, family-friendly UI
+- Simple, mobile-friendly draw interface
+
+### Security
+
+- Row Level Security (RLS) policies protect user data
+- Each admin can only see and manage their own events
+- Token-based participant access (no accounts needed for participants)
 
 ## Quick Start
 
@@ -102,26 +120,33 @@ See `src/routes/__root.tsx` for implementation details.
 
 ## Development Notes
 
-- **No user accounts**: Uses token-based authentication (event admin tokens + participant tokens)
-- **Mobile-first**: Designed for family use on phones
-- **Simple deployment**: Static files + Supabase backend
+- **Admin authentication**: Supabase Auth with email/password (required for creating events)
+- **Participant access**: Token-based (no accounts needed for participants)
+- **Mobile-first**: Designed for family use on phones with responsive layouts
+- **Row Level Security**: Database-level access control ensures admins only see their own data
 
 For detailed setup instructions, see `supabase/README.md`.
+
+## Deployment Considerations
+
+- Requires Supabase project with Auth enabled
+- Email confirmation can be disabled for development
+- RLS policies automatically protect user data
+- Build outputs to `.output/` for Node.js deployment (Vercel, Railway, etc.)
 
 ## TODO
 
 - [x] fix: title and favicon
-- [x] refactor: At lest 3 participants
-- [ ] feat: Add zod
-- [ ] feat(db): Should track drawn participant for each participant
-- [ ] feat: Admin Accounts
-  - Events Overview (this also solves the issue of keeping track of created links)
-    - Links
-    - Stats
-    - Who drawn already, when and what (what only after the event date)
-      - Event date would need be tracked in the event creation
-  - Would also fix regenerated link bug
+- [x] refactor: At least 3 participants
+- [x] feat: Admin Accounts
+  - [x] Events Overview Dashboard
+  - [x] Participant Links Management
+  - [x] Draw Stats
+  - [x] Date-based draw results visibility
+  - [x] Event date tracking
+  - [x] Link regeneration with modal
+  - [x] RLS Security
+- [ ] feat: Add zod for validation
 - [ ] style: Better styling
 - [ ] style: Better font
-- [ ] fix: RLS Database warning? Security warning?
 - [ ] feat: Internationalization

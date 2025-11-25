@@ -18,6 +18,12 @@ export type AuthUser = {
   created_at: string;
 };
 
+export type DrawResult = {
+  drawer_name: string;
+  drawn_name: string;
+  created_at: string;
+};
+
 export type EventWithStats = Event & {
   participant_count: number;
   drawn_count: number;
@@ -31,6 +37,7 @@ export type EventWithStats = Event & {
     has_drawn: boolean;
     drawn_at: string | null;
   }>;
+  draw_results: DrawResult[] | null;
 };
 
 export type Participant = {
