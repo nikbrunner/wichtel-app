@@ -1,12 +1,81 @@
-/* RetroUI Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-
 @import "tailwindcss";
+
+/* TX-02 Custom Font */
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Light-Condensed.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Light-Condensed-Oblique.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Condensed.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Condensed-Oblique.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/SemiBold-Condensed.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/SemiBold-Condensed-Oblique.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Bold-Condensed.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Bold-Condensed-Oblique.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Black-Condensed.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TX-02";
+  src: url("/fonts/TX-02/Condensed/Black-Condensed-Oblique.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+}
 
 /* RetroUI Theme */
 @theme {
-  --font-head: "Archivo Black", sans-serif;
-  --font-sans: "Space Grotesk", sans-serif;
+  --font-head: "TX-02", sans-serif;
+  --font-sans: "TX-02", sans-serif;
   --radius: var(--radius);
 
   --shadow-xs: 1px 1px 0 0 var(--border);
