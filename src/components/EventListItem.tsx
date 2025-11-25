@@ -62,9 +62,10 @@ export function EventListItem({ event }: EventListItemProps) {
   return (
     <Card className="p-6">
       <div className="flex flex-col gap-4">
-        {/* Event Header */}
-        <div className="flex justify-between flex-nowrap">
-          <div className="flex-1">
+        {/* Event Header - 3 column grid on desktop, stacked on mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-4 md:items-center">
+          {/* Name Column */}
+          <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-2xl font-bold">{event.name}</span>
               <EventDateBadge
@@ -84,33 +85,33 @@ export function EventListItem({ event }: EventListItemProps) {
               )}
             </p>
           </div>
-        </div>
 
-        {/* Stats */}
-        <div className="flex gap-8">
-          <div>
-            <span className="text-xs text-muted-foreground">Teilnehmer</span>
-            <p className="text-sm font-medium font-mono">
-              {event.participant_count}
-            </p>
+          {/* Stats Column */}
+          <div className="flex gap-6">
+            <div>
+              <span className="text-xs text-muted-foreground">Teilnehmer</span>
+              <p className="text-sm font-medium font-mono">
+                {event.participant_count}
+              </p>
+            </div>
+            <div>
+              <span className="text-xs text-muted-foreground">Gezogen</span>
+              <p className="text-sm font-medium font-mono">
+                {event.drawn_count} / {event.participant_count}
+              </p>
+            </div>
           </div>
-          <div>
-            <span className="text-xs text-muted-foreground">Gezogen</span>
-            <p className="text-sm font-medium font-mono">
-              {event.drawn_count} / {event.participant_count}
-            </p>
-          </div>
-        </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 mt-2">
-          <Button
-            size="sm"
-            variant={expanded ? "outline" : "info"}
-            onClick={() => setExpanded(!expanded)}
-          >
-            {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
-          </Button>
+          {/* Actions Column */}
+          <div>
+            <Button
+              size="sm"
+              variant={expanded ? "outline" : "info"}
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
+            </Button>
+          </div>
         </div>
 
         {/* Collapsible Participant Details */}
