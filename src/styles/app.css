@@ -12,6 +12,7 @@
 @theme {
   --font-head: "Recursive", sans-serif;
   --font-sans: "Recursive", sans-serif;
+  --font-mono: "Recursive", monospace;
   --radius: var(--radius);
 
   /* Size-based shadows (black border) */
@@ -147,11 +148,13 @@ h3 {
     "wght" 900;
 }
 
-/* Mono Casual - playful monospace for badges, dates, technical text */
-.font-mono {
-  font-variation-settings:
-    "CASL" 1,
-    "MONO" 1;
+/* Extend Tailwind's font-mono with Recursive variable font settings */
+@layer utilities {
+  .font-mono {
+    font-variation-settings:
+      "CASL" 1,
+      "MONO" 1;
+  }
 }
 
 /* Remove outline for mouse users, keep for keyboard users */
