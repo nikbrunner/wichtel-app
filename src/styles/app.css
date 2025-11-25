@@ -151,6 +151,12 @@ body {
   color: var(--foreground);
 }
 
+h1,
+h2,
+h3 {
+  font-weight: 900;
+}
+
 /* Remove outline for mouse users, keep for keyboard users */
 .using-mouse * {
   /* eslint-disable-next-line css/no-important */
