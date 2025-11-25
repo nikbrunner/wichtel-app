@@ -157,6 +157,11 @@ h3 {
   font-weight: 900;
 }
 
+h1,
+h2 {
+  text-transform: uppercase;
+}
+
 /* Remove outline for mouse users, keep for keyboard users */
 .using-mouse * {
   /* eslint-disable-next-line css/no-important */
