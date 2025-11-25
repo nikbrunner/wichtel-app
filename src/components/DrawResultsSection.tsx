@@ -26,7 +26,7 @@ export function DrawResultsSection({
   if (!isPast) {
     return (
       <div className="flex flex-col gap-4">
-        <h3 className="font-head text-lg">Ziehungsergebnisse</h3>
+        <h3 className="text-xl font-semibold">Ziehungsergebnisse</h3>
         <Alert variant="info">
           <AlertTitle>Noch nicht verfügbar</AlertTitle>
           <AlertDescription>
@@ -43,7 +43,7 @@ export function DrawResultsSection({
   if (!drawResults || drawResults.length === 0) {
     return (
       <div className="flex flex-col gap-4">
-        <h3 className="font-head text-lg">Ziehungsergebnisse</h3>
+        <h3 className="text-xl font-semibold">Ziehungsergebnisse</h3>
         <Card className="p-4">
           <p className="text-muted-foreground text-center">
             Noch niemand hat gezogen.
@@ -56,7 +56,7 @@ export function DrawResultsSection({
   // Show results
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="font-head text-lg">Ziehungsergebnisse</h3>
+      <h3 className="text-lg font-bold">Ziehungsergebnisse</h3>
       <Card>
         <Table>
           <TableHeader>
@@ -71,7 +71,7 @@ export function DrawResultsSection({
               <TableRow key={index}>
                 <TableCell className="font-semibold">{result.drawer_name}</TableCell>
                 <TableCell>{result.drawn_name}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="text-xs text-muted-foreground">
                   {dayjs(result.created_at).format("DD.MM.YYYY HH:mm")}
                 </TableCell>
               </TableRow>

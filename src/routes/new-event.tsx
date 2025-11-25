@@ -85,8 +85,8 @@ function Home() {
     const adminLink = `${window.location.origin}/admin/${result.eventSlug}?token=${result.adminToken}`;
 
     return (
-      <div className="flex flex-col gap-6 max-w-3xl mx-auto p-4 sm:p-6">
-        <h1 className="font-head text-2xl sm:text-3xl text-center">
+      <div className="flex flex-col gap-8 max-w-3xl mx-auto p-4 sm:p-6 md:p-8">
+        <h1 className="text-4xl sm:text-5xl font-black text-center">
           Wichtel-Event erstellt!
         </h1>
 
@@ -100,7 +100,7 @@ function Home() {
         <Card className="p-6">
           <div className="flex flex-col gap-6">
             <div>
-              <p className="font-semibold mb-2">Admin-Link (für dich):</p>
+              <p className="text-xl font-semibold mb-3">Admin-Link (für dich):</p>
               <div className="flex gap-2">
                 <Input readOnly value={adminLink} className="flex-1" />
                 <Button
@@ -113,14 +113,14 @@ function Home() {
             </div>
 
             <div>
-              <p className="font-semibold mb-2">Teilnehmer-Links:</p>
+              <p className="text-xl font-semibold mb-3">Teilnehmer-Links:</p>
               <div className="flex flex-col gap-3">
                 {result.participants.map(participant => {
                   const participantLink = `${window.location.origin}${participant.link}`;
                   return (
-                    <Card key={participant.token} className="p-3 bg-muted/30">
+                    <Card key={participant.token} className="p-4 bg-muted/30">
                       <div className="flex flex-col gap-2">
-                        <span className="text-sm font-semibold">
+                        <span className="text-sm font-medium">
                           {participant.name}
                         </span>
                         <div className="flex gap-2">
@@ -161,14 +161,15 @@ function Home() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-xl mx-auto p-4 sm:p-6">
-      <h1 className="font-head text-2xl sm:text-3xl text-center">
-        Wichtel-Event erstellen
-      </h1>
-
-      <p className="text-center text-muted-foreground">
-        Erstelle ein geheimes Wichtel-Event für deine Familie oder Freunde
-      </p>
+    <div className="flex flex-col gap-8 max-w-xl mx-auto p-4 sm:p-6 md:p-8">
+      <div className="text-center">
+        <h1 className="text-4xl sm:text-5xl font-black mb-3">
+          Wichtel-Event erstellen
+        </h1>
+        <p className="text-muted-foreground">
+          Erstelle ein geheimes Wichtel-Event für deine Familie oder Freunde
+        </p>
+      </div>
 
       <form
         onSubmit={e => {
@@ -186,7 +187,7 @@ function Home() {
             }}
           >
             {field => (
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2">
                 <label htmlFor="eventName" className="text-sm font-medium">
                   Event-Name
                 </label>
@@ -233,7 +234,7 @@ function Home() {
                   placeholder="Datum auswählen"
                   minDate={new Date()}
                 />
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground">
                   Die Ziehungsergebnisse werden erst nach diesem Datum sichtbar
                 </p>
                 {field.state.meta.errors.length > 0 && (
@@ -246,7 +247,7 @@ function Home() {
           </form.Field>
 
           <div>
-            <p className="font-semibold mb-2">Teilnehmer</p>
+            <p className="text-xl font-semibold mb-3">Teilnehmer</p>
             <form.Field name="participants" mode="array">
               {field => (
                 <>

@@ -66,19 +66,19 @@ function ParticipantDraw() {
 
   if (drawnName) {
     return (
-      <div className="flex flex-col items-center gap-6 max-w-xl mx-auto p-6">
-        <h1 className="font-head text-2xl sm:text-3xl text-center">
+      <div className="flex flex-col items-center gap-8 max-w-xl mx-auto p-4 sm:p-6 md:p-8">
+        <h1 className="text-4xl sm:text-5xl font-black text-center">
           Hallo {participantInfo.participantName}!
         </h1>
 
-        <Card variant="success" className="p-6 w-full">
+        <Card variant="success" className="p-8 w-full">
           <div className="flex flex-col items-center gap-4">
-            <p className="text-lg font-medium">Du beschenkst:</p>
-            <h2 className="font-head text-2xl text-center">{drawnName}</h2>
+            <p className="text-xl font-semibold">Du beschenkst:</p>
+            <h2 className="text-4xl font-black text-center">{drawnName}</h2>
           </div>
         </Card>
 
-        <p className="text-sm text-muted-foreground text-center">
+        <p className="text-xs text-muted-foreground text-center">
           Merke dir diesen Namen gut! Du kannst diese Seite jederzeit wieder
           aufrufen.
         </p>
@@ -87,12 +87,12 @@ function ParticipantDraw() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 max-w-xl mx-auto p-6">
-      <h1 className="font-head text-2xl sm:text-3xl text-center">
+    <div className="flex flex-col items-center gap-8 max-w-xl mx-auto p-4 sm:p-6 md:p-8">
+      <h1 className="text-4xl sm:text-5xl font-black text-center">
         Hallo {participantInfo.participantName}!
       </h1>
 
-      <p className="text-center text-lg">
+      <p className="text-center text-xl font-semibold">
         Klicke auf den Button unten, um zu erfahren, wen du beschenkst.
       </p>
 

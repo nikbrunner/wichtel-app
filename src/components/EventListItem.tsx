@@ -61,19 +61,19 @@ export function EventListItem({ event }: EventListItemProps) {
 
   return (
     <Card className="p-6">
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {/* Event Header */}
         <div className="flex justify-between flex-nowrap">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-head text-lg">{event.name}</span>
+              <span className="text-2xl font-bold">{event.name}</span>
               <EventDateBadge
                 eventDate={event.event_date}
                 daysUntil={event.days_until_event}
                 isPast={event.is_past}
               />
             </div>
-            <p className="text-sm text-muted-foreground font-mono">
+            <p className="text-xs text-muted-foreground font-mono">
               {new Date(event.event_date).toLocaleDateString("de-DE", {
                 day: "2-digit",
                 month: "long",
@@ -87,14 +87,16 @@ export function EventListItem({ event }: EventListItemProps) {
         </div>
 
         {/* Stats */}
-        <div className="flex gap-6">
+        <div className="flex gap-8">
           <div>
             <span className="text-xs text-muted-foreground">Teilnehmer</span>
-            <p className="font-semibold font-mono">{event.participant_count}</p>
+            <p className="text-sm font-medium font-mono">
+              {event.participant_count}
+            </p>
           </div>
           <div>
             <span className="text-xs text-muted-foreground">Gezogen</span>
-            <p className="font-semibold font-mono">
+            <p className="text-sm font-medium font-mono">
               {event.drawn_count} / {event.participant_count}
             </p>
           </div>
@@ -140,7 +142,7 @@ export function EventListItem({ event }: EventListItemProps) {
                   </button>
                 </Alert>
               )}
-              <span className="text-sm font-semibold">Teilnehmer-Links</span>
+              <span className="text-xl font-semibold">Teilnehmer-Links</span>
               <ParticipantLinkTable
                 eventSlug={event.slug}
                 participants={event.participants}
