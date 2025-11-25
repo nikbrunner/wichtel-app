@@ -73,7 +73,7 @@ export function EventListItem({ event }: EventListItemProps) {
                 isPast={event.is_past}
               />
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground font-mono">
               {new Date(event.event_date).toLocaleDateString("de-DE", {
                 day: "2-digit",
                 month: "long",
@@ -90,11 +90,11 @@ export function EventListItem({ event }: EventListItemProps) {
         <div className="flex gap-6">
           <div>
             <span className="text-xs text-muted-foreground">Teilnehmer</span>
-            <p className="font-semibold">{event.participant_count}</p>
+            <p className="font-semibold font-mono">{event.participant_count}</p>
           </div>
           <div>
             <span className="text-xs text-muted-foreground">Gezogen</span>
-            <p className="font-semibold">
+            <p className="font-semibold font-mono">
               {event.drawn_count} / {event.participant_count}
             </p>
           </div>

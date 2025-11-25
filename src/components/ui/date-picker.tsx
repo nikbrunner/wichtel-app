@@ -36,7 +36,7 @@ export function DatePicker({
           variant="outline"
           disabled={disabled}
           className={cn(
-            "w-full justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal font-mono",
             !value && "text-muted-foreground",
             className
           )}
@@ -48,6 +48,7 @@ export function DatePicker({
       <PopoverContent
         className="w-auto p-0 border-2 border-border shadow-md"
         align="start"
+        sideOffset={8}
       >
         <Calendar
           mode="single"

@@ -225,7 +225,7 @@ function Home() {
             }}
           >
             {field => (
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2 mb-2">
                 <label className="text-sm font-medium">Event-Datum</label>
                 <DatePicker
                   value={field.state.value}
@@ -233,7 +233,7 @@ function Home() {
                   placeholder="Datum auswählen"
                   minDate={new Date()}
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-1">
                   Die Ziehungsergebnisse werden erst nach diesem Datum sichtbar
                 </p>
                 {field.state.meta.errors.length > 0 && (

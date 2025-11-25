@@ -1,81 +1,17 @@
 @import "tailwindcss";
 
-/* TX-02 Custom Font */
+/* Recursive Variable Font */
 @font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Light-Condensed.ttf") format("truetype");
-  font-weight: 300;
+  font-family: "Recursive";
+  src: url("/fonts/Recursive/Recursive_VF_1.085.woff2") format("woff2-variations");
+  font-weight: 300 1000;
   font-style: normal;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Light-Condensed-Oblique.ttf") format("truetype");
-  font-weight: 300;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Condensed.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Condensed-Oblique.ttf") format("truetype");
-  font-weight: 400;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/SemiBold-Condensed.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/SemiBold-Condensed-Oblique.ttf")
-    format("truetype");
-  font-weight: 600;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Bold-Condensed.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Bold-Condensed-Oblique.ttf") format("truetype");
-  font-weight: 700;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Black-Condensed.ttf") format("truetype");
-  font-weight: 900;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "TX-02";
-  src: url("/fonts/TX-02/Condensed/Black-Condensed-Oblique.ttf") format("truetype");
-  font-weight: 900;
-  font-style: italic;
 }
 
 /* RetroUI Theme */
 @theme {
-  --font-head: "TX-02", sans-serif;
-  --font-sans: "TX-02", sans-serif;
+  --font-head: "Recursive", sans-serif;
+  --font-sans: "Recursive", sans-serif;
   --radius: var(--radius);
 
   /* Size-based shadows (black border) */
@@ -194,6 +130,9 @@
 /* Base styles */
 body {
   font-family: var(--font-sans);
+  font-variation-settings:
+    "CASL" 1,
+    "MONO" 0;
   background-color: var(--background);
   color: var(--foreground);
 }
@@ -202,11 +141,17 @@ h1,
 h2,
 h3 {
   font-weight: 900;
+  font-variation-settings:
+    "CASL" 1,
+    "MONO" 0,
+    "wght" 900;
 }
 
-h1,
-h2 {
-  text-transform: uppercase;
+/* Mono Casual - playful monospace for badges, dates, technical text */
+.font-mono {
+  font-variation-settings:
+    "CASL" 1,
+    "MONO" 1;
 }
 
 /* Remove outline for mouse users, keep for keyboard users */
