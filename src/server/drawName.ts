@@ -4,8 +4,13 @@ import type {
   DrawNameInput,
   DrawNameOutput,
   Participant,
-  Draw
+  Draw,
+  Event
 } from "../types/database";
+
+type ParticipantWithEvent = Participant & {
+  event: Pick<Event, "lock_date"> | null;
+};
 
 export const drawName = createServerFn({ method: "POST" })
   .inputValidator((data: DrawNameInput) => data)
@@ -18,15 +23,26 @@ export const drawName = createServerFn({ method: "POST" })
 
     const supabase = getSupabaseServiceRoleClient();
 
-    // Get the participant by token
+    // Get the participant by token with event lock_date
     const { data: participant, error: participantError } = await supabase
       .from("participants")
-      .select("*")
+      .select(
+        `
+        *,
+        event:events(lock_date)
+      `
+      )
       .eq("token", participantToken)
-      .single<Participant>();
+      .single<ParticipantWithEvent>();
 
     if (participantError || !participant) {
       throw new Error("Invalid participant token");
+    }
+
+    // Check if lock date has passed (only allow draw after lock date)
+    const lockDate = participant.event?.lock_date;
+    if (lockDate && new Date() < new Date(lockDate)) {
+      throw new Error("Das Ziehen ist erst nach dem Stichtag möglich");
     }
 
     // Check if participant has already drawn

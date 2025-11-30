@@ -9,6 +9,7 @@ export type Event = {
   admin_token: string | null;
   admin_user_id: string | null;
   event_date: string; // ISO date string
+  lock_date: string | null; // ISO date string, nullable for backwards compat
   created_at: string;
 };
 
@@ -24,6 +25,8 @@ export type DrawResult = {
   created_at: string;
 };
 
+export type InterestsStatus = "pending" | "skipped" | "submitted";
+
 export type EventWithStats = Event & {
   participant_count: number;
   drawn_count: number;
@@ -36,6 +39,7 @@ export type EventWithStats = Event & {
     token: string;
     has_drawn: boolean;
     drawn_at: string | null;
+    interests_status: InterestsStatus;
   }>;
   draw_results: DrawResult[] | null;
 };
@@ -47,6 +51,14 @@ export type Participant = {
   token: string;
   has_drawn: boolean;
   drawn_at: string | null;
+  interests_status: InterestsStatus;
+};
+
+export type ParticipantInterest = {
+  id: string;
+  participant_id: string;
+  item: string;
+  created_at: string;
 };
 
 export type Draw = {
@@ -64,6 +76,7 @@ export type Draw = {
 export type CreateEventInput = {
   eventName: string;
   eventDate: string; // YYYY-MM-DD format
+  lockDate: string; // YYYY-MM-DD format
   participantNames: string[];
 };
 
@@ -99,6 +112,29 @@ export type ParticipantInfoOutput = {
   participantName: string;
   hasDrawn: boolean;
   drawnName: string | null;
+  drawnPersonInterests: string[] | null;
+  isLocked: boolean;
+  lockDate: string | null;
+  myInterests: string[];
+  interestsStatus: InterestsStatus;
+};
+
+// Interests management
+export type UpdateInterestsInput = {
+  participantToken: string;
+  interests: string[];
+};
+
+export type UpdateInterestsOutput = {
+  interests: string[];
+};
+
+export type SkipInterestsInput = {
+  participantToken: string;
+};
+
+export type SkipInterestsOutput = {
+  success: boolean;
 };
 
 export type RegenerateParticipantLinkInput = {

@@ -18,6 +18,7 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(
         admin_token,
         admin_user_id,
         event_date,
+        lock_date,
         created_at
       `
       )
@@ -37,7 +38,7 @@ export const getAdminEvents = createServerFn({ method: "GET" }).handler(
       events.map(async event => {
         const { data: participants } = await supabase
           .from("participants")
-          .select("id, name, token, has_drawn, drawn_at")
+          .select("id, name, token, has_drawn, drawn_at, interests_status")
           .eq("event_id", event.id)
           .order("name");
 

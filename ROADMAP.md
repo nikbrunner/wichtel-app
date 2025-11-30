@@ -16,9 +16,6 @@
 ## Open Goals
 
 - [ ] feat: Internationalization
-- [ ] feat: A participant can optinally provide a list of interests
-  - Maybe a pre-draw date until adding new participants is possible and interests can also be added
-  - Then everything is locked in and everybody can draw
 - [ ] feat: light/dark mode
 
 ---
@@ -32,7 +29,16 @@
 - [x] feat: delete participants
 - [x] feat: add participants to existing events
 - [x] sign-in/up: via Modal
-- [ ] feat: landing page when not logged in
+- [x] feat: landing page when not logged in
+
+## 2025.11.30 - Sunday
+
+- [x] fix: db
+- [x] chore: bring .env into 1P
+- [ ] feat: A participant can optinally provide a list of interests
+  - Maybe a pre-draw date until adding new participants is possible and interests can also be added
+  - Then everything is locked in and everybody can draw
+- [ ] feat: event page needs to be redone
 - [ ] fix: button loading state in sign-in
   - Shows loading state when clicked but reverts to original state before submission
 - [ ] style: create Logo in Figma

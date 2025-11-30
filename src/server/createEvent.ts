@@ -14,7 +14,7 @@ export const createEvent = createServerFn({ method: "POST" })
     const supabase = getSupabaseServerClient();
     const user = await requireAuth(supabase);
 
-    const { eventName, eventDate, participantNames } = data;
+    const { eventName, eventDate, lockDate, participantNames } = data;
 
     if (!eventName || eventName.trim().length === 0) {
       throw new Error("Event name is required");
@@ -22,6 +22,15 @@ export const createEvent = createServerFn({ method: "POST" })
 
     if (!eventDate) {
       throw new Error("Event date is required");
+    }
+
+    if (!lockDate) {
+      throw new Error("Lock date is required");
+    }
+
+    // Validate lockDate is before or equal to eventDate
+    if (new Date(lockDate) > new Date(eventDate)) {
+      throw new Error("Lock date must be before or on the event date");
     }
 
     if (!participantNames || participantNames.length < 3) {
@@ -43,7 +52,8 @@ export const createEvent = createServerFn({ method: "POST" })
         slug: eventSlug,
         admin_token: adminToken,
         admin_user_id: user.id,
-        event_date: eventDate
+        event_date: eventDate,
+        lock_date: lockDate
       })
       .select()
       .single<Event>();

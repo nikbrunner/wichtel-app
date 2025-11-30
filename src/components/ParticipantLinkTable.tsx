@@ -12,6 +12,8 @@ import {
   TableCell
 } from "@/components/retroui/Table";
 
+import type { InterestsStatus } from "../types/database";
+
 type ParticipantLinkTableProps = {
   eventSlug: string;
   participants: Array<{
@@ -20,6 +22,7 @@ type ParticipantLinkTableProps = {
     token: string;
     has_drawn: boolean;
     drawn_at: string | null;
+    interests_status: InterestsStatus;
   }>;
   onRegenerateLink: (participantId: string, participantName: string) => void;
   regeneratingId: string | null;
@@ -28,6 +31,30 @@ type ParticipantLinkTableProps = {
   canAddParticipants: boolean;
   onAddParticipant: () => void;
 };
+
+function InterestsStatusBadge({ status }: { status: InterestsStatus }) {
+  switch (status) {
+    case "submitted":
+      return (
+        <Badge variant="success" title="Hat Wünsche eingetragen">
+          Wünsche
+        </Badge>
+      );
+    case "skipped":
+      return (
+        <Badge variant="warning" title="Hat keine Wünsche eingetragen">
+          Übersprungen
+        </Badge>
+      );
+    case "pending":
+    default:
+      return (
+        <Badge variant="default" title="Hat noch nicht reagiert">
+          Ausstehend
+        </Badge>
+      );
+  }
+}
 
 function useCopyToClipboard() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -74,11 +101,14 @@ export function ParticipantLinkTable({
               <div className="flex flex-col gap-2">
                 <div className="flex justify-between items-start">
                   <span className="font-semibold">{participant.name}</span>
-                  {participant.has_drawn ? (
-                    <Badge variant="success">Gezogen</Badge>
-                  ) : (
-                    <Badge variant="default">Noch nicht</Badge>
-                  )}
+                  <div className="flex gap-1">
+                    <InterestsStatusBadge status={participant.interests_status} />
+                    {participant.has_drawn ? (
+                      <Badge variant="success">Gezogen</Badge>
+                    ) : (
+                      <Badge variant="default">Noch nicht</Badge>
+                    )}
+                  </div>
                 </div>
 
                 <Input readOnly value={link} className="text-xs" />
@@ -126,7 +156,8 @@ export function ParticipantLinkTable({
           <TableHeader>
             <TableRow>
               <TableHead>Teilnehmer</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Wünsche</TableHead>
+              <TableHead>Ziehung</TableHead>
               <TableHead>Link</TableHead>
               <TableHead>Aktionen</TableHead>
             </TableRow>
@@ -138,6 +169,9 @@ export function ParticipantLinkTable({
               return (
                 <TableRow key={participant.id}>
                   <TableCell className="font-semibold">{participant.name}</TableCell>
+                  <TableCell>
+                    <InterestsStatusBadge status={participant.interests_status} />
+                  </TableCell>
                   <TableCell>
                     {participant.has_drawn ? (
                       <Badge variant="success">Gezogen</Badge>
