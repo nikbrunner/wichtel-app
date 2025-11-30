@@ -5,6 +5,7 @@ import { Button } from "@/components/retroui/Button";
 import { Input } from "@/components/retroui/Input";
 import { Card } from "@/components/retroui/Card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
+import { Select } from "@/components/retroui/Select";
 import { DatePicker } from "@/components/ui/date-picker";
 import { createEvent } from "../server/createEvent";
 import type { CreateEventOutput } from "../types/database";
@@ -49,30 +50,46 @@ function Home() {
     []
   );
 
+  // Lock date offset options (days before event)
+  const lockDateOptions = [
+    { value: "0", label: "Sofort (kein Stichtag)" },
+    { value: "1", label: "1 Tag vorher" },
+    { value: "2", label: "2 Tage vorher" },
+    { value: "3", label: "3 Tage vorher" },
+    { value: "7", label: "1 Woche vorher" },
+    { value: "14", label: "2 Wochen vorher" }
+  ];
+
   const form = useForm({
     defaultValues: {
       eventName: "",
       eventDate: undefined as Date | undefined,
-      lockDate: undefined as Date | undefined,
+      lockDateOffset: "3", // Default: 3 days before
       participants: initialParticipants
     },
     onSubmit: async ({ value }) => {
       if (!value.eventDate) {
         throw new Error("Event-Datum ist erforderlich");
       }
-      if (!value.lockDate) {
-        throw new Error("Stichtag ist erforderlich");
-      }
 
       const filteredNames = value.participants
         .map(p => p.name.trim())
         .filter(name => name.length > 0);
 
+      // Calculate lock date from event date minus offset
+      const offsetDays = parseInt(value.lockDateOffset, 10);
+      const eventDateObj = dayjs(value.eventDate);
+      const lockDateObj = eventDateObj.subtract(offsetDays, "day");
+
+      // If lock date would be in the past, use today
+      const today = dayjs().startOf("day");
+      const finalLockDate = lockDateObj.isBefore(today) ? today : lockDateObj;
+
       const eventResult = await createEvent({
         data: {
           eventName: value.eventName.trim(),
           eventDate: format(value.eventDate, "yyyy-MM-dd"),
-          lockDate: format(value.lockDate, "yyyy-MM-dd"),
+          lockDate: finalLockDate.format("YYYY-MM-DD"),
           participantNames: filteredNames
         }
       });
@@ -217,58 +234,14 @@ function Home() {
           </form.Field>
 
           <form.Field
-            name="lockDate"
-            validators={{
-              onChange: ({ value, fieldApi }) => {
-                if (!value) return "Stichtag ist erforderlich";
-                const selectedDate = dayjs(value);
-                const today = dayjs().startOf("day");
-                if (selectedDate.isBefore(today)) {
-                  return "Stichtag muss in der Zukunft liegen";
-                }
-                const eventDate = fieldApi.form.getFieldValue("eventDate");
-                if (eventDate && selectedDate.isAfter(dayjs(eventDate))) {
-                  return "Stichtag muss vor oder am Event-Datum liegen";
-                }
-                return undefined;
-              }
-            }}
-          >
-            {field => (
-              <div className="flex flex-col gap-2 mb-2">
-                <label className="text-sm font-medium">Stichtag für Wünsche</label>
-                <DatePicker
-                  value={field.state.value}
-                  onChange={date => field.handleChange(date)}
-                  placeholder="Stichtag auswählen"
-                  minDate={new Date()}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Bis zu diesem Datum können Teilnehmer ihre Wünsche eintragen.
-                  Danach wird die Ziehung freigeschaltet.
-                </p>
-                {field.state.meta.errors.length > 0 && (
-                  <p className="text-red-600 text-sm">
-                    {field.state.meta.errors.join(", ")}
-                  </p>
-                )}
-              </div>
-            )}
-          </form.Field>
-
-          <form.Field
             name="eventDate"
             validators={{
-              onChange: ({ value, fieldApi }) => {
+              onChange: ({ value }) => {
                 if (!value) return "Event-Datum ist erforderlich";
                 const selectedDate = dayjs(value);
                 const today = dayjs().startOf("day");
                 if (selectedDate.isBefore(today)) {
-                  return "Event-Datum muss in der Zukunft liegen";
-                }
-                const lockDate = fieldApi.form.getFieldValue("lockDate");
-                if (lockDate && selectedDate.isBefore(dayjs(lockDate))) {
-                  return "Event-Datum muss nach oder am Stichtag liegen";
+                  return "Event-Datum muss heute oder in der Zukunft liegen";
                 }
                 return undefined;
               }
@@ -291,6 +264,35 @@ function Home() {
                     {field.state.meta.errors.join(", ")}
                   </p>
                 )}
+              </div>
+            )}
+          </form.Field>
+
+          <form.Field name="lockDateOffset">
+            {field => (
+              <div className="flex flex-col gap-2 mb-2">
+                <label className="text-sm font-medium">Stichtag für Wünsche</label>
+                <Select
+                  value={field.state.value}
+                  onValueChange={value => field.handleChange(value)}
+                >
+                  <Select.Trigger className="w-full">
+                    <Select.Value placeholder="Zeitraum auswählen" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Group>
+                      {lockDateOptions.map(option => (
+                        <Select.Item key={option.value} value={option.value}>
+                          {option.label}
+                        </Select.Item>
+                      ))}
+                    </Select.Group>
+                  </Select.Content>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Bis zum Stichtag können Teilnehmer ihre Wünsche eintragen. Danach
+                  wird die Ziehung freigeschaltet.
+                </p>
               </div>
             )}
           </form.Field>
