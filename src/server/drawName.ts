@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getSupabaseServerClient } from "../utils/supabase";
+import { getSupabaseServiceRoleClient } from "../utils/supabase";
 import type {
   DrawNameInput,
   DrawNameOutput,
@@ -16,7 +16,7 @@ export const drawName = createServerFn({ method: "POST" })
       throw new Error("Participant token is required");
     }
 
-    const supabase = getSupabaseServerClient();
+    const supabase = getSupabaseServiceRoleClient();
 
     // Get the participant by token
     const { data: participant, error: participantError } = await supabase

@@ -1,6 +1,6 @@
 import { getCookies, setCookie } from "@tanstack/react-start/server";
 import { createServerClient, createBrowserClient } from "@supabase/ssr";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Creates a Supabase server client for use in server functions and loaders
@@ -77,4 +77,28 @@ export async function requireAuth(supabase: SupabaseClient) {
   }
 
   return user;
+}
+
+/**
+ * Creates a Supabase client with service role key for server-side operations
+ * that need to bypass RLS (e.g., participant token-based access)
+ *
+ * WARNING: This bypasses RLS! Only use in server functions with proper validation.
+ */
+export function getSupabaseServiceRoleClient() {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error(
+      "Missing Supabase environment variables for service role client"
+    );
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
 }
