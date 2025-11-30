@@ -73,11 +73,11 @@ See `src/styles/app.css` for theme variables and `src/routes/__root.tsx` for lay
 
 ### Database: Supabase (PostgreSQL)
 
-**Client Setup**: Single server-side client in `src/utils/supabase.ts`
+**Client Setup**: Two server-side clients in `src/utils/supabase.ts`
 
-- Uses `@supabase/ssr` for cookie-based session handling
-- Environment variables via `import.meta.env` (bundled at build time)
-- Never create Supabase clients elsewhere - always use `getSupabaseServerClient()`
+- `getSupabaseServerClient()` - Uses anon key with cookie-based session handling (for authenticated admin operations)
+- `getSupabaseServiceRoleClient()` - Uses service role key, bypasses RLS (for participant token-based operations)
+- Environment variables via `import.meta.env` (VITE\_ prefixed) and `process.env` (server-only)
 
 **Schema**:
 
@@ -85,10 +85,10 @@ See `src/styles/app.css` for theme variables and `src/routes/__root.tsx` for lay
 - `participants` - Event participants with unique tokens and draw status
 - `draws` - Who drew whom (immutable once created)
 
-**Authentication Model**: Token-based (no user accounts)
+**Authentication Model**: Hybrid (Supabase Auth + tokens)
 
-- Admin token for event management
-- Participant tokens for drawing names
+- **Admins**: Supabase Auth (email/password) - protected by RLS (`auth.uid() = admin_user_id`)
+- **Participants**: Token-based (no login) - validated in server functions, uses service role client
 - All tokens are UUIDs generated via `crypto.randomUUID()`
 
 ## Project Structure
@@ -162,25 +162,29 @@ const mutation = useMutation({
 });
 ```
 
-### Token-Based Security
+### Security Model
 
+- **RLS (Row Level Security)**: Enabled on all tables, restricts admin operations to own data
+- **Admin operations**: Use `getSupabaseServerClient()` - RLS filters by `auth.uid()`
+- **Participant operations**: Use `getSupabaseServiceRoleClient()` - bypasses RLS, validates tokens in code
 - Tokens are UUIDs stored in database, passed via query params
-- Admin tokens control event management
-- Participant tokens control name drawing
-- No RLS configured (token-based access control sufficient for this use case)
 
 ## Environment Variables
 
 Required in `.env` (see `.env.example`):
 
 ```bash
+# Public (bundled to frontend via import.meta.env)
 VITE_SUPABASE_URL=           # Project URL from Supabase dashboard
 VITE_SUPABASE_ANON_KEY=      # Anon/public key from Supabase dashboard
+
+# Server-only (accessed via process.env, NOT bundled to frontend)
+SUPABASE_SERVICE_ROLE_KEY=   # Service role key (bypasses RLS - keep secret!)
 SUPABASE_PROJECT_REF=        # Project reference (from project URL)
 DB_PASSWORD=                 # Database password for migrations
 ```
 
-**Important**: All variables use `VITE_` prefix to work with Vercel deployment (bundled at build time via `import.meta.env`).
+**Important**: `VITE_` prefixed variables are bundled into frontend code. `SUPABASE_SERVICE_ROLE_KEY` must NOT have this prefix to stay server-side only.
 
 ## Database Migrations
 
