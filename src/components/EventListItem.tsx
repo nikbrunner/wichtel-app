@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/retroui/Button";
 import { Card } from "@/components/retroui/Card";
@@ -175,7 +175,13 @@ export function EventListItem({ event }: EventListItemProps) {
           {/* Name Column */}
           <div>
             <div className="flex items-center gap-8 mb-4">
-              <span className="text-2xl font-bold">{event.name}</span>
+              <Link
+                to="/e/$eventSlug"
+                params={{ eventSlug: event.slug }}
+                className="text-2xl font-bold hover:underline"
+              >
+                {event.name}
+              </Link>
               <EventDateBadge
                 eventDate={event.event_date}
                 daysUntil={event.days_until_event}

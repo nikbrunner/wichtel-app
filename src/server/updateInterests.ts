@@ -42,7 +42,7 @@ export const updateInterests = createServerFn({ method: "POST" })
     const lockDate = participant.event?.lock_date;
     if (lockDate && new Date() >= new Date(lockDate)) {
       throw new Error(
-        "Der Stichtag ist bereits vorbei. Wünsche können nicht mehr geändert werden."
+        "Der Stichtag ist bereits vorbei. Interessen können nicht mehr geändert werden."
       );
     }
 

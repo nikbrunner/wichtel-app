@@ -80,7 +80,7 @@ export const addParticipant = createServerFn({ method: "POST" })
         id: participant.id,
         name: participant.name,
         token: participant.token,
-        link: `/e/${event.slug}?token=${participant.token}`
+        link: `/p/${event.slug}?token=${participant.token}`
       }
     };
   });

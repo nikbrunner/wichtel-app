@@ -26,7 +26,7 @@ export function CopyAllLinksButton({
 
 ${participants
   .map(p => {
-    const link = `${origin}/e/${eventSlug}?token=${p.token}`;
+    const link = `${origin}/p/${eventSlug}?token=${p.token}`;
     return `${p.name}: ${link}`;
   })
   .join("\n\n")}

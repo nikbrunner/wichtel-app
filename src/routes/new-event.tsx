@@ -274,7 +274,9 @@ function Home() {
           <form.Field name="lockDateOffset">
             {field => (
               <div className="flex flex-col gap-2 mb-2">
-                <label className="text-sm font-medium">Stichtag für Wünsche</label>
+                <label className="text-sm font-medium">
+                  Stichtag für Interessen
+                </label>
                 <Select
                   value={field.state.value}
                   onValueChange={value =>
@@ -295,8 +297,8 @@ function Home() {
                   </Select.Content>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Bis zum Stichtag können Teilnehmer ihre Wünsche eintragen. Danach
-                  wird die Ziehung freigeschaltet.
+                  Bis zum Stichtag können Teilnehmer ihre Interessen eintragen.
+                  Danach wird die Ziehung freigeschaltet.
                 </p>
                 <form.Subscribe
                   selector={state => ({

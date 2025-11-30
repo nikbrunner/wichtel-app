@@ -87,7 +87,7 @@ export const createEvent = createServerFn({ method: "POST" })
       participants: participants.map((participant: Participant) => ({
         name: participant.name,
         token: participant.token,
-        link: `/e/${eventSlug}?token=${participant.token}`
+        link: `/p/${eventSlug}?token=${participant.token}`
       }))
     };
   });

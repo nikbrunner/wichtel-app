@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as NewEventRouteImport } from './routes/new-event'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PEventSlugRouteImport } from './routes/p.$eventSlug'
 import { Route as EEventSlugRouteImport } from './routes/e.$eventSlug'
+import { Route as PEventSlugResultRouteImport } from './routes/p.$eventSlug/result'
+import { Route as PEventSlugInterestsRouteImport } from './routes/p.$eventSlug/interests'
+import { Route as PEventSlugDrawRouteImport } from './routes/p.$eventSlug/draw'
 
 const NewEventRoute = NewEventRouteImport.update({
   id: '/new-event',
@@ -29,10 +33,30 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PEventSlugRoute = PEventSlugRouteImport.update({
+  id: '/p/$eventSlug',
+  path: '/p/$eventSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EEventSlugRoute = EEventSlugRouteImport.update({
   id: '/e/$eventSlug',
   path: '/e/$eventSlug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PEventSlugResultRoute = PEventSlugResultRouteImport.update({
+  id: '/result',
+  path: '/result',
+  getParentRoute: () => PEventSlugRoute,
+} as any)
+const PEventSlugInterestsRoute = PEventSlugInterestsRouteImport.update({
+  id: '/interests',
+  path: '/interests',
+  getParentRoute: () => PEventSlugRoute,
+} as any)
+const PEventSlugDrawRoute = PEventSlugDrawRouteImport.update({
+  id: '/draw',
+  path: '/draw',
+  getParentRoute: () => PEventSlugRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -40,12 +64,20 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/new-event': typeof NewEventRoute
   '/e/$eventSlug': typeof EEventSlugRoute
+  '/p/$eventSlug': typeof PEventSlugRouteWithChildren
+  '/p/$eventSlug/draw': typeof PEventSlugDrawRoute
+  '/p/$eventSlug/interests': typeof PEventSlugInterestsRoute
+  '/p/$eventSlug/result': typeof PEventSlugResultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/new-event': typeof NewEventRoute
   '/e/$eventSlug': typeof EEventSlugRoute
+  '/p/$eventSlug': typeof PEventSlugRouteWithChildren
+  '/p/$eventSlug/draw': typeof PEventSlugDrawRoute
+  '/p/$eventSlug/interests': typeof PEventSlugInterestsRoute
+  '/p/$eventSlug/result': typeof PEventSlugResultRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +85,42 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/new-event': typeof NewEventRoute
   '/e/$eventSlug': typeof EEventSlugRoute
+  '/p/$eventSlug': typeof PEventSlugRouteWithChildren
+  '/p/$eventSlug/draw': typeof PEventSlugDrawRoute
+  '/p/$eventSlug/interests': typeof PEventSlugInterestsRoute
+  '/p/$eventSlug/result': typeof PEventSlugResultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/new-event' | '/e/$eventSlug'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/new-event'
+    | '/e/$eventSlug'
+    | '/p/$eventSlug'
+    | '/p/$eventSlug/draw'
+    | '/p/$eventSlug/interests'
+    | '/p/$eventSlug/result'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/new-event' | '/e/$eventSlug'
-  id: '__root__' | '/' | '/dashboard' | '/new-event' | '/e/$eventSlug'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/new-event'
+    | '/e/$eventSlug'
+    | '/p/$eventSlug'
+    | '/p/$eventSlug/draw'
+    | '/p/$eventSlug/interests'
+    | '/p/$eventSlug/result'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/new-event'
+    | '/e/$eventSlug'
+    | '/p/$eventSlug'
+    | '/p/$eventSlug/draw'
+    | '/p/$eventSlug/interests'
+    | '/p/$eventSlug/result'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +128,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   NewEventRoute: typeof NewEventRoute
   EEventSlugRoute: typeof EEventSlugRoute
+  PEventSlugRoute: typeof PEventSlugRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -92,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/p/$eventSlug': {
+      id: '/p/$eventSlug'
+      path: '/p/$eventSlug'
+      fullPath: '/p/$eventSlug'
+      preLoaderRoute: typeof PEventSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/e/$eventSlug': {
       id: '/e/$eventSlug'
       path: '/e/$eventSlug'
@@ -99,14 +168,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EEventSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/p/$eventSlug/result': {
+      id: '/p/$eventSlug/result'
+      path: '/result'
+      fullPath: '/p/$eventSlug/result'
+      preLoaderRoute: typeof PEventSlugResultRouteImport
+      parentRoute: typeof PEventSlugRoute
+    }
+    '/p/$eventSlug/interests': {
+      id: '/p/$eventSlug/interests'
+      path: '/interests'
+      fullPath: '/p/$eventSlug/interests'
+      preLoaderRoute: typeof PEventSlugInterestsRouteImport
+      parentRoute: typeof PEventSlugRoute
+    }
+    '/p/$eventSlug/draw': {
+      id: '/p/$eventSlug/draw'
+      path: '/draw'
+      fullPath: '/p/$eventSlug/draw'
+      preLoaderRoute: typeof PEventSlugDrawRouteImport
+      parentRoute: typeof PEventSlugRoute
+    }
   }
 }
+
+interface PEventSlugRouteChildren {
+  PEventSlugDrawRoute: typeof PEventSlugDrawRoute
+  PEventSlugInterestsRoute: typeof PEventSlugInterestsRoute
+  PEventSlugResultRoute: typeof PEventSlugResultRoute
+}
+
+const PEventSlugRouteChildren: PEventSlugRouteChildren = {
+  PEventSlugDrawRoute: PEventSlugDrawRoute,
+  PEventSlugInterestsRoute: PEventSlugInterestsRoute,
+  PEventSlugResultRoute: PEventSlugResultRoute,
+}
+
+const PEventSlugRouteWithChildren = PEventSlugRoute._addFileChildren(
+  PEventSlugRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   NewEventRoute: NewEventRoute,
   EEventSlugRoute: EEventSlugRoute,
+  PEventSlugRoute: PEventSlugRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

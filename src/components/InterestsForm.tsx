@@ -51,7 +51,7 @@ export function InterestsForm({
   return (
     <Card className="p-6 w-full">
       <div className="flex flex-col gap-4">
-        <h3 className="text-xl font-semibold">Meine Wünsche</h3>
+        <h3 className="text-xl font-semibold">Meine Interessen</h3>
 
         {interests.length > 0 ? (
           <ul className="flex flex-col gap-2">
@@ -75,13 +75,13 @@ export function InterestsForm({
           </ul>
         ) : (
           <p className="text-muted-foreground text-sm italic">
-            Noch keine Wünsche eingetragen
+            Noch keine Interessen eingetragen
           </p>
         )}
 
         <div className="flex gap-2">
           <Input
-            placeholder="Neuer Wunsch..."
+            placeholder="Neues Interesse..."
             value={newItem}
             onChange={e => setNewItem(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -109,7 +109,7 @@ export function InterestsForm({
         {saveSuccess && (
           <Alert variant="success">
             <AlertTitle>Gespeichert</AlertTitle>
-            <AlertDescription>Deine Wünsche wurden gespeichert!</AlertDescription>
+            <AlertDescription>Deine Interessen wurden gespeichert!</AlertDescription>
           </Alert>
         )}
 
@@ -120,7 +120,7 @@ export function InterestsForm({
             variant="success"
             className="flex-1"
           >
-            {isSaving ? "Speichern..." : "Wünsche speichern"}
+            {isSaving ? "Speichern..." : "Interessen speichern"}
           </Button>
           <Button
             onClick={onSkip}
@@ -128,7 +128,7 @@ export function InterestsForm({
             variant="outline"
             className="flex-1"
           >
-            {isSkipping ? "..." : "Keine Wünsche"}
+            {isSkipping ? "..." : "Keine Interessen"}
           </Button>
         </div>
       </div>

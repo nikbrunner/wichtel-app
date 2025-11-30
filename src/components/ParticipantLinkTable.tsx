@@ -36,13 +36,13 @@ function InterestsStatusBadge({ status }: { status: InterestsStatus }) {
   switch (status) {
     case "submitted":
       return (
-        <Badge variant="success" title="Hat Wünsche eingetragen">
-          Wünsche
+        <Badge variant="success" title="Hat Interessen eingetragen">
+          Interessen
         </Badge>
       );
     case "skipped":
       return (
-        <Badge variant="warning" title="Hat keine Wünsche eingetragen">
+        <Badge variant="warning" title="Hat keine Interessen eingetragen">
           Übersprungen
         </Badge>
       );
@@ -86,7 +86,7 @@ export function ParticipantLinkTable({
 
   const generateLink = (token: string) => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    return `${origin}/e/${eventSlug}?token=${token}`;
+    return `${origin}/p/${eventSlug}?token=${token}`;
   };
 
   return (
@@ -156,7 +156,7 @@ export function ParticipantLinkTable({
           <TableHeader>
             <TableRow>
               <TableHead>Teilnehmer</TableHead>
-              <TableHead>Wünsche</TableHead>
+              <TableHead>Interessen</TableHead>
               <TableHead>Ziehung</TableHead>
               <TableHead>Link</TableHead>
               <TableHead>Aktionen</TableHead>

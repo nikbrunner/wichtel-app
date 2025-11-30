@@ -66,6 +66,6 @@ export const regenerateParticipantLink = createServerFn({ method: "POST" })
     // Return link without origin - client will prepend it
     return {
       newToken,
-      newLink: `/e/${eventSlug}?token=${newToken}`
+      newLink: `/p/${eventSlug}?token=${newToken}`
     };
   });
