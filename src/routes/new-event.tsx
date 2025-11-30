@@ -51,20 +51,23 @@ function Home() {
   );
 
   // Lock date offset options (days before event)
-  const lockDateOptions = [
-    { value: "0", label: "Sofort (kein Stichtag)" },
-    { value: "1", label: "1 Tag vorher" },
-    { value: "2", label: "2 Tage vorher" },
-    { value: "3", label: "3 Tage vorher" },
-    { value: "7", label: "1 Woche vorher" },
-    { value: "14", label: "2 Wochen vorher" }
-  ];
+  type LockDateOption = { label: string; days: number };
+  const lockDateOptions: Record<string, LockDateOption> = {
+    "immediate": { days: 0, label: "Sofort (kein Stichtag)" },
+    "1day": { days: 1, label: "1 Tag vorher" },
+    "2days": { days: 2, label: "2 Tage vorher" },
+    "3days": { days: 3, label: "3 Tage vorher" },
+    "1week": { days: 7, label: "1 Woche vorher" },
+    "2weeks": { days: 14, label: "2 Wochen vorher" },
+    "3weeks": { days: 21, label: "3 Wochen vorher" },
+    "4weeks": { days: 28, label: "4 Wochen vorher" }
+  };
 
   const form = useForm({
     defaultValues: {
       eventName: "",
       eventDate: undefined as Date | undefined,
-      lockDateOffset: "3", // Default: 3 days before
+      lockDateOffset: "2weeks" as keyof typeof lockDateOptions,
       participants: initialParticipants
     },
     onSubmit: async ({ value }) => {
@@ -77,8 +80,8 @@ function Home() {
         .filter(name => name.length > 0);
 
       // Calculate lock date from event date minus offset
-      const offsetDays = parseInt(value.lockDateOffset, 10);
       const eventDateObj = dayjs(value.eventDate);
+      const offsetDays = lockDateOptions[value.lockDateOffset].days;
       const lockDateObj = eventDateObj.subtract(offsetDays, "day");
 
       // If lock date would be in the past, use today
@@ -274,15 +277,17 @@ function Home() {
                 <label className="text-sm font-medium">Stichtag für Wünsche</label>
                 <Select
                   value={field.state.value}
-                  onValueChange={value => field.handleChange(value)}
+                  onValueChange={value =>
+                    field.handleChange(value as keyof typeof lockDateOptions)
+                  }
                 >
                   <Select.Trigger className="w-full">
                     <Select.Value placeholder="Zeitraum auswählen" />
                   </Select.Trigger>
                   <Select.Content>
                     <Select.Group>
-                      {lockDateOptions.map(option => (
-                        <Select.Item key={option.value} value={option.value}>
+                      {Object.entries(lockDateOptions).map(([key, option]) => (
+                        <Select.Item key={key} value={key}>
                           {option.label}
                         </Select.Item>
                       ))}
@@ -293,6 +298,28 @@ function Home() {
                   Bis zum Stichtag können Teilnehmer ihre Wünsche eintragen. Danach
                   wird die Ziehung freigeschaltet.
                 </p>
+                <form.Subscribe
+                  selector={state => ({
+                    eventDate: state.values.eventDate,
+                    lockDateOffset: state.values.lockDateOffset
+                  })}
+                >
+                  {({ eventDate, lockDateOffset }) => {
+                    if (!eventDate) return null;
+                    const eventDateObj = dayjs(eventDate);
+                    const offsetDays = lockDateOptions[lockDateOffset].days;
+                    const lockDateObj = eventDateObj.subtract(offsetDays, "day");
+                    const today = dayjs().startOf("day");
+                    const finalLockDate = lockDateObj.isBefore(today)
+                      ? today
+                      : lockDateObj;
+                    return (
+                      <p className="text-sm font-medium text-primary">
+                        Stichtag: {finalLockDate.format("DD.MM.YYYY")}
+                      </p>
+                    );
+                  }}
+                </form.Subscribe>
               </div>
             )}
           </form.Field>
