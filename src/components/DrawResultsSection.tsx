@@ -1,5 +1,5 @@
-import { Card } from "@/components/retroui/Card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
+import { Card } from "@/components/retroui/Card";
 import {
   Table,
   TableHeader,
@@ -8,6 +8,7 @@ import {
   TableRow,
   TableCell
 } from "@/components/retroui/Table";
+
 import type { DrawResult } from "../types/database";
 import dayjs from "dayjs";
 
@@ -57,28 +58,26 @@ export function DrawResultsSection({
   return (
     <div className="flex flex-col gap-4">
       <h3 className="text-lg font-bold">Ziehungsergebnisse</h3>
-      <Card>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Wer zieht</TableHead>
-              <TableHead>Hat gezogen</TableHead>
-              <TableHead>Wann</TableHead>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Wer zieht</TableHead>
+            <TableHead>Hat gezogen</TableHead>
+            <TableHead>Wann</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {drawResults.map((result, index) => (
+            <TableRow key={index}>
+              <TableCell className="font-semibold">{result.drawer_name}</TableCell>
+              <TableCell>{result.drawn_name}</TableCell>
+              <TableCell className="text-xs text-muted-foreground">
+                {dayjs(result.created_at).format("DD.MM.YYYY HH:mm")}
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {drawResults.map((result, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-semibold">{result.drawer_name}</TableCell>
-                <TableCell>{result.drawn_name}</TableCell>
-                <TableCell className="text-xs text-muted-foreground">
-                  {dayjs(result.created_at).format("DD.MM.YYYY HH:mm")}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
