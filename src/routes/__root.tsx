@@ -163,7 +163,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="font-sans bg-background text-foreground">
         {children}
-        <Toaster position="top-right" richColors />
+        <Toaster position="bottom-center" richColors />
         <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>
