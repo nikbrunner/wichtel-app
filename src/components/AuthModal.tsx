@@ -48,7 +48,6 @@ export function AuthModal() {
       router.invalidate();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login fehlgeschlagen");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -76,7 +75,6 @@ export function AuthModal() {
       router.invalidate();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registrierung fehlgeschlagen");
-    } finally {
       setIsLoading(false);
     }
   };
