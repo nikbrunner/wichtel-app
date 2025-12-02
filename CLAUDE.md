@@ -6,7 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A family-friendly Secret Santa/Wichtel web app for organizing gift exchanges without user accounts. Uses token-based authentication where each participant gets a unique link to draw their Secret Santa.
 
-**Key Workflow**: Admin creates event → participants receive unique links → each draws a name (can't draw themselves or already-drawn names) → admin can regenerate individual links if needed.
+**Key Workflow**:
+
+1. Admin creates event with participants and lock date
+2. Participants receive unique links
+3. **Interests phase**: Before lock date, participants can add their wishlist/interests
+4. **Draw phase**: After lock date, participants draw names and see their match's interests
+5. Admin can regenerate individual links if needed
 
 ## Development Commands
 
@@ -61,8 +67,8 @@ src/components/
 **Key Design Principles**:
 
 - Neo-Brutalism aesthetic: thick borders, stark drop shadows, bold colors
-- Typography: Archivo Black (headings), Space Grotesk (body)
-- Colors: Yellow primary, cream backgrounds, multi-color accents
+- Typography: Recursive variable font (self-hosted)
+- Colors: Yellow primary (#fac706), cream backgrounds (#f6f3df), green accent (#17835E)
 
 **Utilities**:
 
@@ -70,6 +76,12 @@ src/components/
 - Tailwind responsive classes instead of media query hooks
 
 See `src/styles/app.css` for theme variables and `src/routes/__root.tsx` for layout.
+
+**Logo Component** (`src/components/Logo.tsx`):
+
+- Inline SVG with dynamic stroke widths based on size
+- Strokes scale inversely (smaller = thicker) for visibility
+- Size variants: `s`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `4xl`, `5xl`
 
 ### Database: Supabase (PostgreSQL)
 
@@ -81,8 +93,8 @@ See `src/styles/app.css` for theme variables and `src/routes/__root.tsx` for lay
 
 **Schema**:
 
-- `events` - Event metadata with admin token and slug
-- `participants` - Event participants with unique tokens and draw status
+- `events` - Event metadata with admin token, slug, and lock date
+- `participants` - Event participants with unique tokens, draw status, and interests
 - `draws` - Who drew whom (immutable once created)
 
 **Authentication Model**: Hybrid (Supabase Auth + tokens)
@@ -96,27 +108,34 @@ See `src/styles/app.css` for theme variables and `src/routes/__root.tsx` for lay
 ```text
 src/
 ├── routes/                    # File-based routing
-│   ├── __root.tsx            # Root layout with RetroUI/Tailwind
-│   ├── index.tsx             # Home page (create event form)
-│   ├── e.$eventSlug.tsx      # Participant view (draw names)
-│   └── admin.$eventSlug.tsx  # Admin view (event management)
+│   ├── __root.tsx            # Root layout with header/nav
+│   ├── index.tsx             # Landing page (logged out)
+│   ├── dashboard.tsx         # Admin dashboard (logged in)
+│   ├── admin.$eventSlug.tsx  # Admin event management
+│   └── p.$eventSlug/         # Participant flows (token-based)
+│       ├── interests.tsx     # Phase 1: Add wishlist/interests
+│       ├── draw.tsx          # Phase 2: Draw a name
+│       └── result.tsx        # Show drawn name + their interests
 │
 ├── server/                    # Server functions (createServerFn)
 │   ├── createEvent.ts        # Create new event with participants
 │   ├── drawName.ts           # Draw a name for participant
-│   ├── getEventDetails.ts    # Get event info for admin
-│   ├── getParticipantInfo.ts # Get participant draw status
-│   └── regenerateParticipantLink.ts  # Generate new token
+│   ├── updateInterests.ts    # Save participant interests
+│   ├── getParticipantInfo.ts # Get participant state/interests
+│   └── ...                   # Other server functions
+│
+├── components/
+│   ├── Logo.tsx              # Inline SVG logo with size variants
+│   ├── retroui/              # RetroUI components
+│   └── ui/                   # ShadCN fallbacks
 │
 ├── utils/
 │   ├── supabase.ts           # Supabase server client factory
-│   ├── wichtel.ts            # Token/slug generation utilities
 │   └── seo.ts                # SEO meta tag helpers
 │
 ├── hooks/
-│   └── useMutation.ts        # Simple mutation hook (React Query-like API)
+│   └── useMutation.ts        # Simple mutation hook
 │
-├── components/               # Error boundaries and not found pages
 └── types/
     └── database.ts           # TypeScript types for DB schema
 ```
