@@ -5,6 +5,7 @@ import { InterestsForm } from "@/components/InterestsForm";
 import { updateInterests } from "../../server/updateInterests";
 import { skipInterests } from "../../server/skipInterests";
 import { getParticipantInfo } from "../../server/getParticipantInfo";
+import { Card } from "~/components/retroui/Card";
 
 export const Route = createFileRoute("/p/$eventSlug/interests")({
   loader: async ({ params, location }) => {
@@ -114,21 +115,39 @@ function InterestsPage() {
           Hallo {loaderData.participantName}!
         </h1>
 
+        {/* Step indicator */}
+        <div className="w-full flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-full bg-success border-2 border-black flex items-center justify-center font-bold text-sm">
+              ✓
+            </span>
+            <span className="font-semibold">Interessen</span>
+          </div>
+          <div className="flex-1 h-0.5 bg-border" />
+          <div className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-full bg-muted border-2 border-black flex items-center justify-center font-bold text-sm text-muted-foreground">
+              2
+            </span>
+            <span className="text-muted-foreground">Namen ziehen</span>
+          </div>
+        </div>
+
         <Alert variant="info" className="w-full">
-          <AlertTitle>Keine Interessen eingetragen</AlertTitle>
+          <AlertTitle>Schritt 1 erledigt!</AlertTitle>
           <AlertDescription>
-            Du hast angegeben, dass du keine Interessen eintragen möchtest. Nach dem
-            Stichtag kannst du hier einen Namen ziehen.
+            Du hast keine Interessen eingetragen – kein Problem!
             {lockDateFormatted && (
-              <span className="block mt-2 font-semibold">
-                Stichtag: {lockDateFormatted}
+              <span className="block mt-2">
+                <span className="font-semibold">Nächster Schritt:</span> Ab{" "}
+                {lockDateFormatted} kannst du hier zurückkommen und einen Namen
+                ziehen.
               </span>
             )}
           </AlertDescription>
         </Alert>
 
         <p className="text-xs text-muted-foreground text-center">
-          Du kannst diese Seite jederzeit wieder aufrufen.
+          Speichere diesen Link – du brauchst ihn für Schritt 2.
         </p>
       </div>
     );
@@ -140,25 +159,60 @@ function InterestsPage() {
         Hallo {loaderData.participantName}!
       </h1>
 
-      <div className="text-center space-y-3">
-        <p className="text-xl font-semibold">Du wurdest zum Wichteln eingeladen!</p>
-        <p className="text-muted-foreground">
-          Beim Wichteln zieht jeder geheim einen Namen und beschenkt diese Person.
-          Damit dein Wichtel weiß, was dir gefällt, kannst du hier deine Interessen
-          eintragen. Nach dem Stichtag kannst du dann deinen Namen ziehen.
-        </p>
+      <p className="text-xl font-semibold text-center">
+        Du wurdest zum Wichteln eingeladen!
+      </p>
+
+      {/* Step indicator */}
+      <div className="w-full flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-full bg-primary border-2 border-black flex items-center justify-center font-bold text-sm">
+            1
+          </span>
+          <span className="font-semibold">Interessen</span>
+        </div>
+        <div className="flex-1 h-0.5 bg-border" />
+        <div className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-full bg-muted border-2 border-black flex items-center justify-center font-bold text-sm text-muted-foreground">
+            2
+          </span>
+          <span className="text-muted-foreground">Namen ziehen</span>
+        </div>
       </div>
+
+      {/* Explanation */}
+      <Card variant="primary">
+        <Card.Header>
+          <Card.Title>So funktioniert&apos;s</Card.Title>
+        </Card.Header>
+        <Card.Content className="flex flex-col gap-4">
+          <div>
+            <h3 className="font-semibold">Jetzt</h3>
+            <p>
+              Trage deine Interessen ein, damit dein Wichtel weiß, was dir gefällt
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold">
+              {lockDateFormatted ? `Ab ${lockDateFormatted}` : "Nach dem Stichtag"}
+            </h3>
+            <p>
+              Komm zurück und ziehe einen Namen – das ist die Person, die du
+              beschenkst
+            </p>
+          </div>
+          <Alert className="text-sm">
+            Falls alle ihre Interessen eingetragen haben kann der Organisator auch
+            die nächste Phase starten.
+          </Alert>
+        </Card.Content>
+      </Card>
 
       <Alert variant="info" className="w-full">
         <AlertTitle>Deine Interessen</AlertTitle>
         <AlertDescription>
           Was interessiert dich? Was wünschst du dir? Die Person, die dich zieht,
           kann diese Hinweise später sehen.
-          {lockDateFormatted && (
-            <span className="block mt-2 font-semibold">
-              Stichtag: {lockDateFormatted}
-            </span>
-          )}
         </AlertDescription>
       </Alert>
 
