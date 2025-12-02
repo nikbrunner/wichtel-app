@@ -38,19 +38,19 @@
 
 ## 2025.12.02 - Tuesday
 
+- [x] Manual phase 2 trigger when all participants have entered interests
 - [ ] Improve texts for explaining phases
 - [ ] Interrests: Handle open entry in input field
-- [ ] Manual phase 2 trigger when all participants have entered interests
-- [ ] What happens if we add more participants during a running event?
+- [ ] style: create Logo in Figma
 
 ---
 
+- [ ] test: What happens if we add more participants during a running event?
 - [ ] feat: A participant can optinally provide a list of interests
   - Maybe a pre-draw date until adding new participants is possible and interests can also be added
   - Then everything is locked in and everybody can draw
 - [ ] feat: event page needs to be redone
 - [ ] fix: button loading state in sign-in
   - Shows loading state when clicked but reverts to original state before submission
-- [ ] style: create Logo in Figma
 - [ ] feat: Add zod for validation
 - [ ] refactor: cleanup

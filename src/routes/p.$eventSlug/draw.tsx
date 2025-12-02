@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/retroui/Button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
@@ -41,8 +41,10 @@ export const Route = createFileRoute("/p/$eventSlug/draw")({
 
 function DrawPage() {
   const loaderData = Route.useLoaderData();
+  const { eventSlug } = Route.useParams();
   const search = Route.useSearch();
   const token = search.token;
+  const navigate = useNavigate();
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,11 +60,13 @@ function DrawPage() {
         }
       });
 
-      // Reload page to get drawn person's interests and redirect to result
-      window.location.reload();
+      navigate({
+        to: "/p/$eventSlug/result",
+        params: { eventSlug },
+        search: { token }
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Fehler beim Ziehen des Namens");
-    } finally {
       setIsDrawing(false);
     }
   };
