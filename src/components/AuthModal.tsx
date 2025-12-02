@@ -29,6 +29,7 @@ export function AuthModal() {
     setPassword("");
     setConfirmPassword("");
     setError(null);
+    setIsLoading(false);
   };
 
   const handleClose = () => {
