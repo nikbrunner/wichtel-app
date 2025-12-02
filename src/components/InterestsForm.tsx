@@ -15,6 +15,8 @@ type InterestsFormProps = {
   saveSuccess: boolean;
 };
 
+const MIN_INTEREST_LENGTH = 3;
+
 export function InterestsForm({
   interests,
   onChange,
@@ -26,13 +28,26 @@ export function InterestsForm({
   saveSuccess
 }: InterestsFormProps) {
   const [newItem, setNewItem] = useState("");
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const addItem = () => {
     const trimmed = newItem.trim();
-    if (trimmed && !interests.includes(trimmed)) {
-      onChange([...interests, trimmed]);
-      setNewItem("");
+    setValidationError(null);
+
+    if (!trimmed) return;
+
+    if (trimmed.length < MIN_INTEREST_LENGTH) {
+      setValidationError(`Mindestens ${MIN_INTEREST_LENGTH} Zeichen erforderlich`);
+      return;
     }
+
+    if (interests.includes(trimmed)) {
+      setValidationError("Dieses Interesse existiert bereits");
+      return;
+    }
+
+    onChange([...interests, trimmed]);
+    setNewItem("");
   };
 
   const removeItem = (index: number) => {
@@ -46,17 +61,29 @@ export function InterestsForm({
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewItem(e.target.value);
+    if (validationError) setValidationError(null);
+  };
+
   const isProcessing = isSaving || isSkipping;
 
   const handleSave = () => {
     const trimmed = newItem.trim();
     let finalInterests = interests;
+    setValidationError(null);
 
     // Include pending input if there's something typed
-    if (trimmed && !interests.includes(trimmed)) {
-      finalInterests = [...interests, trimmed];
-      onChange(finalInterests);
-      setNewItem("");
+    if (trimmed) {
+      if (trimmed.length < MIN_INTEREST_LENGTH) {
+        setValidationError(`Mindestens ${MIN_INTEREST_LENGTH} Zeichen erforderlich`);
+        return;
+      }
+      if (!interests.includes(trimmed)) {
+        finalInterests = [...interests, trimmed];
+        onChange(finalInterests);
+        setNewItem("");
+      }
     }
 
     onSave(finalInterests);
@@ -94,24 +121,29 @@ export function InterestsForm({
           </ul>
         )}
 
-        <div className="flex gap-2 mb-4">
-          <Input
-            placeholder="Neues Interesse..."
-            value={newItem}
-            onChange={e => setNewItem(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1"
-            variant="pink"
-            disabled={isProcessing}
-          />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addItem}
-            disabled={!newItem.trim() || isProcessing}
-          >
-            +
-          </Button>
+        <div className="flex flex-col gap-2 mb-4">
+          <div className="flex gap-2">
+            <Input
+              placeholder="Neues Interesse..."
+              value={newItem}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              className="flex-1"
+              variant="pink"
+              disabled={isProcessing}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addItem}
+              disabled={!newItem.trim() || isProcessing}
+            >
+              +
+            </Button>
+          </div>
+          {validationError && (
+            <p className="text-sm text-destructive">{validationError}</p>
+          )}
         </div>
 
         <div className="flex gap-3">
