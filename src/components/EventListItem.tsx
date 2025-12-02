@@ -184,11 +184,11 @@ export function EventListItem({ evt, initiallyExpanded = false }: Props) {
       await lockEvent({ data: { eventId: evt.id } });
       toast.success("Ziehen ist jetzt freigeschaltet!");
       router.invalidate();
+      // Don't reset lockingEvent - button will disappear after invalidate
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Fehler beim Sperren des Events"
       );
-    } finally {
       setLockingEvent(false);
     }
   };
