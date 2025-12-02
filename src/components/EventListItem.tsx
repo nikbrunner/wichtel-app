@@ -16,6 +16,7 @@ import { regenerateParticipantLink } from "../server/regenerateParticipantLink";
 import { deleteEvent } from "../server/deleteEvent";
 import { deleteParticipant } from "../server/deleteParticipant";
 import { addParticipant } from "../server/addParticipant";
+import { lockEvent } from "../server/lockEvent";
 import type { EventWithStats } from "../types/database";
 
 type EventListItemProps = {
@@ -58,8 +59,15 @@ export function EventListItem({ event }: EventListItemProps) {
     null
   );
 
+  // Lock event state
+  const [lockingEvent, setLockingEvent] = useState(false);
+
   // Can only add participants if no draws have been made
   const canAddParticipants = event.drawn_count === 0;
+
+  // Check if event is in interests phase (lock_date is in the future)
+  const isInInterestsPhase =
+    event.lock_date && new Date(event.lock_date) > new Date();
 
   // Regenerate link handlers
   const handleRegenerateClick = (participantId: string, participantName: string) => {
@@ -167,6 +175,24 @@ export function EventListItem({ event }: EventListItemProps) {
     }
   };
 
+  // Lock event handler (transition to draw phase)
+  const handleLockEvent = async () => {
+    setError(null);
+    setLockingEvent(true);
+
+    try {
+      await lockEvent({ data: { eventId: event.id } });
+      toast.success("Ziehen ist jetzt freigeschaltet!");
+      router.invalidate();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Fehler beim Sperren des Events"
+      );
+    } finally {
+      setLockingEvent(false);
+    }
+  };
+
   return (
     <Card className="p-6">
       <div className="flex flex-col gap-4">
@@ -228,6 +254,16 @@ export function EventListItem({ event }: EventListItemProps) {
           </div>
 
           <div className="flex gap-2 justify-self-end">
+            {isInInterestsPhase && (
+              <Button
+                size="sm"
+                variant="success"
+                onClick={handleLockEvent}
+                disabled={lockingEvent}
+              >
+                {lockingEvent ? "..." : "Ziehen freischalten"}
+              </Button>
+            )}
             <Button
               size="sm"
               variant="destructive"

@@ -37,7 +37,7 @@ function InterestsStatusBadge({ status }: { status: InterestsStatus }) {
     case "submitted":
       return (
         <Badge variant="success" title="Hat Interessen eingetragen">
-          Interessen
+          Erledigt
         </Badge>
       );
     case "skipped":

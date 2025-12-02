@@ -181,3 +181,13 @@ export type AddParticipantOutput = {
     link: string;
   };
 };
+
+// Lock Event (transition to draw phase)
+export type LockEventInput = {
+  eventId: string;
+};
+
+export type LockEventOutput = {
+  success: boolean;
+  lockDate: string;
+};

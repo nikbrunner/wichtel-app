@@ -35,6 +35,16 @@
 
 - [x] fix: db
 - [x] chore: bring .env into 1P
+
+## 2025.12.02 - Tuesday
+
+- [ ] Improve texts for explaining phases
+- [ ] Interrests: Handle open entry in input field
+- [ ] Manual phase 2 trigger when all participants have entered interests
+- [ ] What happens if we add more participants during a running event?
+
+---
+
 - [ ] feat: A participant can optinally provide a list of interests
   - Maybe a pre-draw date until adding new participants is possible and interests can also be added
   - Then everything is locked in and everybody can draw
