@@ -40,6 +40,7 @@ function useCopyToClipboard() {
 function Home() {
   const [result, setResult] = useState<CreateEventOutput | null>(null);
   const { copiedId, copy } = useCopyToClipboard();
+  const navigate = Route.useNavigate();
 
   const initialParticipants = useMemo(
     () => [
@@ -88,7 +89,7 @@ function Home() {
       const today = dayjs().startOf("day");
       const finalLockDate = lockDateObj.isBefore(today) ? today : lockDateObj;
 
-      const eventResult = await createEvent({
+      const createdEvent = await createEvent({
         data: {
           eventName: value.eventName.trim(),
           eventDate: format(value.eventDate, "yyyy-MM-dd"),
@@ -97,7 +98,10 @@ function Home() {
         }
       });
 
-      setResult(eventResult);
+      navigate({
+        to: "/e/$eventSlug",
+        params: { eventSlug: createdEvent.eventSlug }
+      });
     }
   });
 
