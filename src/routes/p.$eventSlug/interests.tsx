@@ -63,14 +63,14 @@ function InterestsPage() {
       })
     : null;
 
-  const handleSaveInterests = async () => {
+  const handleSaveInterests = async (interestsToSave: string[]) => {
     setError(null);
     setIsSaving(true);
     setSaveSuccess(false);
 
     try {
       const result = await updateInterests({
-        data: { participantToken: token, interests }
+        data: { participantToken: token, interests: interestsToSave }
       });
       setInterests(result.interests);
       setInterestsStatus("submitted");

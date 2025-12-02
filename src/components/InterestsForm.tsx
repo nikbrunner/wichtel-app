@@ -7,7 +7,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert"
 type InterestsFormProps = {
   interests: string[];
   onChange: (interests: string[]) => void;
-  onSave: () => Promise<void>;
+  onSave: (interestsToSave: string[]) => Promise<void>;
   onSkip: () => Promise<void>;
   isSaving: boolean;
   isSkipping: boolean;
@@ -47,6 +47,20 @@ export function InterestsForm({
   };
 
   const isProcessing = isSaving || isSkipping;
+
+  const handleSave = () => {
+    const trimmed = newItem.trim();
+    let finalInterests = interests;
+
+    // Include pending input if there's something typed
+    if (trimmed && !interests.includes(trimmed)) {
+      finalInterests = [...interests, trimmed];
+      onChange(finalInterests);
+      setNewItem("");
+    }
+
+    onSave(finalInterests);
+  };
 
   return (
     <Card className="p-6 w-full">
@@ -99,23 +113,9 @@ export function InterestsForm({
           </Button>
         </div>
 
-        {error && (
-          <Alert variant="danger">
-            <AlertTitle>Fehler</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        {saveSuccess && (
-          <Alert variant="success">
-            <AlertTitle>Gespeichert</AlertTitle>
-            <AlertDescription>Deine Interessen wurden gespeichert!</AlertDescription>
-          </Alert>
-        )}
-
         <div className="flex gap-3">
           <Button
-            onClick={onSave}
+            onClick={handleSave}
             disabled={isProcessing}
             variant="success"
             className="flex-1"
@@ -131,6 +131,20 @@ export function InterestsForm({
             {isSkipping ? "..." : "Keine Interessen"}
           </Button>
         </div>
+
+        {error && (
+          <Alert variant="danger">
+            <AlertTitle>Fehler</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {saveSuccess && (
+          <Alert variant="success">
+            <AlertTitle>Gespeichert</AlertTitle>
+            <AlertDescription>Deine Interessen wurden gespeichert!</AlertDescription>
+          </Alert>
+        )}
       </div>
     </Card>
   );
