@@ -132,17 +132,14 @@ export function InterestsForm({
           </Button>
         </div>
 
+        {saveSuccess && (
+          <p className="text-sm text-success text-center font-medium">Gespeichert</p>
+        )}
+
         {error && (
           <Alert variant="danger">
             <AlertTitle>Fehler</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        {saveSuccess && (
-          <Alert variant="success">
-            <AlertTitle>Gespeichert</AlertTitle>
-            <AlertDescription>Deine Interessen wurden gespeichert!</AlertDescription>
           </Alert>
         )}
       </div>

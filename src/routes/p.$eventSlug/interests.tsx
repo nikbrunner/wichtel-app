@@ -48,6 +48,12 @@ function InterestsPage() {
   const token = search.token;
 
   const [interests, setInterests] = useState<string[]>(loaderData.myInterests);
+
+  // Clear saved indicator when interests change (dirty state)
+  const handleInterestsChange = (newInterests: string[]) => {
+    setInterests(newInterests);
+    setSaveSuccess(false);
+  };
   const [isSaving, setIsSaving] = useState(false);
   const [isSkipping, setIsSkipping] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -75,7 +81,6 @@ function InterestsPage() {
       setInterests(result.interests);
       setInterestsStatus("submitted");
       setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
       router.invalidate();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Fehler beim Speichern");
@@ -159,7 +164,7 @@ function InterestsPage() {
 
       <InterestsForm
         interests={interests}
-        onChange={setInterests}
+        onChange={handleInterestsChange}
         onSave={handleSaveInterests}
         onSkip={handleSkipInterests}
         isSaving={isSaving}
