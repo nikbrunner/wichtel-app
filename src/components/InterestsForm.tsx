@@ -65,9 +65,14 @@ export function InterestsForm({
   return (
     <Card className="p-6 w-full">
       <div className="flex flex-col gap-4">
-        <h3 className="text-xl font-semibold">Meine Interessen</h3>
+        <h3 className="text-xl font-semibold">Deine Interessen</h3>
+        <p className="mb-4">
+          Was interessiert dich? Was wünschst du dir?
+          <br />
+          Die Person, die dich zieht, kann diese Hinweise später sehen.
+        </p>
 
-        {interests.length > 0 ? (
+        {interests.length > 0 && (
           <ul className="flex flex-col gap-2">
             {interests.map((item, idx) => (
               <li key={idx} className="flex items-center gap-2">
@@ -87,13 +92,9 @@ export function InterestsForm({
               </li>
             ))}
           </ul>
-        ) : (
-          <p className="text-muted-foreground text-sm italic">
-            Noch keine Interessen eingetragen
-          </p>
         )}
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-4">
           <Input
             placeholder="Neues Interesse..."
             value={newItem}
@@ -115,20 +116,20 @@ export function InterestsForm({
 
         <div className="flex gap-3">
           <Button
-            onClick={handleSave}
-            disabled={isProcessing}
-            variant="success"
-            className="flex-1"
-          >
-            {isSaving ? "Speichern..." : "Interessen speichern"}
-          </Button>
-          <Button
             onClick={onSkip}
             disabled={isProcessing}
             variant="outline"
             className="flex-1"
           >
             {isSkipping ? "..." : "Keine Interessen"}
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={isProcessing}
+            variant="success"
+            className="flex-1"
+          >
+            {isSaving ? "Speichern..." : "Interessen speichern"}
           </Button>
         </div>
 

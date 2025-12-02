@@ -181,11 +181,11 @@ function InterestsPage() {
       </div>
 
       {/* Explanation */}
-      <Card variant="primary">
+      <Card variant="primary" className="p-8">
         <Card.Header>
           <Card.Title>So funktioniert&apos;s</Card.Title>
         </Card.Header>
-        <Card.Content className="flex flex-col gap-4">
+        <Card.Content className="flex flex-col gap-6">
           <div>
             <h3 className="font-semibold">Jetzt</h3>
             <p>
@@ -201,20 +201,12 @@ function InterestsPage() {
               beschenkst
             </p>
           </div>
-          <Alert className="text-sm">
+          <Alert className="text-sm font-bold">
             Falls alle ihre Interessen eingetragen haben kann der Organisator auch
             die nächste Phase starten.
           </Alert>
         </Card.Content>
       </Card>
-
-      <Alert variant="info" className="w-full">
-        <AlertTitle>Deine Interessen</AlertTitle>
-        <AlertDescription>
-          Was interessiert dich? Was wünschst du dir? Die Person, die dich zieht,
-          kann diese Hinweise später sehen.
-        </AlertDescription>
-      </Alert>
 
       <InterestsForm
         interests={interests}
