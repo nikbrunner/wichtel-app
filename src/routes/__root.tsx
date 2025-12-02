@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/retroui/Button";
 import { Toaster } from "@/components/retroui/Sonner";
 import { AuthModal } from "../components/AuthModal";
+import { Logo } from "../components/Logo";
 import { DefaultCatchBoundary } from "../components/DefaultCatchBoundary";
 import { NotFound } from "../components/NotFound";
 import { useAuthModal } from "../stores/authModal";
@@ -62,7 +63,8 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: appCss },
       {
         rel: "icon",
-        href: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>"
+        type: "image/svg+xml",
+        href: "/logo.svg"
       }
     ]
   }),
@@ -108,8 +110,7 @@ function RootComponent() {
               to={user ? "/dashboard" : "/"}
               className="flex items-center gap-2 no-underline"
             >
-              <span className="text-2xl">🎁</span>
-              <span className="font-head text-xl">Wichtel-App</span>
+              <Logo />
             </Link>
 
             {/* Navigation */}
