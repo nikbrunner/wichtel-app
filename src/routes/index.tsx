@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/retroui/Button";
 import { Card } from "@/components/retroui/Card";
 import { useAuthModal } from "~/stores/authModal";
+import { Logo } from "~/components/Logo";
 
 export const Route = createFileRoute("/")({
   beforeLoad: ({ context }) => {
@@ -19,7 +20,7 @@ function LandingPage() {
     <div className="flex flex-col gap-12 py-8 sm:py-16">
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center gap-6">
-        <span className="text-6xl sm:text-8xl">🎁</span>
+        <Logo size="5xl" />
         <h1 className="text-4xl sm:text-6xl font-black max-w-3xl">
           Organisiere dein Wichteln ganz einfach
         </h1>

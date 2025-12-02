@@ -103,7 +103,7 @@ function RootComponent() {
     <RootDocument>
       <div className="min-h-screen flex flex-col">
         {/* Header */}
-        <header className="h-16 border-b-2 border-border bg-primary text-primary-foreground">
+        <header className="h-24 border-b-2 border-border bg-primary text-primary-foreground">
           <div className="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
             {/* Logo/Brand */}
             <Link
