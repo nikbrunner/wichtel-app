@@ -54,7 +54,7 @@ function EventDetailPage() {
         <h1 className="text-2xl font-black">{event.name}</h1>
       </div>
 
-      <EventListItem event={event} />
+      <EventListItem initiallyExpanded evt={event} />
     </div>
   );
 }

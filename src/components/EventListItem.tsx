@@ -19,13 +19,14 @@ import { addParticipant } from "../server/addParticipant";
 import { lockEvent } from "../server/lockEvent";
 import type { EventWithStats } from "../types/database";
 
-type EventListItemProps = {
-  event: EventWithStats;
+type Props = {
+  evt: EventWithStats;
+  initiallyExpanded?: boolean;
 };
 
-export function EventListItem({ event }: EventListItemProps) {
+export function EventListItem({ evt, initiallyExpanded = false }: Props) {
   const router = useRouter();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(initiallyExpanded);
   const [regenerating, setRegenerating] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,11 +64,10 @@ export function EventListItem({ event }: EventListItemProps) {
   const [lockingEvent, setLockingEvent] = useState(false);
 
   // Can only add participants if no draws have been made
-  const canAddParticipants = event.drawn_count === 0;
+  const canAddParticipants = evt.drawn_count === 0;
 
   // Check if event is in interests phase (lock_date is in the future)
-  const isInInterestsPhase =
-    event.lock_date && new Date(event.lock_date) > new Date();
+  const isInInterestsPhase = evt.lock_date && new Date(evt.lock_date) > new Date();
 
   // Regenerate link handlers
   const handleRegenerateClick = (participantId: string, participantName: string) => {
@@ -84,7 +84,7 @@ export function EventListItem({ event }: EventListItemProps) {
     try {
       await regenerateParticipantLink({
         data: {
-          eventSlug: event.slug,
+          eventSlug: evt.slug,
           participantId: selectedForRegenerate.id
         }
       });
@@ -110,7 +110,7 @@ export function EventListItem({ event }: EventListItemProps) {
     setDeletingEvent(true);
 
     try {
-      await deleteEvent({ data: { eventId: event.id } });
+      await deleteEvent({ data: { eventId: evt.id } });
       setDeleteEventModalOpened(false);
       router.invalidate();
     } catch (err) {
@@ -127,7 +127,7 @@ export function EventListItem({ event }: EventListItemProps) {
     participantId: string,
     participantName: string
   ) => {
-    const participant = event.participants.find(p => p.id === participantId);
+    const participant = evt.participants.find(p => p.id === participantId);
     const hasDraws = participant?.has_drawn ?? false;
     setSelectedForDeletion({ id: participantId, name: participantName, hasDraws });
     setDeleteParticipantModalOpened(true);
@@ -141,7 +141,7 @@ export function EventListItem({ event }: EventListItemProps) {
 
     try {
       await deleteParticipant({
-        data: { eventId: event.id, participantId: selectedForDeletion.id }
+        data: { eventId: evt.id, participantId: selectedForDeletion.id }
       });
       toast.success(`${selectedForDeletion.name} wurde entfernt.`);
       setDeleteParticipantModalOpened(false);
@@ -162,7 +162,7 @@ export function EventListItem({ event }: EventListItemProps) {
     setAddingParticipant(true);
 
     try {
-      await addParticipant({ data: { eventId: event.id, participantName: name } });
+      await addParticipant({ data: { eventId: evt.id, participantName: name } });
       toast.success(`${name} wurde hinzugefügt.`);
       setAddParticipantModalOpened(false);
       router.invalidate();
@@ -181,7 +181,7 @@ export function EventListItem({ event }: EventListItemProps) {
     setLockingEvent(true);
 
     try {
-      await lockEvent({ data: { eventId: event.id } });
+      await lockEvent({ data: { eventId: evt.id } });
       toast.success("Ziehen ist jetzt freigeschaltet!");
       router.invalidate();
     } catch (err) {
@@ -203,25 +203,25 @@ export function EventListItem({ event }: EventListItemProps) {
             <div className="flex items-center gap-8 mb-4">
               <Link
                 to="/e/$eventSlug"
-                params={{ eventSlug: event.slug }}
+                params={{ eventSlug: evt.slug }}
                 className="text-2xl font-bold hover:underline"
               >
-                {event.name}
+                {evt.name}
               </Link>
               <EventDateBadge
-                eventDate={event.event_date}
-                daysUntil={event.days_until_event}
-                isPast={event.is_past}
+                eventDate={evt.event_date}
+                daysUntil={evt.days_until_event}
+                isPast={evt.is_past}
               />
             </div>
             <p className="text-xs text-muted-foreground font-mono">
-              {new Date(event.event_date).toLocaleDateString("de-DE", {
+              {new Date(evt.event_date).toLocaleDateString("de-DE", {
                 day: "2-digit",
                 month: "long",
                 year: "numeric"
               })}
-              {event.days_until_event !== null && (
-                <> · {event.days_until_event} Tage bis Event</>
+              {evt.days_until_event !== null && (
+                <> · {evt.days_until_event} Tage bis Event</>
               )}
             </p>
           </div>
@@ -231,26 +231,28 @@ export function EventListItem({ event }: EventListItemProps) {
             <div>
               <span className="text-xs text-muted-foreground">Teilnehmer</span>
               <p className="text-sm font-medium font-mono">
-                {event.participant_count}
+                {evt.participant_count}
               </p>
             </div>
             <div>
               <span className="text-xs text-muted-foreground">Gezogen</span>
               <p className="text-sm font-medium font-mono">
-                {event.drawn_count} / {event.participant_count}
+                {evt.drawn_count} / {evt.participant_count}
               </p>
             </div>
           </div>
 
           {/* Actions Column */}
           <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant={expanded ? "outline" : "info"}
-              onClick={() => setExpanded(!expanded)}
-            >
-              {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
-            </Button>
+            {!initiallyExpanded && (
+              <Button
+                size="sm"
+                variant={expanded ? "outline" : "info"}
+                onClick={() => setExpanded(!expanded)}
+              >
+                {expanded ? "Weniger anzeigen" : "Teilnehmer-Links anzeigen"}
+              </Button>
+            )}
           </div>
 
           <div className="flex gap-2 justify-self-end">
@@ -293,8 +295,8 @@ export function EventListItem({ event }: EventListItemProps) {
               )}
               <span className="text-xl font-semibold">Teilnehmer-Links</span>
               <ParticipantLinkTable
-                eventSlug={event.slug}
-                participants={event.participants}
+                eventSlug={evt.slug}
+                participants={evt.participants}
                 onRegenerateLink={handleRegenerateClick}
                 regeneratingId={regenerating}
                 onDeleteParticipant={handleDeleteParticipantClick}
@@ -303,15 +305,15 @@ export function EventListItem({ event }: EventListItemProps) {
                 onAddParticipant={() => setAddParticipantModalOpened(true)}
               />
               <CopyAllLinksButton
-                eventName={event.name}
-                eventSlug={event.slug}
-                participants={event.participants}
+                eventName={evt.name}
+                eventSlug={evt.slug}
+                participants={evt.participants}
               />
               <hr className="border-t-2 border-border my-4" />
               <DrawResultsSection
-                eventDate={event.event_date}
-                isPast={event.is_past}
-                drawResults={event.draw_results}
+                eventDate={evt.event_date}
+                isPast={evt.is_past}
+                drawResults={evt.draw_results}
               />
             </div>
           </>
@@ -334,8 +336,8 @@ export function EventListItem({ event }: EventListItemProps) {
         opened={deleteEventModalOpened}
         onClose={() => setDeleteEventModalOpened(false)}
         onConfirm={handleDeleteEventConfirm}
-        eventName={event.name}
-        participantCount={event.participant_count}
+        eventName={evt.name}
+        participantCount={evt.participant_count}
         isLoading={deletingEvent}
       />
 

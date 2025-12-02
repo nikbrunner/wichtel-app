@@ -98,7 +98,7 @@ function Component() {
         ) : (
           <div className="flex flex-col gap-4">
             {runningEvents.map(event => (
-              <EventListItem key={event.id} event={event} />
+              <EventListItem key={event.id} evt={event} />
             ))}
           </div>
         )}
@@ -113,7 +113,7 @@ function Component() {
           <h2 className="text-2xl font-bold mb-4">Vergangene Events</h2>
           <div className="flex flex-col gap-4">
             {pastEvents.map(event => (
-              <EventListItem key={event.id} event={event} />
+              <EventListItem key={event.id} evt={event} />
             ))}
           </div>
         </div>
