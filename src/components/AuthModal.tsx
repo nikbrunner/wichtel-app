@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/retroui/Button";
@@ -19,20 +20,32 @@ export function AuthModal() {
   const router = useRouter();
   const authModal = useAuthModal();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Post-submit UI state (not form data)
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
 
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: ""
+    },
+    onSubmit: async ({ value }) => {
+      if (authModal.activeTab === "login") {
+        await signIn({ data: { email: value.email, password: value.password } });
+        handleClose();
+        toast.success("Willkommen zuruck!");
+        router.invalidate();
+      } else {
+        await signUp({ data: { email: value.email, password: value.password } });
+        setSignupEmail(value.email);
+        setSignupSuccess(true);
+      }
+    }
+  });
+
   const resetForm = () => {
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setError(null);
-    setIsLoading(false);
+    form.reset();
     setSignupSuccess(false);
     setSignupEmail("");
   };
@@ -42,51 +55,8 @@ export function AuthModal() {
     authModal.close();
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      await signIn({ data: { email, password } });
-      handleClose();
-      toast.success("Willkommen zuruck!");
-      router.invalidate();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login fehlgeschlagen");
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (password !== confirmPassword) {
-      setError("Passworter stimmen nicht uberein");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Passwort muss mindestens 6 Zeichen haben");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      await signUp({ data: { email, password } });
-      setSignupEmail(email);
-      setSignupSuccess(true);
-      setIsLoading(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Registrierung fehlgeschlagen");
-      setIsLoading(false);
-    }
-  };
-
   const handleTabChange = (value: string) => {
-    setError(null);
+    form.reset();
     authModal.setTab(value as "login" | "signup");
   };
 
@@ -138,134 +108,228 @@ export function AuthModal() {
 
         <Tabs value={authModal.activeTab} onValueChange={handleTabChange}>
           <TabsContent value="login" className="mt-0">
-            <form onSubmit={handleLogin}>
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                form.handleSubmit();
+              }}
+            >
               <div className="flex flex-col gap-4 p-10">
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="login-email" className="text-sm font-medium">
-                    Email
-                  </label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="deine@email.de"
-                    value={email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setEmail(e.target.value)
-                    }
-                    required
-                    variant="pink"
-                    autoFocus
-                  />
-                </div>
+                <form.Field name="email">
+                  {field => (
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="login-email" className="text-sm font-medium">
+                        Email
+                      </label>
+                      <Input
+                        id="login-email"
+                        type="email"
+                        placeholder="deine@email.de"
+                        value={field.state.value}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          field.handleChange(e.target.value)
+                        }
+                        onBlur={field.handleBlur}
+                        required
+                        variant="pink"
+                        autoFocus
+                      />
+                    </div>
+                  )}
+                </form.Field>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="login-password" className="text-sm font-medium">
-                    Passwort
-                  </label>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    placeholder="Dein Passwort"
-                    value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setPassword(e.target.value)
-                    }
-                    required
-                    variant="success"
-                  />
-                </div>
+                <form.Field name="password">
+                  {field => (
+                    <div className="flex flex-col gap-1">
+                      <label
+                        htmlFor="login-password"
+                        className="text-sm font-medium"
+                      >
+                        Passwort
+                      </label>
+                      <Input
+                        id="login-password"
+                        type="password"
+                        placeholder="Dein Passwort"
+                        value={field.state.value}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          field.handleChange(e.target.value)
+                        }
+                        onBlur={field.handleBlur}
+                        required
+                        variant="success"
+                      />
+                    </div>
+                  )}
+                </form.Field>
 
-                {error && <p className="text-red-600 text-sm">{error}</p>}
+                <form.Subscribe selector={state => state.errors}>
+                  {errors =>
+                    errors.length > 0 && (
+                      <p className="text-red-600 text-sm">{errors.join(", ")}</p>
+                    )
+                  }
+                </form.Subscribe>
               </div>
 
               <DialogFooter>
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={handleClose}
-                  disabled={isLoading}
-                >
-                  Abbrechen
-                </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Wird eingeloggt..." : "Einloggen"}
-                </Button>
+                <form.Subscribe selector={state => state.isSubmitting}>
+                  {isSubmitting => (
+                    <>
+                      <Button
+                        type="button"
+                        variant="link"
+                        onClick={handleClose}
+                        disabled={isSubmitting}
+                      >
+                        Abbrechen
+                      </Button>
+                      <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Wird eingeloggt..." : "Einloggen"}
+                      </Button>
+                    </>
+                  )}
+                </form.Subscribe>
               </DialogFooter>
             </form>
           </TabsContent>
 
           <TabsContent value="signup" className="mt-0">
-            <form onSubmit={handleSignup}>
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                form.handleSubmit();
+              }}
+            >
               <div className="flex flex-col gap-4 p-10">
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="signup-email" className="text-sm font-medium">
-                    Email
-                  </label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="deine@email.de"
-                    value={email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setEmail(e.target.value)
-                    }
-                    required
-                    variant="pink"
-                  />
-                </div>
+                <form.Field name="email">
+                  {field => (
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="signup-email" className="text-sm font-medium">
+                        Email
+                      </label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="deine@email.de"
+                        value={field.state.value}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          field.handleChange(e.target.value)
+                        }
+                        onBlur={field.handleBlur}
+                        required
+                        variant="pink"
+                      />
+                    </div>
+                  )}
+                </form.Field>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="signup-password" className="text-sm font-medium">
-                    Passwort
-                  </label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="Mindestens 6 Zeichen"
-                    value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setPassword(e.target.value)
-                    }
-                    required
-                    variant="success"
-                  />
-                </div>
+                <form.Field
+                  name="password"
+                  validators={{
+                    onChange: ({ value }) =>
+                      value.length > 0 && value.length < 6
+                        ? "Passwort muss mindestens 6 Zeichen haben"
+                        : undefined
+                  }}
+                >
+                  {field => (
+                    <div className="flex flex-col gap-1">
+                      <label
+                        htmlFor="signup-password"
+                        className="text-sm font-medium"
+                      >
+                        Passwort
+                      </label>
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        placeholder="Mindestens 6 Zeichen"
+                        value={field.state.value}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          field.handleChange(e.target.value)
+                        }
+                        onBlur={field.handleBlur}
+                        required
+                        variant="success"
+                      />
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="text-red-600 text-sm">
+                          {field.state.meta.errors.join(", ")}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
 
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="signup-confirm-password"
-                    className="text-sm font-medium"
-                  >
-                    Passwort bestatigen
-                  </label>
-                  <Input
-                    id="signup-confirm-password"
-                    type="password"
-                    placeholder="Passwort wiederholen"
-                    value={confirmPassword}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setConfirmPassword(e.target.value)
+                <form.Field
+                  name="confirmPassword"
+                  validators={{
+                    onChangeListenTo: ["password"],
+                    onChange: ({ value, fieldApi }) => {
+                      const password = fieldApi.form.getFieldValue("password");
+                      return value && value !== password
+                        ? "Passworter stimmen nicht uberein"
+                        : undefined;
                     }
-                    required
-                    variant="pink"
-                  />
-                </div>
+                  }}
+                >
+                  {field => (
+                    <div className="flex flex-col gap-1">
+                      <label
+                        htmlFor="signup-confirm-password"
+                        className="text-sm font-medium"
+                      >
+                        Passwort bestatigen
+                      </label>
+                      <Input
+                        id="signup-confirm-password"
+                        type="password"
+                        placeholder="Passwort wiederholen"
+                        value={field.state.value}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          field.handleChange(e.target.value)
+                        }
+                        onBlur={field.handleBlur}
+                        required
+                        variant="pink"
+                      />
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="text-red-600 text-sm">
+                          {field.state.meta.errors.join(", ")}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
 
-                {error && <p className="text-red-600 text-sm">{error}</p>}
+                <form.Subscribe selector={state => state.errors}>
+                  {errors =>
+                    errors.length > 0 && (
+                      <p className="text-red-600 text-sm">{errors.join(", ")}</p>
+                    )
+                  }
+                </form.Subscribe>
               </div>
 
               <DialogFooter>
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={handleClose}
-                  disabled={isLoading}
-                >
-                  Abbrechen
-                </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Wird erstellt..." : "Registrieren"}
-                </Button>
+                <form.Subscribe selector={state => state.isSubmitting}>
+                  {isSubmitting => (
+                    <>
+                      <Button
+                        type="button"
+                        variant="link"
+                        onClick={handleClose}
+                        disabled={isSubmitting}
+                      >
+                        Abbrechen
+                      </Button>
+                      <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Wird erstellt..." : "Registrieren"}
+                      </Button>
+                    </>
+                  )}
+                </form.Subscribe>
               </DialogFooter>
             </form>
           </TabsContent>

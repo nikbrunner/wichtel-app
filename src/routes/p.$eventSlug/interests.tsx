@@ -1,11 +1,13 @@
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
 import { Alert, AlertTitle, AlertDescription } from "@/components/retroui/Alert";
-import { InterestsForm } from "@/components/InterestsForm";
+import { Button } from "@/components/retroui/Button";
+import { Input } from "@/components/retroui/Input";
+import { Card } from "~/components/retroui/Card";
 import { updateInterests } from "../../server/updateInterests";
 import { skipInterests } from "../../server/skipInterests";
 import { getParticipantInfo } from "../../server/getParticipantInfo";
-import { Card } from "~/components/retroui/Card";
 
 export const Route = createFileRoute("/p/$eventSlug/interests")({
   loader: async ({ params, location }) => {
@@ -42,24 +44,34 @@ export const Route = createFileRoute("/p/$eventSlug/interests")({
   component: InterestsPage
 });
 
+const MIN_INTEREST_LENGTH = 3;
+
 function InterestsPage() {
   const router = useRouter();
   const loaderData = Route.useLoaderData();
   const search = Route.useSearch();
   const token = search.token;
 
-  const [interests, setInterests] = useState<string[]>(loaderData.myInterests);
-
-  // Clear saved indicator when interests change (dirty state)
-  const handleInterestsChange = (newInterests: string[]) => {
-    setInterests(newInterests);
-    setSaveSuccess(false);
-  };
-  const [isSaving, setIsSaving] = useState(false);
-  const [isSkipping, setIsSkipping] = useState(false);
+  // Post-submit UI state
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isSkipping, setIsSkipping] = useState(false);
   const [interestsStatus, setInterestsStatus] = useState(loaderData.interestsStatus);
+
+  const form = useForm({
+    defaultValues: {
+      interests: loaderData.myInterests as string[],
+      newItem: ""
+    },
+    onSubmit: async ({ value }) => {
+      const result = await updateInterests({
+        data: { participantToken: token, interests: value.interests }
+      });
+      form.setFieldValue("interests", result.interests);
+      setInterestsStatus("submitted");
+      setSaveSuccess(true);
+      router.invalidate();
+    }
+  });
 
   const lockDateFormatted = loaderData.lockDate
     ? new Date(loaderData.lockDate).toLocaleDateString("de-DE", {
@@ -70,41 +82,57 @@ function InterestsPage() {
       })
     : null;
 
-  const handleSaveInterests = async (interestsToSave: string[]) => {
-    setError(null);
-    setIsSaving(true);
-    setSaveSuccess(false);
-
-    try {
-      const result = await updateInterests({
-        data: { participantToken: token, interests: interestsToSave }
-      });
-      setInterests(result.interests);
-      setInterestsStatus("submitted");
-      setSaveSuccess(true);
-      router.invalidate();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Fehler beim Speichern");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   const handleSkipInterests = async () => {
-    setError(null);
     setIsSkipping(true);
-
     try {
       await skipInterests({
         data: { participantToken: token }
       });
       setInterestsStatus("skipped");
       router.invalidate();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Fehler beim Aktualisieren");
+    } catch {
+      // Error handling via form errors
     } finally {
       setIsSkipping(false);
     }
+  };
+
+  const addInterest = () => {
+    const newItem = form.getFieldValue("newItem").trim();
+    const interests = form.getFieldValue("interests");
+
+    if (!newItem || newItem.length < MIN_INTEREST_LENGTH) return;
+    if (interests.includes(newItem)) return;
+
+    form.setFieldValue("interests", [...interests, newItem]);
+    form.setFieldValue("newItem", "");
+    setSaveSuccess(false);
+  };
+
+  const removeInterest = (index: number) => {
+    const interests = form.getFieldValue("interests");
+    form.setFieldValue(
+      "interests",
+      interests.filter((_, i) => i !== index)
+    );
+    setSaveSuccess(false);
+  };
+
+  const handleSaveWithPendingInput = () => {
+    const newItem = form.getFieldValue("newItem").trim();
+    const interests = form.getFieldValue("interests");
+
+    // Add pending input if valid
+    if (
+      newItem &&
+      newItem.length >= MIN_INTEREST_LENGTH &&
+      !interests.includes(newItem)
+    ) {
+      form.setFieldValue("interests", [...interests, newItem]);
+      form.setFieldValue("newItem", "");
+    }
+
+    form.handleSubmit();
   };
 
   // If already skipped, show confirmation
@@ -208,16 +236,148 @@ function InterestsPage() {
         </Card.Content>
       </Card>
 
-      <InterestsForm
-        interests={interests}
-        onChange={handleInterestsChange}
-        onSave={handleSaveInterests}
-        onSkip={handleSkipInterests}
-        isSaving={isSaving}
-        isSkipping={isSkipping}
-        error={error}
-        saveSuccess={saveSuccess}
-      />
+      <Card className="p-6 w-full">
+        <div className="flex flex-col gap-4">
+          <h3 className="text-xl font-semibold">Deine Interessen</h3>
+          <p className="mb-4">
+            Was interessiert dich? Was wünschst du dir?
+            <br />
+            Die Person, die dich zieht, kann diese Hinweise später sehen.
+          </p>
+
+          <form.Field name="interests" mode="array">
+            {field =>
+              field.state.value.length > 0 && (
+                <ul className="flex flex-col gap-2">
+                  {field.state.value.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="flex-1 bg-muted/30 px-3 py-2 rounded-lg border-2 border-border">
+                        {item}
+                      </span>
+                      <form.Subscribe selector={state => state.isSubmitting}>
+                        {isSubmitting => (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => removeInterest(idx)}
+                            disabled={isSubmitting || isSkipping}
+                            className="text-red-600 hover:bg-red-50"
+                          >
+                            ×
+                          </Button>
+                        )}
+                      </form.Subscribe>
+                    </li>
+                  ))}
+                </ul>
+              )
+            }
+          </form.Field>
+
+          <form.Field
+            name="newItem"
+            validators={{
+              onBlur: ({ value }) => {
+                if (!value.trim()) return undefined;
+                if (value.trim().length < MIN_INTEREST_LENGTH) {
+                  return `Mindestens ${MIN_INTEREST_LENGTH} Zeichen erforderlich`;
+                }
+                const interests = form.getFieldValue("interests");
+                if (interests.includes(value.trim())) {
+                  return "Dieses Interesse existiert bereits";
+                }
+                return undefined;
+              }
+            }}
+          >
+            {field => (
+              <div className="flex flex-col gap-2 mb-4">
+                <form.Subscribe selector={state => state.isSubmitting}>
+                  {isSubmitting => (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Neues Interesse..."
+                        value={field.state.value}
+                        onChange={e => field.handleChange(e.target.value)}
+                        onKeyDown={(e: React.KeyboardEvent) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addInterest();
+                          }
+                        }}
+                        className="flex-1"
+                        variant="pink"
+                        disabled={isSubmitting || isSkipping}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={addInterest}
+                        disabled={
+                          !field.state.value.trim() || isSubmitting || isSkipping
+                        }
+                      >
+                        +
+                      </Button>
+                    </div>
+                  )}
+                </form.Subscribe>
+                {field.state.meta.errors.length > 0 && field.state.value.trim() && (
+                  <p className="text-sm text-destructive">
+                    {field.state.meta.errors.join(", ")}
+                  </p>
+                )}
+              </div>
+            )}
+          </form.Field>
+
+          <form.Subscribe
+            selector={state => ({
+              isSubmitting: state.isSubmitting,
+              errors: state.errors
+            })}
+          >
+            {({ isSubmitting, errors }) => (
+              <>
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    onClick={handleSkipInterests}
+                    disabled={isSubmitting || isSkipping}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    {isSkipping ? "..." : "Keine Interessen"}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleSaveWithPendingInput}
+                    disabled={isSubmitting || isSkipping}
+                    variant="success"
+                    className="flex-1"
+                  >
+                    {isSubmitting ? "Speichern..." : "Interessen speichern"}
+                  </Button>
+                </div>
+
+                {saveSuccess && (
+                  <p className="text-sm text-success text-center font-medium">
+                    Gespeichert
+                  </p>
+                )}
+
+                {errors.length > 0 && (
+                  <Alert variant="danger">
+                    <AlertTitle>Fehler</AlertTitle>
+                    <AlertDescription>{errors.join(", ")}</AlertDescription>
+                  </Alert>
+                )}
+              </>
+            )}
+          </form.Subscribe>
+        </div>
+      </Card>
 
       <p className="text-xs text-muted-foreground text-center">
         Das Ausfüllen ist optional. Dieser Link bleibt gültig – du kannst jederzeit
