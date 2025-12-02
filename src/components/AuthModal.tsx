@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { Mail } from "lucide-react";
 import { Button } from "@/components/retroui/Button";
 import { Input } from "@/components/retroui/Input";
 import {
@@ -23,6 +24,8 @@ export function AuthModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
 
   const resetForm = () => {
     setEmail("");
@@ -30,6 +33,8 @@ export function AuthModal() {
     setConfirmPassword("");
     setError(null);
     setIsLoading(false);
+    setSignupSuccess(false);
+    setSignupEmail("");
   };
 
   const handleClose = () => {
@@ -71,9 +76,9 @@ export function AuthModal() {
 
     try {
       await signUp({ data: { email, password } });
-      handleClose();
-      toast.success("Konto erstellt! Du bist jetzt eingeloggt.");
-      router.invalidate();
+      setSignupEmail(email);
+      setSignupSuccess(true);
+      setIsLoading(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registrierung fehlgeschlagen");
       setIsLoading(false);
@@ -84,6 +89,40 @@ export function AuthModal() {
     setError(null);
     authModal.setTab(value as "login" | "signup");
   };
+
+  if (signupSuccess) {
+    return (
+      <Dialog open={authModal.isOpen} onOpenChange={open => !open && handleClose()}>
+        <DialogContent>
+          <div className="flex flex-col items-center gap-6 p-10 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full border-3 border-black bg-green-100">
+              <Mail className="h-8 w-8 text-green-700" />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <h2 className="text-xl font-bold">Bestatigungsmail gesendet!</h2>
+              <p className="text-gray-600">
+                Wir haben eine E-Mail an{" "}
+                <span className="font-semibold text-black">{signupEmail}</span>{" "}
+                gesendet.
+              </p>
+              <p className="text-gray-600">
+                Bitte klicke auf den Link in der E-Mail, um dein Konto zu aktivieren.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-sm text-gray-500">
+              <p>Keine E-Mail erhalten? Prufe deinen Spam-Ordner.</p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={handleClose}>Verstanden</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={authModal.isOpen} onOpenChange={open => !open && handleClose()}>
