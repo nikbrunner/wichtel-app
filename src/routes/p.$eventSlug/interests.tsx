@@ -335,10 +335,11 @@ function InterestsPage() {
           <form.Subscribe
             selector={state => ({
               isSubmitting: state.isSubmitting,
-              errors: state.errors
+              errors: state.errors,
+              isNewItemDefaulted: state.fieldMeta.newItem?.isDefaultValue
             })}
           >
-            {({ isSubmitting, errors }) => (
+            {({ isSubmitting, errors, isNewItemDefaulted }) => (
               <>
                 <div className="flex gap-3">
                   <Button
@@ -353,7 +354,7 @@ function InterestsPage() {
                   <Button
                     type="button"
                     onClick={handleSaveWithPendingInput}
-                    disabled={isSubmitting || isSkipping}
+                    disabled={isNewItemDefaulted || isSubmitting || isSkipping}
                     variant="success"
                     className="flex-1"
                   >
