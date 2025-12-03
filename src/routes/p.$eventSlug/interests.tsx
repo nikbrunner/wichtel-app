@@ -6,6 +6,7 @@ import { Button } from "@/components/retroui/Button";
 import { Input } from "@/components/retroui/Input";
 import { Card } from "~/components/retroui/Card";
 import { updateInterests } from "../../server/updateInterests";
+import { deleteInterest } from "../../server/deleteInterest";
 import { skipInterests } from "../../server/skipInterests";
 import { getParticipantInfo } from "../../server/getParticipantInfo";
 
@@ -106,12 +107,20 @@ function InterestsPage() {
     form.setFieldValue("newItem", "");
   };
 
-  const removeInterest = (index: number) => {
+  const removeInterest = async (index: number) => {
     const interests = form.getFieldValue("interests");
+    const itemToDelete = interests[index];
+
+    // Update UI immediately for responsiveness
     form.setFieldValue(
       "interests",
       interests.filter((_, i) => i !== index)
     );
+
+    // Persist deletion to database
+    await deleteInterest({
+      data: { participantToken: token, item: itemToDelete }
+    });
   };
 
   const handleSaveWithPendingInput = () => {
