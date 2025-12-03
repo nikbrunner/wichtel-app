@@ -126,9 +126,7 @@ export function AuthModal() {
                         type="email"
                         placeholder="deine@email.de"
                         value={field.state.value}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          field.handleChange(e.target.value)
-                        }
+                        onChange={e => field.handleChange(e.target.value)}
                         onBlur={field.handleBlur}
                         required
                         variant="pink"
