@@ -59,7 +59,7 @@ export const Route = createRootRoute({
       ...seo({
         title: "Wichtel-App | Geheimer Geschenketausch für Familie & Freunde",
         description: `Erstelle ein geheimes Wichtel-Event für deine Familie oder Freunde. Einfach, sicher und kostenlos - niemand sieht, wer wen beschenkt!`,
-        image: `${import.meta.env.VITE_SITE_URL || "https://wichtel-gifts.vercel.app"}/og-image.png`
+        image: `${import.meta.env.VITE_SITE_URL || "https://wichtel.gifts"}/og-image.png`
       })
     ],
     links: [
