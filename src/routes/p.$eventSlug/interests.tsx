@@ -250,8 +250,8 @@ function InterestsPage() {
             Die Person, die dich zieht, kann diese Hinweise später sehen.
           </p>
           <p className="mb-4 text-pink-500">
-            Wenn du lieber keine Interessen angeben und dich überraschen lassen
-            möchtest, kannst du unten einfach auf "Keine Interessen" klicken.
+            Wenn du dich lieber überraschen lassen möchtest, kannst du unten einfach
+            auf <strong>"Ich will überrascht werden"</strong> klicken.
           </p>
 
           <form.Field name="interests" mode="array">
