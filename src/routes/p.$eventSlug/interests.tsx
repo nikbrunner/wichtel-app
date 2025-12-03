@@ -53,7 +53,6 @@ function InterestsPage() {
   const token = search.token;
 
   // Post-submit UI state
-  const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSkipping, setIsSkipping] = useState(false);
   const [interestsStatus, setInterestsStatus] = useState(loaderData.interestsStatus);
 
@@ -68,7 +67,6 @@ function InterestsPage() {
       });
       form.setFieldValue("interests", result.interests);
       setInterestsStatus("submitted");
-      setSaveSuccess(true);
       router.invalidate();
     }
   });
@@ -106,7 +104,6 @@ function InterestsPage() {
 
     form.setFieldValue("interests", [...interests, newItem]);
     form.setFieldValue("newItem", "");
-    setSaveSuccess(false);
   };
 
   const removeInterest = (index: number) => {
@@ -115,7 +112,6 @@ function InterestsPage() {
       "interests",
       interests.filter((_, i) => i !== index)
     );
-    setSaveSuccess(false);
   };
 
   const handleSaveWithPendingInput = () => {
@@ -351,6 +347,7 @@ function InterestsPage() {
           <form.Subscribe
             selector={state => ({
               isSubmitting: state.isSubmitting,
+              isSubmitSuccessful: state.isSubmitSuccessful,
               errors: state.errors,
               shouldSaveButtonBeDisabled:
                 state.submissionAttempts > 0 &&
@@ -360,6 +357,7 @@ function InterestsPage() {
           >
             {({
               isSubmitting,
+              isSubmitSuccessful,
               errors,
               shouldSaveButtonBeDisabled,
               fieldHasErrors
@@ -391,7 +389,7 @@ function InterestsPage() {
                   </Button>
                 </div>
 
-                {saveSuccess && (
+                {isSubmitSuccessful && (
                   <p className="text-sm text-success text-center font-medium">
                     Gespeichert
                   </p>
