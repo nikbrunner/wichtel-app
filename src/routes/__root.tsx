@@ -8,7 +8,7 @@ import {
   useRouter
 } from "@tanstack/react-router";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import * as React from "react";
@@ -167,8 +167,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="font-sans bg-background text-foreground">
         {children}
         <Toaster position="bottom-center" richColors />
-        <TanStackRouterDevtools position="bottom-right" />
-        <TanStackDevtools plugins={[formDevtoolsPlugin()]} />
+        <TanStackDevtools
+          plugins={[
+            formDevtoolsPlugin(),
+            {
+              name: "TanStack Router",
+              render: <TanStackRouterDevtoolsPanel />
+            }
+          ]}
+        />
         <Scripts />
       </body>
     </html>
