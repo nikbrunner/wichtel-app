@@ -176,15 +176,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="font-sans bg-background text-foreground">
         {children}
         <Toaster position="bottom-center" richColors />
-        <TanStackDevtools
-          plugins={[
-            formDevtoolsPlugin(),
-            {
-              name: "TanStack Router",
-              render: <TanStackRouterDevtoolsPanel />
-            }
-          ]}
-        />
+        {import.meta.env.DEV && (
+          <TanStackDevtools
+            plugins={[
+              formDevtoolsPlugin(),
+              {
+                name: "TanStack Router",
+                render: <TanStackRouterDevtoolsPanel />
+              }
+            ]}
+          />
+        )}
         <Scripts />
       </body>
     </html>
