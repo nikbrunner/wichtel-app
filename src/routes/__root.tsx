@@ -134,11 +134,20 @@ function RootComponent() {
                 <Button
                   variant="link"
                   size="sm"
-                  onClick={() => authModal.open("login")}
+                  onClick={() => {
+                    authModal.open("login");
+                  }}
                 >
                   Login
                 </Button>
-                <Button size="sm" onClick={() => authModal.open("signup")}>
+                <Button
+                  size="sm"
+                  className="opacity-50 cursor-not-allowed"
+                  onClick={() => {
+                    // authModal.open("signup");
+                    toast.info("Registrierung ist momentan deaktiviert");
+                  }}
+                >
                   Registrieren
                 </Button>
               </div>
