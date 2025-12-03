@@ -96,7 +96,7 @@ export function AuthModal() {
 
   return (
     <Dialog open={authModal.isOpen} onOpenChange={open => !open && handleClose()}>
-      <DialogContent>
+      <DialogContent onInteractOutside={e => e.preventDefault()}>
         <DialogHeader asChild>
           <Tabs value={authModal.activeTab} onValueChange={handleTabChange}>
             <TabsList className="w-full justify-start">
