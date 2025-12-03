@@ -278,7 +278,8 @@ function InterestsPage() {
           <form.Field
             name="newItem"
             validators={{
-              onBlur: ({ value }) => {
+              onChangeListenTo: ["interests"],
+              onChange: ({ value }) => {
                 if (!value.trim()) return undefined;
                 if (value.trim().length < MIN_INTEREST_LENGTH) {
                   return `Mindestens ${MIN_INTEREST_LENGTH} Zeichen erforderlich`;
@@ -315,7 +316,10 @@ function InterestsPage() {
                         variant="outline"
                         onClick={addInterest}
                         disabled={
-                          !field.state.value.trim() || isSubmitting || isSkipping
+                          !field.state.value.trim() ||
+                          field.state.meta.errors.length > 0 ||
+                          isSubmitting ||
+                          isSkipping
                         }
                       >
                         +
