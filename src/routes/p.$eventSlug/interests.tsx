@@ -239,10 +239,14 @@ function InterestsPage() {
       <Card className="p-6 w-full">
         <div className="flex flex-col gap-4">
           <h3 className="text-xl font-semibold">Deine Interessen</h3>
-          <p className="mb-4">
+          <p>
             Was interessiert dich? Was wünschst du dir?
             <br />
             Die Person, die dich zieht, kann diese Hinweise später sehen.
+          </p>
+          <p className="mb-4 text-pink-500">
+            Wenn du lieber keine Interessen angeben und dich überraschen lassen
+            möchtest, kannst du unten einfach auf "Keine Interessen" klicken.
           </p>
 
           <form.Field name="interests" mode="array">
@@ -278,13 +282,16 @@ function InterestsPage() {
           <form.Field
             name="newItem"
             validators={{
-              onChangeListenTo: ["interests"],
-              onChange: ({ value }) => {
-                if (!value.trim()) return undefined;
-                if (value.trim().length < MIN_INTEREST_LENGTH) {
+              onBlur: ({ value }) => {
+                // Only validate if there's content - empty is allowed
+                if (value.trim() && value.trim().length < MIN_INTEREST_LENGTH) {
                   return `Mindestens ${MIN_INTEREST_LENGTH} Zeichen erforderlich`;
                 }
+              },
+              onChangeListenTo: ["interests"],
+              onChange: ({ value }) => {
                 const interests = form.getFieldValue("interests");
+
                 if (interests.includes(value.trim())) {
                   return "Dieses Interesse existiert bereits";
                 }
@@ -294,22 +301,27 @@ function InterestsPage() {
           >
             {field => (
               <div className="flex flex-col gap-2 mb-4">
-                <form.Subscribe selector={state => state.isSubmitting}>
-                  {isSubmitting => (
+                <form.Subscribe
+                  selector={state => ({
+                    isSubmitting: state.isSubmitting
+                  })}
+                >
+                  {({ isSubmitting }) => (
                     <div className="flex gap-2">
                       <Input
                         placeholder="Neues Interesse..."
+                        className="flex-1"
+                        variant="info"
+                        disabled={isSubmitting || isSkipping}
                         value={field.state.value}
                         onChange={e => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
                         onKeyDown={(e: React.KeyboardEvent) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
                             addInterest();
                           }
                         }}
-                        className="flex-1"
-                        variant="pink"
-                        disabled={isSubmitting || isSkipping}
                       />
                       <Button
                         type="button"
@@ -340,10 +352,18 @@ function InterestsPage() {
             selector={state => ({
               isSubmitting: state.isSubmitting,
               errors: state.errors,
-              isNewItemDefaulted: state.fieldMeta.newItem?.isDefaultValue
+              shouldSaveButtonBeDisabled:
+                state.submissionAttempts > 0 &&
+                state.fieldMeta.newItem?.isDefaultValue,
+              fieldHasErrors: (state.fieldMeta.newItem?.errors ?? []).length > 0
             })}
           >
-            {({ isSubmitting, errors, isNewItemDefaulted }) => (
+            {({
+              isSubmitting,
+              errors,
+              shouldSaveButtonBeDisabled,
+              fieldHasErrors
+            }) => (
               <>
                 <div className="flex gap-3">
                   <Button
@@ -353,12 +373,17 @@ function InterestsPage() {
                     variant="outline"
                     className="flex-1"
                   >
-                    {isSkipping ? "..." : "Keine Interessen"}
+                    {isSkipping ? "..." : "Ich will überrascht werden"}
                   </Button>
                   <Button
                     type="button"
                     onClick={handleSaveWithPendingInput}
-                    disabled={isNewItemDefaulted || isSubmitting || isSkipping}
+                    disabled={
+                      fieldHasErrors ||
+                      shouldSaveButtonBeDisabled ||
+                      isSubmitting ||
+                      isSkipping
+                    }
                     variant="success"
                     className="flex-1"
                   >
