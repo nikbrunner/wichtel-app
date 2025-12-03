@@ -7,7 +7,9 @@ import {
   Link,
   useRouter
 } from "@tanstack/react-router";
+import { TanStackDevtools } from "@tanstack/react-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import * as React from "react";
 import { useState } from "react";
@@ -152,7 +154,6 @@ function RootComponent() {
         </main>
       </div>
       <AuthModal />
-      <TanStackRouterDevtools position="bottom-right" />
     </RootDocument>
   );
 }
@@ -167,6 +168,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         {children}
         <Toaster position="bottom-center" richColors />
         <TanStackRouterDevtools position="bottom-right" />
+        <TanStackDevtools plugins={[formDevtoolsPlugin()]} />
         <Scripts />
       </body>
     </html>
